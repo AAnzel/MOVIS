@@ -1,12 +1,105 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import all_global
+
+
+import genomics
+import proteomics
+import metabolomics
+import phy_che
+
+import os
+import random
+import math
+import streamlit
+import gensim
+import altair_saver
+import pandas as pd
+import numpy as np
+import altair as alt
+import datetime as dt
+import selenium
+from Bio import SeqIO
+from Bio.SeqUtils.ProtParam import ProteinAnalysis
+from gensim.models import Word2Vec
+from sklearn.cluster import KMeans, OPTICS
+from sklearn.decomposition import PCA
+from sklearn.manifold import MDS
+from sklearn import preprocessing, model_selection, metrics
+from scipy.spatial.distance import jaccard, pdist, squareform
+
+
+# Defining paths for each and every omic
+
+path_root_data = os.path.join ('..', '..', 'Data', 'Extracted', 'First source', 'Databases')
+
+path_all_fasta = os.path.join (path_root_data, 'fasta_files', 'AllBins')
+path_genomics_78 = os.path.join (path_root_data, 'fasta_files', 'rmags_filtered')
+path_genomics_kegg = os.path.join (path_root_data, 'Annotations', 'KEGG')
+path_normalised_metabolomics = os.path.join (path_root_data, 'Metabolomics', 'Normalised_Tables')
+path_proteomics_78 = os.path.join (path_root_data, 'Proteomics', 'set_of_78')
+path_physico_chemical = os.path.join (path_root_data, 'PhysicoChemical')
+path_second_source = os.path.join ('..', '..', 'Data', 'Extracted', 'Second source')
+
+path_model_save_root = os.path.join ('..', 'Saved_models')
+path_figures_save_root = os.path.join ('..', 'Output_figures')
+
+num_of_mags = len([i for i in os.listdir(path_genomics_78) if i.endswith('fa')])
+num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if i.endswith('faa')])
+SEED = 42
+END = num_of_mags
+ALL_DAYS = 51
+MAX_ROWS = 15000
+EPOCHS = 10
+NUM_OF_WORKERS = 8
+START_DATE = dt.datetime.strptime ('2011-03-21', '%Y-%m-%d')
+random.seed(SEED)
+np.random.seed(SEED)
+alt.data_transformers.enable('default', max_rows = MAX_ROWS) # Important if you want to visualize datasets with >5000 samples
+
+
+# Functions below are shared among different omics
+# Function that saves charts from list_of_charts with names from list_of_names
+def save_charts (list_of_chart, list_of_names):
+    
+    for chart, name in zip(list_of_chart, list_of_names):
+        altair_saver.save(chart, os.path.join (path_figures_save_root, name), method = 'selenium', webdriver = selenium.webdriver.Firefox())
+        #chart.save(os.path.join (path_figures_save_root, name))
+
+# This function creates new dataframe with column that represent season according to date
+# It also concatenates important types with metabolite names
+def season_data (data, temporal_column):
+    new_df = data
+    new_df['season'] = new_df[temporal_column].dt.month%12 // 3 + 1
+    
+    #important_types = [metabolite_column] + important_types
+    #new_df['new_name'] = df[important_types].agg('\n'.join, axis=1)
+    
+    return new_df
+
+def create_temporal_column (list_of_days, start_date, end):
+    
+    list_of_dates = []
+    
+    # This is specific to the metaomics data set I am using
+    # Creating list of dates for every rMAG
+    for i in list_of_days[:end]:
+        
+        tmp_datetime = start_date + dt.timedelta (weeks = int(i[1:3]))
+        
+        if tmp_datetime not in list_of_dates:
+            list_of_dates.append (tmp_datetime)
+        
+        else:
+            tmp_datetime = tmp_datetime.replace (day = tmp_datetime.day + 1)
+            list_of_dates.append (tmp_datetime)
+    
+    return list_of_dates
 
 # ---
 # # GENOMIC ANALYSIS
 # ---
-def calc_genomics:
+def calc_genomics():
     # **Important**: I should review the way I look at MAGs. The names of all fasta files beggining with 'D_##' represent the days those MAGs were obtained. Therefore, I should look at this also as timeseries data. Also, maybe I should only consider 78 MAGs, and not all ~1300.
     # After some consideration, I conclude that I should definetly use only 78 MAGs, because that way I wouldn't be tied to meta-omics data only. I also thinked about what should I visualize in that case. One idea is that I should also encode those MAGs with word2wec, and then make a 3D chart where one dimension is time, and other two dimensions would be PCA dimensions of those MAGs. I could also use this function to visualize proteomics data if I want.
     # 
@@ -14,7 +107,7 @@ def calc_genomics:
     # ## MAG examination
     # ### KEGG examination
 
-    kegg_matrix = import_kegg_and_create_df (end = ALL_DAYS, path_fasta = path_genomics_78, path_all_keggs = path_genomics_kegg)
+    kegg_matrix = genomics.import_kegg_and_create_df (end = ALL_DAYS, path_fasta = path_genomics_78, path_all_keggs = path_genomics_kegg)
 
     mag_scaler = preprocessing.StandardScaler()
     scaled_keggs_df = mag_scaler.fit_transform(kegg_matrix)
@@ -38,11 +131,11 @@ def calc_genomics:
     k_means_model = KMeans (n_clusters = num_of_clusters, random_state = SEED)
     k_means_predicted = k_means_model.fit_predict(scaled_keggs_df)
 
-    k_means_chart = visualize_with_pca (scaled_keggs_df, k_means_predicted, k_means_model.cluster_centers_)
+    k_means_chart = genomics.visualize_with_pca (scaled_keggs_df, k_means_predicted, k_means_model.cluster_centers_)
 
     # ### KEGG examination but with pairwise Jaccard distance matrix (as seen in paper)
-    kegg_pairwise = create_pairwise_jaccard (kegg_matrix)
-    kegg_mds_chart = visualize_with_mds(kegg_pairwise, START_DATE, END, path_genomics_78)
+    kegg_pairwise = genomics.create_pairwise_jaccard (kegg_matrix)
+    kegg_mds_chart = genomics.visualize_with_mds(kegg_pairwise, START_DATE, END, path_genomics_78)
 
     # ---
     # # VAZNO:
@@ -51,10 +144,10 @@ def calc_genomics:
     # ---
     
     # FOR CLUSTERING I SHOULD CREATE A DATAFRAME WITH MAGs INDEXES AND THEIR VECTOR REPRESENTATIONS
-    final_model, fasta_names, fasta_ids = import_mags_and_build_model (end = END, path_fasta = path_genomics_78)
+    final_model, fasta_names, fasta_ids = genomics.import_mags_and_build_model (end = END, path_fasta = path_genomics_78)
     
     # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
-    final_model = train_model (final_model, epochs = EPOCHS, end = END)
+    final_model = genomics.train_model (final_model, epochs = EPOCHS, end = END)
     
     final_model.wv.save_word2vec_format(os.path.join (path_model_save_root, 'model_78.bin'), binary=True) 
 
@@ -62,7 +155,7 @@ def calc_genomics:
     # > This could be done by importing one MAG at a time, then tokenizing it (like before), then getting vector representations of that MAG's sentences (genomes) and then finding the vector representation of the whole MAG (document). If I do that for one MAG at a time, There is no need to worry about memory
     # 
     
-    list_of_mag_vectors = vectorize_mags (final_model, path_fasta = path_genomics_78, end = END)
+    list_of_mag_vectors = genomics.vectorize_mags (final_model, path_fasta = path_genomics_78, end = END)
     mags_df = pd.DataFrame (list_of_mag_vectors)
     
     # ## Data preprocessing
@@ -90,7 +183,7 @@ def calc_genomics:
     k_means_model = KMeans (n_clusters = num_of_clusters, random_state = SEED)
     k_means_predicted = k_means_model.fit_predict(scaled_mags_df)
 
-    k_means_chart = visualize_with_pca (scaled_mags_df, k_means_predicted, k_means_model.cluster_centers_)
+    k_means_chart = genomics.visualize_with_pca (scaled_mags_df, k_means_predicted, k_means_model.cluster_centers_)
 
     # ### 2. OPTICS
 
@@ -100,7 +193,7 @@ def calc_genomics:
     optics_predicted = optics_model.fit_predict (scaled_mags_df)
 
     # Visualize clusters, since there are no centroids, we are sending bogus array
-    optics_chart = visualize_with_pca (scaled_mags_df, optics_predicted, np.empty([optics_predicted.shape[0], 1], dtype=int))
+    optics_chart = genomics.visualize_with_pca (scaled_mags_df, optics_predicted, np.empty([optics_predicted.shape[0], 1], dtype=int))
 
     # Side by side comparison
     cluster_comparison_chart = alt.hconcat (k_means_chart, optics_chart).resolve_scale(color='independent')
@@ -114,14 +207,14 @@ def calc_genomics:
     print ('\t2. OPTICS:', eval_optics)
 
     # ## Visualizing rMAGs with time axis
-    time_chart = visualize_temporal_mags (scaled_mags_df, fasta_names, START_DATE, END)
+    time_chart = genomics.visualize_temporal_mags (scaled_mags_df, fasta_names, START_DATE, END)
     
     save_charts ([k_means_chart, optics_chart, cluster_comparison_chart, time_chart], ['genomics_k_means_chart.png', 'genomics_optics_chart.png', 'genomics_cluster_comparison_chart.png', 'genomics_time_chart.png'])
 
 # ---
 # # METABOLOMIC ANALYSIS
 # ---
-def calc_metabolomics:
+def calc_metabolomics():
     # ## Importing Metabolomic data
     metabolomics_file_name = os.path.join(path_normalised_metabolomics, os.listdir(path_normalised_metabolomics)[0])
     metabolomics_df = pd.read_csv (metabolomics_file_name, delimiter = '\t')
@@ -160,7 +253,7 @@ def calc_metabolomics:
     metabolomics_df.reset_index(drop=True, inplace=True)
 
     # ## Time series examination
-    metabolites_chart = visualize_metabolites(metabolomics_df, 'date', 'Metabolite', ['type', 'type2', 'measurement', 'N'])
+    metabolites_chart = metabolomics.visualize_metabolites(metabolomics_df, 'date', 'Metabolite', ['type', 'type2', 'measurement', 'N'])
 
     save_charts ([metabolites_chart], ['metabolomics_metabolites_chart.png'])
     
@@ -172,22 +265,22 @@ def calc_metabolomics:
 # ---
 # # PROTEOMIC ANALYSIS
 # ---
-def calc_proteomics:
+def calc_proteomics():
     # ## Importing Proteomic data
     
     # I could create something similar to Fig. 5 of the original paper, where I would calculate mean of different proteomic feature values for each rMAG calculated by days
     # So I would have a table: date | feature 1 | feature 2 | ...
     # Where each feature is mean of all values for one day of each MAG in that rMAG
     
-    proteomics_data = import_proteomics (end = num_of_proteomics)
-    chart_proteomics = visualize_proteomics(proteomics_data)
+    proteomics_data = proteomics.import_proteomics (end = num_of_proteomics)
+    chart_proteomics = proteomics.visualize_proteomics(proteomics_data)
 
     save_charts ([chart_proteomics], ['proteomics_chart_proteomics.png'])
 
 # ---
 # # PHYSICO-CHEMICAL ANALYSIS
 # ---
-def calc_phy_che:
+def calc_phy_che():
     # ## Importing Physico-chemical data
     phy_che_file_name = os.path.join(path_physico_chemical, [i for i in os.listdir(path_physico_chemical) if (i.endswith(('.tsv', '.csv')))][1])
     phy_che_df = pd.read_csv (phy_che_file_name, decimal = ',')
@@ -206,8 +299,8 @@ def calc_phy_che:
     filtered_phy_che_df.insert (0, 'DateTime', tmp_column.values)
 
     # Visualize temperature, air_temperature, conductivity, inflow_pH, nitrate, oxygen, pH
-    chart_phy_che = visualize_phy_che (filtered_phy_che_df, 'DateTime', filtered_phy_che_df.columns.values[4:])
-    chart_phy_che_corr = visualize_phy_che_heatmap (filtered_phy_che_df)
+    chart_phy_che = phy_che.visualize_phy_che (filtered_phy_che_df, 'DateTime', filtered_phy_che_df.columns.values[4:])
+    chart_phy_che_corr = phy_che.visualize_phy_che_heatmap (filtered_phy_che_df)
     
     save_charts ([chart_phy_che_corr, chart_phy_che], ['physico_chemical_chart_psy_che_corr.png', 'physico_chemical_chart_psy_che.png'])
 
@@ -216,7 +309,7 @@ def calc_phy_che:
 
 # FRONT-END
 def main():
-
+    calc_phy_che()
 
 
 

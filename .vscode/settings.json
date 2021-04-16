@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "/home/alexein/miniconda3/bin/python",
+    "launch": {
+
+        "configurations": [],
+        "compounds": []
+    },
+    "terminal.explorerKind": "external"
+}
