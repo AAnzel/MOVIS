@@ -124,4 +124,4 @@ def visualize_phy_che_heatmap (data):
         color = alt.condition("abs(datum.correlation) > 0.5", alt.value('white'), alt.value('black'))
     )
     
-    return chart.transform_filter("datum.var_1 < datum.var_2") # This returns only lower triangle
+    return chart.transform_filter("datum.var_1 < datum.var_2").interactive() # This returns only lower triangle

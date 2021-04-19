@@ -1,4 +1,5 @@
 import os
+import io
 import random
 import math
 import gensim
@@ -17,13 +18,16 @@ from sklearn.manifold import MDS
 from sklearn import preprocessing, model_selection, metrics
 from scipy.spatial.distance import jaccard, pdist, squareform
 
+import omics_run
 
 def create_main_shared():
     
     # TODO: Be careful when placing values in beta_columns
     # These are hardcoded values for column width
-    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.8, 2, 1])
-    tmp_col_2.title('Tool title - ML cruncher')
+    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.5, 2, 1])
+    tmp_col_2.title('Tool title - Multi-omics time series')
+    st.markdown(' ')
+    st.markdown(' ')
     st.markdown('---')
 
     return None
@@ -59,6 +63,13 @@ def create_main_example_1_metabolomics():
     st.subheader ('Metabolomics')
 
     # Here I show the head() of the data set and some summary() and info()
+    df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
+
+    with st.beta_expander('Show the data set and related info', expanded = True):
+        st.markdown('First 100 entries')
+        st.dataframe(df.head(100))
+        st.dataframe(df.describe())
+        
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -75,10 +86,22 @@ def create_main_example_1_proteomics():
 
     return None
 
+@st.cache
 def create_main_example_1_phy_che():
     st.subheader ('Physico-chemical')
 
     # Here I show the head() of the data set and some summary() and info()
+    df = omics_run.get_cached_dataframe(omics_run.EX_1, 'phy_che')
+
+    with st.beta_expander('Show the data set', expanded = True):
+        st.markdown('First 100 entries')
+        st.dataframe(df.head(100))
+
+    with st.beta_expander('Show a correlation matrix', expanded = True):
+        st.altair_chart(omics_run.phy_che.visualize_phy_che_heatmap(df),
+                        use_container_width = True)
+
+
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -103,12 +126,11 @@ def create_main_example_1():
     
     example_1_omics_dict = {'Genomics':0, 'Metabolomics':0, 'Proteomics':0,
                             'Physico-chemical':0}
-    choose_omics = st.multiselect('Which omics do you want to see:',
+    choose_omics = st.multiselect('Which omic do you want to see:',
                                 list(example_1_omics_dict.keys()))
     
     num_of_columns = 0
     for i in choose_omics:
-        print (i)
         example_1_omics_dict[i] = 1
         num_of_columns += 1
     
@@ -221,6 +243,12 @@ def create_main():
 def main():
     
     st.set_page_config(layout = 'wide')
+
+    # I need to run this just once, so I create cache
+    #omics_run.example_1_calc_phy_che()
+    #omics_run.example_1_calc_metabolomics()
+
+
     create_main()
 
     return None
