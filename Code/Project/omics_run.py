@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
-import selenium
+import streamlit as st
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec
@@ -76,6 +76,7 @@ def cache_dataframe (dataframe, num_of_example, name):
     
     return None
 
+@st.cache
 def get_cached_dataframe(num_of_example, name):
     if num_of_example == EX_1:
         return pd.read_pickle (os.path.join(path_data_frame_save_root, 'example_1', 'data_frames', name + '_dataframe.pkl'))
