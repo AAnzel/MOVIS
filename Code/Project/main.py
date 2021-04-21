@@ -22,8 +22,18 @@ import omics_run
 import example_1
 import example_2
 import upload
+import home
 
 def create_sidebar_and_main():
+    
+    # TODO: Be careful when placing values in beta_columns
+    # These are hardcoded values for column width
+    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.5, 2, 1])
+    tmp_col_2.title('Tool title - Multi-omics time series')
+    st.markdown(' ')
+    st.markdown(' ')
+    st.markdown('---')
+
     st.sidebar.markdown('Above should be a logo. Below should be a github repo\
                         logo that is clickable, and on the right should be\
                         the link to the paper.')
@@ -38,11 +48,13 @@ def create_sidebar_and_main():
     st.sidebar.markdown('Here put some info about the app.')
     st.sidebar.markdown('---')
 
-    st.sidebar.markdown('**Choose your data set:**')
-    choice_data_set = st.sidebar.radio('', ('Example 1', 'Example 2', 'Upload'),
+    st.sidebar.markdown('**Navigation:**')
+    choice_data_set = st.sidebar.radio('', ('Home', 'Example 1', 'Example 2', 'Upload'),
                                        index = 0)
 
-    if choice_data_set == 'Example 1':
+    if choice_data_set == 'Home':
+        home.create_home()
+    elif choice_data_set == 'Example 1':
         example_1.create_main_example_1()
     elif choice_data_set == 'Example 2':
         example_2.create_main_example_2()

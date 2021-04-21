@@ -20,17 +20,6 @@ from scipy.spatial.distance import jaccard, pdist, squareform
 
 import omics_run
 
-def create_main_shared():
-    
-    # TODO: Be careful when placing values in beta_columns
-    # These are hardcoded values for column width
-    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.5, 2, 1])
-    tmp_col_2.title('Tool title - Multi-omics time series')
-    st.markdown(' ')
-    st.markdown(' ')
-    st.markdown('---')
-
-    return None
 
 def show_data_set(df):
     with st.beta_expander('Show the data set and related info', expanded = True):
@@ -108,7 +97,6 @@ def create_main_example_1_phy_che():
     return None
 
 def create_main_example_1():
-    create_main_shared()
     
     st.info('''
             This data set comes from the following paper:

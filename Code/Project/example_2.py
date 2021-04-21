@@ -18,17 +18,6 @@ from sklearn.manifold import MDS
 from sklearn import preprocessing, model_selection, metrics
 from scipy.spatial.distance import jaccard, pdist, squareform
 
-def create_main_shared():
-    
-    # TODO: Be careful when placing values in beta_columns
-    # These are hardcoded values for column width
-    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.5, 2, 1])
-    tmp_col_2.title('Tool title - Multi-omics time series')
-    st.markdown(' ')
-    st.markdown(' ')
-    st.markdown('---')
-
-    return None
 
 def show_data_set(df):
     with st.beta_expander('Show the data set and related info', expanded = True):
@@ -39,6 +28,5 @@ def show_data_set(df):
     return None
 
 def create_main_example_2():
-    create_main_shared()
 
     return None
