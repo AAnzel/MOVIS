@@ -18,8 +18,8 @@ Physico-chemical | Tabular data (.csv, .xlsx...) with time column
 Analyze                                        | Search                              | Query      
 ---|---|---
 Consume: discover and present.                 | Target unknown: browse and explore. | Identify
-Produce: record and derive. (**without** annotate) | Target known: **nothing** (**without** lookup and locate).      | Compare  
-                   NaN                         |   NaN                               | **Without** summarize
+Produce: record and derive. (**without** annotate) | Target known: **nothing** (**without** lookup and locate).      | Compare
+NaN										    	| NaN					 | **Without** summarize
 
 ---
 ***How?*** question:
