@@ -19,7 +19,7 @@ Analyze                                        | Search                         
 ---|---|---
 Consume: discover and present.                 | Target unknown: browse and explore. | Identify
 Produce: record and derive. (**without** annotate) | Target known: **nothing** (**without** lookup and locate).      | Compare  
-                                               |                                     | **Without** summarize
+                   NaN                         |   NaN                               | **Without** summarize
 
 ---
 ***How?*** question:

@@ -25,7 +25,7 @@ Produce: record and derive. (**without** annotate) | Target known: **nothing** (
 ***How?*** question:
 
 Data set         | Encode                                               | Manipulate                        | Facet                     | Reduce
----|---|---|---|---|
+---|---|---|---|---
 Genomics         | **FASTA**: W2V -> PCA -> Map; **KOs**: Map                              | Select and navigate (**without** change) | Juxtapose (**without** partition and superimpose) | Filter (**without** aggregate and embed)
 Transcriptomics  | NaN                                                                     | Select and navigate (**without** change) | Juxtapose (**without** partition and superimpose) |Filter (**without** aggregate and embed)
 Metabolomics     | Map                                                                     | Select and navigate (**without** change) | Juxtapose (**without** partition and superimpose) |Filter (**without** aggregate and embed)
