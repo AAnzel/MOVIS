@@ -19,15 +19,26 @@ from sklearn import preprocessing, model_selection, metrics
 from scipy.spatial.distance import jaccard, pdist, squareform
 
 import omics_run
+import metabolomics
+
+URANDOM_LENGTH = 5
 
 
 def show_data_set(df):
-    with st.beta_expander('Show the data set and related info', expanded = True):
+    with st.beta_expander('Show the data set and related info', expanded=True):
         st.markdown('First 100 entries')
         st.dataframe(df.head(100))
         st.dataframe(df.describe())
 
     return None
+
+
+def choose_columns(df):
+
+    new_columns = st.multiselect('Choose columns to visualize:',
+                                 list(df.columns.values),
+                                 key=os.urandom(URANDOM_LENGTH))
+    return new_columns
 
 
 def create_main_example_1_genomics():
@@ -62,7 +73,36 @@ def create_main_example_1_metabolomics():
 
     # Here I show the head() of the data set and some summary() and info()
     df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
-    show_data_set(df)    
+    show_data_set(df)
+
+    visualizations = st.multiselect('Choose your visualization',
+                                    ['Feature through time',
+                                     'Two features scatter-plot',
+                                     'Scatter-plot matrix',
+                                     'Multiple features parallel chart'],
+                                    key=os.urandom(URANDOM_LENGTH))
+
+    for i in visualizations:
+        if i == 'Feature through time':
+            selected_column = st.selectbox('Select column to visualize',
+                                           list(df.columns.values))
+
+            temporal_column = None
+            temporal_column = df.select_dtypes(include=[np.datetime64])[0]
+
+            if temporal_column is None:
+                st.text('Datetime column not detected.')
+
+            st.altair_chart(metabolomics.visualize_time_feature(df,
+                                                                selected_column,
+                                                                temporal_column))
+
+        elif i == 'Two features scatter-plot':
+            pass
+        elif i == 'Scatter-plot matrix':
+            pass
+        else:
+            pass
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants

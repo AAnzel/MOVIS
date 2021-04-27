@@ -113,7 +113,7 @@ def split_genome(genome, k=5):
         return genome
     else:
         for i in range(n - k):
-            new_genome.append(genome[i : i + k])
+            new_genome.append(genome[i: i + k])
 
         return new_genome
 
@@ -379,7 +379,7 @@ def import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
             tmp_filter = (tmp_df["Gene"].apply(lambda x: str(x).split("_")[0]
                                                + "_" + str(x).split("_")[1])
                                         .isin(rmags_78_names))
-            
+
             tmp_df = tmp_df[tmp_filter]
 
             tmp_df["Gene"] = tmp_df["Gene"].apply(

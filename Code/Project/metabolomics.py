@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
+import streamlit as st
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec
@@ -25,7 +26,8 @@ path_root_data = os.path.join(
 )
 
 path_all_fasta = os.path.join(path_root_data, "fasta_files", "AllBins")
-path_genomics_78 = os.path.join(path_root_data, "fasta_files", "rmags_filtered")
+path_genomics_78 = os.path.join(path_root_data, "fasta_files",
+                                "rmags_filtered")
 path_genomics_kegg = os.path.join(path_root_data, "Annotations", "KEGG")
 path_normalised_metabolomics = os.path.join(
     path_root_data, "Metabolomics", "Normalised_Tables"
@@ -100,10 +102,19 @@ def create_temporal_column(list_of_days, start_date, end):
     return list_of_dates
 
 
+def visualize_time_feature(df, selected_column, temporal_column):
+
+    chart = alt.Chart(df).mark_line().encode(
+        alt.X(temporal_column, type='temporal', scale=alt.Scale(nice=True)),
+        alt.Y(selected_column, type='quantitative')
+        )
+
+    return chart
+
+
 # This functions are used for METABOLOMICS
-
-
-def visualize_metabolites(data, temporal_column, metabolite_column, type_columns):
+def visualize_metabolites(data, temporal_column, metabolite_column,
+                          type_columns):
 
     data_seasoned = season_data(data, temporal_column)
 
@@ -126,6 +137,7 @@ def visualize_metabolites(data, temporal_column, metabolite_column, type_columns
             alt.Tooltip(type_columns, type="nominal"),
         ).properties(width=1200).repeat(row=float_columns)
         .resolve_scale(color="independent", size="independent")
-    ) # .interactive()
+    )
+    # .interactive()
 
     return chart

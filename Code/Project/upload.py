@@ -1,7 +1,6 @@
 import os
 import streamlit as st
 import pandas as pd
-import altair as alt
 
 URANDOM_LENGTH = 5
 
@@ -24,7 +23,7 @@ def upload_data_set():
     delimiter = st.selectbox('Select the delimiter in your data set',
                              ['Comma(,)', 'Semicolon(;)', 'Tab(\\t)',
                               'Excel File'], key=os.urandom(URANDOM_LENGTH))
-    
+
     if imported_file is not None:
         return pd.read_csv(imported_file, delimiter=delimiter)
     else:
@@ -36,7 +35,7 @@ def upload_genomics():
     st.markdown('')
 
     df = upload_data_set()
-    
+
     if df is None:
         return None
 
@@ -64,10 +63,10 @@ def upload_metabolomics():
     st.markdown('')
 
     df = upload_data_set()
-    
+
     if df is None:
         return None
-    
+
     show_data_set(df)
 
     return None
@@ -109,12 +108,12 @@ def create_main_upload():
                          'Physico-chemical': 0, 'Transcriptomics': 0}
     choose_omics = st.multiselect('Which omic data do you want to upload:',
                                   list(upload_omics_dict.keys()))
-    
+
     num_of_columns = 0
     for i in choose_omics:
         upload_omics_dict[i] = 1
         num_of_columns += 1
-    
+
     if num_of_columns >= 2:
         column_list = st.beta_columns(num_of_columns)
         curr_pos = 0
@@ -141,7 +140,7 @@ def create_main_upload():
                     with column_list[curr_pos]:
                         curr_pos += 1
                         upload_phy_che()
-    
+
     else:
         for i in list(upload_omics_dict.keys()):
             if upload_omics_dict[i] != 0:

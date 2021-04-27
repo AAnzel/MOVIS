@@ -22,7 +22,8 @@ def create_sidebar_and_main():
                         the link to the paper.')
 
     # We need 5 columns so that we have nicely aligned images
-    col_1, col_2, col_3, col_4, col_5 = st.sidebar.beta_columns([1, 2, 1, 2, 1])
+    col_1, col_2, col_3, col_4, col_5 = st.sidebar.beta_columns([1, 2, 1,
+                                                                 2, 1])
     col_2.image(os.path.join('images', 'GitHub-Mark-120px-plus.png'), width=52)
     col_2.markdown('[GitHub](https://github.com/AAnzel/Multi-omics_platform)')
     col_4.markdown('Paper doi with journal logo')
