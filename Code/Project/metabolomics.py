@@ -104,10 +104,25 @@ def create_temporal_column(list_of_days, start_date, end):
 
 def visualize_time_feature(df, selected_column, temporal_column):
 
-    chart = alt.Chart(df).mark_line().encode(
-        alt.X(temporal_column, type='temporal', scale=alt.Scale(nice=True)),
-        alt.Y(selected_column, type='quantitative')
-        )
+    if str(df[selected_column].dtype) == 'string':
+        chart = alt.Chart(df).mark_point().encode(
+            alt.X(temporal_column, type='temporal',
+                  scale=alt.Scale(nice=True)),
+            alt.Y(selected_column, type='nominal'))
+    else:
+        chart = alt.Chart(df).mark_line().encode(
+            alt.X(temporal_column, type='temporal',
+                  scale=alt.Scale(nice=True)),
+            alt.Y(selected_column, type='quantitative'))
+
+    return chart
+
+
+def visualize_two_features(df, feature_1, feature_2):
+    chart = alt.Chart(df).mark_point().encode(
+        alt.X(feature_1, type='quantitative',
+              scale=alt.Scale(nice=True)),
+        alt.Y(feature_2, type='quantitative'))
 
     return chart
 

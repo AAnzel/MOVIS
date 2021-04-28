@@ -92,11 +92,11 @@ def get_cached_dataframe(num_of_example, name):
     if num_of_example == EX_1:
         return pd.read_pickle(os.path.join(path_data_frame_save_root,
                                            "example_1", "data_frames", name +
-                                           "_dataframe.pkl"))
+                                           "_dataframe.pkl")).convert_dtypes()
     else:
         return pd.read_pickle(os.path.join(path_data_frame_save_root,
                                            "example_2", "data_frames", name +
-                                           "_dataframe.pkl"))
+                                           "_dataframe.pkl")).convert_dtypes()
 
 
 # This function creates new dataframe with column that represent season

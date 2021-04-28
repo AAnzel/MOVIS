@@ -57,14 +57,14 @@ def create_main_example_1_genomics():
             ├── D08_O6.fa
             ...
                 ''')
-    
+
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
     # st.altair_chart()
-    
+
     return None
 
 
@@ -74,31 +74,54 @@ def create_main_example_1_metabolomics():
     # Here I show the head() of the data set and some summary() and info()
     df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
     show_data_set(df)
+    feature_list = list(df.columns.values)
+
+    temporal_feature = None
+    temporal_feature = str(df.select_dtypes(
+        include=[np.datetime64]).columns[0])
+
+    if temporal_feature is None:
+        st.text('Datetime column not detected.')
+        # TODO: Implement choosing time column and modifying dataframe
+
+    feature_list.remove(temporal_feature)
+
 
     visualizations = st.multiselect('Choose your visualization',
                                     ['Feature through time',
                                      'Two features scatter-plot',
                                      'Scatter-plot matrix',
-                                     'Multiple features parallel chart'],
-                                    key=os.urandom(URANDOM_LENGTH))
+                                     'Multiple features parallel chart'])
 
     for i in visualizations:
         if i == 'Feature through time':
-            selected_column = st.selectbox('Select column to visualize',
-                                           list(df.columns.values))
+            selected_feature = st.selectbox('Select feature to visualize',
+                                            feature_list)
 
-            temporal_column = None
-            temporal_column = df.select_dtypes(include=[np.datetime64])[0]
-
-            if temporal_column is None:
-                st.text('Datetime column not detected.')
-
-            st.altair_chart(metabolomics.visualize_time_feature(df,
-                                                                selected_column,
-                                                                temporal_column))
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    metabolomics.visualize_time_feature(df, selected_feature,
+                                                        temporal_feature),
+                    use_container_width=True)
 
         elif i == 'Two features scatter-plot':
-            pass
+            col_1, col_2 = st.beta_columns(2)
+            feature_1 = col_1.selectbox('Select 1. feature',
+                                        feature_list)
+
+            if feature_1 in feature_list:
+                feature_list.remove(feature_1)
+
+            feature_2 = col_2.selectbox('Select 2. feature',
+                                        feature_list)
+
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    metabolomics.visualize_two_features(df, feature_1,
+                                                        feature_2),
+                    use_container_width=True)
+
+
         elif i == 'Scatter-plot matrix':
             pass
         else:
