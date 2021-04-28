@@ -9,6 +9,7 @@ import numpy as np
 import altair as alt
 import datetime as dt
 import streamlit as st
+import plotly.express as px
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec
@@ -119,10 +120,31 @@ def visualize_time_feature(df, selected_column, temporal_column):
 
 
 def visualize_two_features(df, feature_1, feature_2):
+
     chart = alt.Chart(df).mark_point().encode(
         alt.X(feature_1, type='quantitative',
               scale=alt.Scale(nice=True)),
         alt.Y(feature_2, type='quantitative'))
+
+    return chart
+
+
+def visualize_parallel(df, list_of_features, target):
+    '''
+    new_df = df[list_of_features].reset_index().melt(id_vars=['index', target])
+
+    chart = alt.Chart(new_df).mark_line().encode(
+        alt.X('variable:N'),
+        alt.Y('value:Q'),
+        alt.Color(target, type='nominal'),
+        alt.Detail('index:N'),
+        opacity=alt.value(0.4)
+    )
+    '''
+    chart = px.parallel_coordinates(
+        df, color=range(0, len(df[target])), dimensions=list_of_features,
+        color_continuous_scale=px.colors.diverging.Tealrose,
+        color_continuous_midpoint=2)
 
     return chart
 

@@ -72,13 +72,14 @@ def create_main_example_1_metabolomics():
     st.header('Metabolomics')
 
     # Here I show the head() of the data set and some summary() and info()
-    df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
+    with st.spinner('Getting data set...'):
+        df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
     show_data_set(df)
     feature_list = list(df.columns.values)
 
     temporal_feature = None
-    temporal_feature = str(df.select_dtypes(
-        include=[np.datetime64]).columns[0])
+    temporal_feature = str(
+        df.select_dtypes(include=[np.datetime64]).columns[0])
 
     if temporal_feature is None:
         st.text('Datetime column not detected.')
@@ -121,9 +122,32 @@ def create_main_example_1_metabolomics():
                                                         feature_2),
                     use_container_width=True)
 
-
         elif i == 'Scatter-plot matrix':
             pass
+
+        elif i == 'Multiple features parallel chart':
+            target_feature = st.selectbox('Select target feature for color',
+                                          feature_list)
+
+            list_of_features = st.multiselect('Choose features', feature_list)
+
+            if len(list_of_features) < 2:
+                st.stop()
+
+            list_of_features.append(target_feature)
+
+            with st.spinner('Visualizing...'):
+                '''
+                st.altair_chart(
+                    metabolomics.visualize_parallel(df, list_of_features,
+                                                    target_feature),
+                    use_container_width=True)
+                '''
+                st.plotly_chart(
+                    metabolomics.visualize_parallel(df, list_of_features,
+                                                    target_feature),
+                    use_container_width=True)
+                    
         else:
             pass
 
