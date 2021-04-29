@@ -34,7 +34,7 @@ def choose_columns(df, key_prefix):
 
     new_columns = st.multiselect('Choose columns to visualize:',
                                  list(df.columns.values),
-                                 key='choose_col' + key_prefix + '1')
+                                 key='choose_col' + key_prefix)
 
     return new_columns
 
@@ -46,7 +46,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                      'Two features scatter-plot',
                                      'Scatter-plot matrix',
                                      'Multiple features parallel chart'],
-                                    key='vis_data' + key_prefix + '1')
+                                    key='vis_data' + key_prefix)
 
     for i in visualizations:
         if i == 'Feature through time':
@@ -55,27 +55,39 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
 
             with st.spinner('Visualizing...'):
                 st.altair_chart(
-                    visualize.visualize_time_feature(df, selected_feature,
-                                                     temporal_feature),
+                    visualize.time_feature(df, selected_feature,
+                                           temporal_feature),
                     use_container_width=True)
 
         elif i == 'Two features scatter-plot':
-            feature_1 = st.selectbox('Select 1. feature',
-                                     feature_list)
+            feature_1 = st.selectbox('Select 1. feature', feature_list)
 
             if feature_1 in feature_list:
                 feature_list.remove(feature_1)
 
-            feature_2 = st.selectbox('Select 2. feature',
-                                     feature_list)
+            feature_2 = st.selectbox('Select 2. feature', feature_list)
 
             with st.spinner('Visualizing...'):
                 st.altair_chart(
-                    visualize.visualize_two_features(df, feature_1, feature_2),
+                    visualize.two_features(df, feature_1, feature_2),
                     use_container_width=True)
 
         elif i == 'Scatter-plot matrix':
-            pass
+            target_feature = st.selectbox('Select target feature for color',
+                                          feature_list)
+
+            list_of_features = st.multiselect('Choose features', feature_list)
+
+            if len(list_of_features) < 2:
+                st.stop()
+
+            list_of_features.append(target_feature)
+
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    visualize.scatter_matrix(df, list_of_features,
+                                             target_feature),
+                    use_container_width=True)
 
         elif i == 'Multiple features parallel chart':
             target_feature = st.selectbox('Select target feature for color',
@@ -91,13 +103,13 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
             with st.spinner('Visualizing...'):
                 '''
                 st.altair_chart(
-                    visualize.visualize_parallel(df, list_of_features,
-                                                    target_feature),
+                    visualize.parallel_coordinates(df, list_of_features,
+                                                   target_feature),
                     use_container_width=True)
                 '''
                 st.plotly_chart(
-                    visualize.visualize_parallel(df, list_of_features,
-                                                 target_feature),
+                    visualize.parallel_coordinates(df, list_of_features,
+                                                   target_feature),
                     use_container_width=True)
 
         else:

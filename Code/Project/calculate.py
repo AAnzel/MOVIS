@@ -33,7 +33,7 @@ path_figures_save_root = os.path.join("..", "Output_figures")
 
 num_of_mags = len([i for i in os.listdir(path_genomics_78) if
                    i.endswith("fa")])
-num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if 
+num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if
                          i.endswith("faa")])
 
 SEED = 42

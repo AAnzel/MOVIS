@@ -92,7 +92,7 @@ def create_temporal_column(list_of_days, start_date, end):
     return list_of_dates
 
 
-def visualize_time_feature(df, selected_column, temporal_column):
+def time_feature(df, selected_column, temporal_column):
 
     if str(df[selected_column].dtype) == 'string':
         chart = alt.Chart(df).mark_bar().encode(
@@ -108,7 +108,7 @@ def visualize_time_feature(df, selected_column, temporal_column):
     return chart.interactive()
 
 
-def visualize_two_features(df, feature_1, feature_2):
+def two_features(df, feature_1, feature_2):
 
     if (str(df[feature_1].dtype) == 'string' and
             str(df[feature_2].dtype) != 'string'):
@@ -135,7 +135,7 @@ def visualize_two_features(df, feature_1, feature_2):
     return chart.interactive()
 
 
-def visualize_parallel(df, list_of_features, target):
+def parallel_coordinates(df, list_of_features, target):
     '''
     new_df = df[list_of_features].reset_index().melt(id_vars=['index', target])
 
@@ -151,6 +151,25 @@ def visualize_parallel(df, list_of_features, target):
         df, color=range(0, len(df[target])), dimensions=list_of_features,
         color_continuous_scale=px.colors.diverging.Tealrose,
         color_continuous_midpoint=2)
+
+    return chart
+
+
+def scatter_matrix(df, list_of_features, target_feature):
+
+    list_of_features.remove(target_feature)
+
+    chart = alt.Chart(df).mark_circle().encode(
+        alt.X(alt.repeat("column"), type='quantitative'),
+        alt.Y(alt.repeat("row"), type='quantitative'),
+        color=alt.Color(target_feature, type='quantitative')
+    ).properties(
+        width=150,
+        height=150
+    ).repeat(
+        row=list_of_features,
+        column=list_of_features
+    )
 
     return chart
 
