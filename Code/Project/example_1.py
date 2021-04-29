@@ -1,27 +1,8 @@
-import os
-import io
-import random
-import math
-import gensim
-import altair_saver
 import streamlit as st
-import pandas as pd
 import numpy as np
-import altair as alt
-import datetime as dt
-from Bio import SeqIO
-from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from gensim.models import Word2Vec
-from sklearn.cluster import KMeans, OPTICS
-from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
-from sklearn import preprocessing, model_selection, metrics
-from scipy.spatial.distance import jaccard, pdist, squareform
-
 import omics_run
-import visualize
 
-URANDOM_LENGTH = 5
+import visualize
 
 
 def show_data_set(df):
@@ -49,21 +30,23 @@ def find_temporal_feature(df):
     return temporal_feature, feature_list
 
 
-def choose_columns(df):
+def choose_columns(df, key_prefix):
 
     new_columns = st.multiselect('Choose columns to visualize:',
                                  list(df.columns.values),
-                                 key=os.urandom(URANDOM_LENGTH))
+                                 key='choose_col' + key_prefix + '1')
+
     return new_columns
 
 
-def visualize_data_set(df, temporal_feature, feature_list):
+def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
 
     visualizations = st.multiselect('Choose your visualization',
                                     ['Feature through time',
                                      'Two features scatter-plot',
                                      'Scatter-plot matrix',
-                                     'Multiple features parallel chart'])
+                                     'Multiple features parallel chart'],
+                                    key='vis_data' + key_prefix + '1')
 
     for i in visualizations:
         if i == 'Feature through time':
@@ -160,7 +143,7 @@ def create_main_example_1_metabolomics():
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
-    visualize_data_set(df, temporal_feature, feature_list)
+    visualize_data_set(df, temporal_feature, feature_list, 'metabolomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -192,7 +175,7 @@ def create_main_example_1_phy_che():
         st.altair_chart(visualize.visualize_phy_che_heatmap(df),
                         use_container_width=True)
 
-    visualize_data_set(df, temporal_feature, feature_list)
+    visualize_data_set(df, temporal_feature, feature_list, 'phy_che')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -215,48 +198,43 @@ def create_main_example_1():
             found here: [GitHub](put_link)
             ''')
 
-    example_1_omics_dict = {'Genomics': 0, 'Metabolomics': 0, 'Proteomics': 0,
-                            'Physico-chemical': 0}
+    example_1_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
+                            'Physico-chemical']
     choose_omics = st.multiselect('Which omic do you want to see:',
-                                  list(example_1_omics_dict.keys()))
+                                  example_1_omics_list)
 
-    num_of_columns = 0
-    for i in choose_omics:
-        example_1_omics_dict[i] = 1
-        num_of_columns += 1
+    num_of_columns = len(choose_omics)
 
     if num_of_columns >= 2:
         column_list = st.beta_columns(num_of_columns)
         curr_pos = 0
 
-        for i in list(example_1_omics_dict.keys()):
-            if example_1_omics_dict[i] != 0:
-                if i == 'Genomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        create_main_example_1_genomics()
-                elif i == 'Metabolomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        create_main_example_1_metabolomics()
-                elif i == 'Proteomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        create_main_example_1_proteomics()
-                else:
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        create_main_example_1_phy_che()
+        for i in choose_omics:
+            if i == 'Genomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    create_main_example_1_genomics()
+            elif i == 'Metabolomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    create_main_example_1_metabolomics()
+            elif i == 'Proteomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    create_main_example_1_proteomics()
+            else:
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    create_main_example_1_phy_che()
 
     else:
-        for i in list(example_1_omics_dict.keys()):
-            if example_1_omics_dict[i] != 0:
-                if i == 'Genomics':
-                    create_main_example_1_genomics()
-                elif i == 'Metabolomics':
-                    create_main_example_1_metabolomics()
-                elif i == 'Proteomics':
-                    create_main_example_1_proteomics()
-                else:
-                    create_main_example_1_phy_che()
+        for i in choose_omics:
+            if i == 'Genomics':
+                create_main_example_1_genomics()
+            elif i == 'Metabolomics':
+                create_main_example_1_metabolomics()
+            elif i == 'Proteomics':
+                create_main_example_1_proteomics()
+            else:
+                create_main_example_1_phy_che()
     return None

@@ -1,25 +1,17 @@
 import os
 import random
 import math
-import streamlit
-import gensim
 import altair_saver
 import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
 import streamlit as st
-from Bio import SeqIO
-from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from gensim.models import Word2Vec
 from sklearn.cluster import KMeans, OPTICS
-from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
-from sklearn import preprocessing, model_selection, metrics
-from scipy.spatial.distance import jaccard, pdist, squareform
+from sklearn import preprocessing, metrics
 
-import genomics
-import proteomics
+import calculate
+import visualize
 
 # Defining paths for each and every omic
 
@@ -43,7 +35,8 @@ path_model_save_root = os.path.join("..", "Saved_models")
 path_figures_save_root = os.path.join("..", "Output_figures")
 path_data_frame_save_root = os.path.join("cached")
 
-num_of_mags = len([i for i in os.listdir(path_genomics_78) if i.endswith("fa")])
+num_of_mags = len([i for i in os.listdir(path_genomics_78) if
+                  i.endswith("fa")])
 num_of_proteomics = len(
     [i for i in os.listdir(path_proteomics_78) if i.endswith("faa")]
 )
@@ -151,7 +144,7 @@ def example_1_calc_genomics():
     # ## MAG examination
     # ### KEGG examination
 
-    kegg_matrix = genomics.import_kegg_and_create_df(
+    kegg_matrix = calculate.import_kegg_and_create_df(
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)
 
@@ -179,14 +172,14 @@ def example_1_calc_genomics():
     k_means_model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
     k_means_predicted = k_means_model.fit_predict(scaled_keggs_df)
 
-    k_means_chart = genomics.visualize_with_pca(
+    k_means_chart = visualize.visualize_with_pca(
         scaled_keggs_df, k_means_predicted, k_means_model.cluster_centers_)
 
     # ### KEGG examination but with pairwise Jaccard distance matrix(as
     # seen in paper)
-    kegg_pairwise = genomics.create_pairwise_jaccard(kegg_matrix)
-    kegg_mds_chart = genomics.visualize_with_mds(kegg_pairwise, START_DATE,
-                                                 END, path_genomics_78)
+    kegg_pairwise = calculate.create_pairwise_jaccard(kegg_matrix)
+    kegg_mds_chart = visualize.visualize_with_mds(kegg_pairwise, START_DATE,
+                                                  END, path_genomics_78)
 
     # ---
     # # VAZNO:
@@ -199,11 +192,12 @@ def example_1_calc_genomics():
 
     # FOR CLUSTERING I SHOULD CREATE A DATAFRAME WITH MAGs INDEXES AND THEIR
     # VECTOR REPRESENTATIONS
-    final_model, fasta_names, fasta_ids = genomics.import_mags_and_build_model(
-        end=END, path_fasta=path_genomics_78)
+    final_model, fasta_names, fasta_ids =\
+        calculate.import_mags_and_build_model(end=END,
+                                              path_fasta=path_genomics_78)
 
     # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
-    final_model = genomics.train_model(final_model, epochs=EPOCHS, end=END)
+    final_model = calculate.train_model(final_model, epochs=EPOCHS, end=END)
 
     final_model.wv.save_word2vec_format(
         os.path.join(path_model_save_root, "model_78.bin"), binary=True)
@@ -218,9 +212,9 @@ def example_1_calc_genomics():
     # > need to worry about memory
     #
 
-    list_of_mag_vectors = genomics.vectorize_mags(
-        final_model, path_fasta=path_genomics_78, end=END
-    )
+    list_of_mag_vectors = calculate.vectorize_mags(final_model,
+                                                   path_fasta=path_genomics_78,
+                                                   end=END)
     mags_df = pd.DataFrame(list_of_mag_vectors)
 
     # ## Data preprocessing
@@ -250,9 +244,8 @@ def example_1_calc_genomics():
     k_means_model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
     k_means_predicted = k_means_model.fit_predict(scaled_mags_df)
 
-    k_means_chart = genomics.visualize_with_pca(
-        scaled_mags_df, k_means_predicted, k_means_model.cluster_centers_
-    )
+    k_means_chart = visualize.visualize_with_pca(
+        scaled_mags_df, k_means_predicted, k_means_model.cluster_centers_)
 
     # ### 2. OPTICS
 
@@ -263,7 +256,7 @@ def example_1_calc_genomics():
 
     # Visualize clusters, since there are no centroids, we are sending bogus
     # array
-    optics_chart = genomics.visualize_with_pca(
+    optics_chart = visualize.visualize_with_pca(
         scaled_mags_df,
         optics_predicted,
         np.empty([optics_predicted.shape[0], 1], dtype=int),
@@ -283,8 +276,8 @@ def example_1_calc_genomics():
     print("\t2. OPTICS:", eval_optics)
 
     # ## Visualizing rMAGs with time axis
-    time_chart = genomics.visualize_temporal_mags(scaled_mags_df, fasta_names,
-                                                  START_DATE, END)
+    time_chart = visualize.visualize_temporal_mags(scaled_mags_df, fasta_names,
+                                                   START_DATE, END)
 
     # save_charts([k_means_chart, optics_chart, cluster_comparison_chart,
     # time_chart], ['genomics_k_means_chart.png', 'genomics_optics_chart.png',
@@ -350,7 +343,7 @@ def example_1_calc_metabolomics():
     metabolomics_df.reset_index(drop=True, inplace=True)
 
     # ## Time series examination
-    metabolites_chart = metabolomics.visualize_metabolites(
+    metabolites_chart = visualize.visualize_metabolites(
         metabolomics_df, "date", "Metabolite", ["type", "type2", "measurement",
                                                 "N"])
 
@@ -374,8 +367,8 @@ def example_1_calc_proteomics():
     # | ... Where each feature is mean of all values for one day of each MAG in
     # that rMAG
 
-    proteomics_data = proteomics.import_proteomics(end=num_of_proteomics)
-    chart_proteomics = proteomics.visualize_proteomics(proteomics_data)
+    proteomics_data = calculate.import_proteomics(end=num_of_proteomics)
+    chart_proteomics = visualize.visualize_proteomics(proteomics_data)
 
     # save_charts([chart_proteomics], ['proteomics_chart_proteomics.png'])
 
@@ -418,16 +411,12 @@ def example_1_calc_phy_che():
 
     # Visualize temperature, air_temperature, conductivity, inflow_pH, nitrate,
     # oxygen, pH
-    chart_phy_che = phy_che.visualize_phy_che(
+    chart_phy_che = visualize.visualize_phy_che(
         filtered_phy_che_df, "DateTime", filtered_phy_che_df.columns.values[4:]
     )
-    chart_phy_che_corr = phy_che.visualize_phy_che_heatmap(filtered_phy_che_df)
+    chart_phy_che_corr = visualize.visualize_phy_che_heatmap(
+        filtered_phy_che_df)
 
     # save_charts([chart_phy_che_corr, chart_phy_che],
     # ['physico_chemical_chart_psy_che_corr.png',
     # 'physico_chemical_chart_psy_che.png'])
-
-
-# Main run for every omic
-def main_run():
-    calc_phy_che()

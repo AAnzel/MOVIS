@@ -1,9 +1,12 @@
 import os
 import random
 import numpy as np
+import pandas as pd
 import altair as alt
 import datetime as dt
 import plotly.express as px
+from sklearn.decomposition import PCA
+from sklearn.manifold import MDS
 
 
 # Defining paths for each and every omic
@@ -69,6 +72,26 @@ def season_data(data, temporal_column):
     return new_df
 
 
+def create_temporal_column(list_of_days, start_date, end):
+
+    list_of_dates = []
+
+    # This is specific to the metaomics data set I am using Creating list of
+    # dates for every rMAG
+    for i in list_of_days[:end]:
+
+        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
+
+        if tmp_datetime not in list_of_dates:
+            list_of_dates.append(tmp_datetime)
+
+        else:
+            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
+            list_of_dates.append(tmp_datetime)
+
+    return list_of_dates
+
+
 def visualize_time_feature(df, selected_column, temporal_column):
 
     if str(df[selected_column].dtype) == 'string':
@@ -132,7 +155,7 @@ def visualize_parallel(df, list_of_features, target):
     return chart
 
 
-# This functions are used for METABOLOMICS
+# Everything below is used for metabolomics data set exclusively
 def visualize_metabolites(data, temporal_column, metabolite_column,
                           type_columns):
 
@@ -142,7 +165,8 @@ def visualize_metabolites(data, temporal_column, metabolite_column,
     float_columns = []
 
     for i in data_seasoned.columns:
-        if data_seasoned[i].dtypes == "float64" or data_seasoned[i].dtypes == "float32":
+        if (data_seasoned[i].dtypes == "float64"
+                or data_seasoned[i].dtypes == "float32"):
             float_columns.append(i)
 
     # Create repeated chart with varying size encodings
@@ -185,7 +209,7 @@ def visualize_phy_che_heatmap(data):
     corr.columns = ["var_1", "var_2", "correlation"]
 
     # Create correlation chart
-    chart = (alt.Chart(corr).mark_rect().encode(
+    chart = alt.Chart(corr).mark_rect().encode(
             alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
             alt.Y("var_2", title=None),
             alt.Color(
@@ -193,9 +217,9 @@ def visualize_phy_che_heatmap(data):
                 legend=None,
                 scale=alt.Scale(scheme="redblue", reverse=True),
             ),
-        ).properties(width=alt.Step(40), height=alt.Step(40)))
+        ).properties(width=alt.Step(30), height=alt.Step(30))
 
-    chart += chart.mark_text(size=12).encode(
+    chart += chart.mark_text(size=8).encode(
         alt.Text("correlation", format=".2f"),
         color=alt.condition("abs(datum.correlation) > 0.5",
                             alt.value("white"), alt.value("black"))
@@ -203,3 +227,123 @@ def visualize_phy_che_heatmap(data):
 
     # This returns only lower triangle
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
+
+
+# Everything below is used for proteomics data set exclusively
+def visualize_proteomics(data):
+
+    # Adding another column that replaces temporal data for now
+    if "Index_tmp" not in data.columns:
+        data.insert(0, "Index_tmp", data.index.values)
+
+    # Create repeated chart
+    chart = (alt.Chart(data).mark_area().encode(
+             alt.X("Index_tmp", type="quantitative"),
+             alt.Y(alt.repeat("row"), type="quantitative"),
+             ).properties(width=1200).repeat(row=data.columns.values))
+    # .resolve_scale(size = 'independent')#.interactive()
+
+    return chart
+
+
+# Everything below is used for genomics data set exclusively
+def visualize_with_pca(data, labels, centers):
+
+    pca_model = PCA(n_components=2, random_state=SEED)
+    data_transformed = pca_model.fit_transform(data)
+
+    data_transformed = pd.DataFrame(data_transformed)
+    data_transformed.columns = ["PC_1", "PC_2"]
+    data_transformed["Labels"] = labels
+
+    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
+            alt.X("PC_1:Q"),
+            alt.Y("PC_2:Q"),
+            alt.Color("Labels:N", legend=alt.Legend())
+        ))
+
+    # This means we are visualising centroids from k_means (there are less
+    # centroids that data points)
+    if labels.shape[0] != centers.shape[0]:
+
+        centers_transformed = pca_model.fit_transform(centers)
+        centers_transformed = pd.DataFrame(centers_transformed)
+        centers_transformed.columns = ["PC_1", "PC_2"]
+
+        chart_centers = (alt.Chart(centers_transformed)
+                         .mark_point(shape="diamond", color="black", size=50,
+                                     opacity=0.7).encode(
+                                                         alt.X("PC_1:Q"),
+                                                         alt.Y("PC_2:Q"),
+            ))
+
+        return chart_data + chart_centers
+
+    # For DBSCAN there are no centroids
+    else:
+        return chart_data
+
+
+def visualize_temporal_mags(data, list_of_days, start_date, end):
+
+    list_of_dates = create_temporal_column(list_of_days, start_date, end)
+
+    pca_model = PCA(n_components=2, random_state=SEED)
+    data_transformed = pca_model.fit_transform(data)
+
+    data_transformed = np.hstack(
+        ((np.asarray(list_of_dates))[:, np.newaxis], data_transformed)
+    )
+    data_transformed = pd.DataFrame(
+        data_transformed, columns=["DateTime", "PCA_1", "PCA_2"]
+    )
+
+    data_transformed = season_data(data_transformed, "DateTime")
+
+    chart_data = (
+        alt.Chart(data_transformed).mark_circle(opacity=1).encode(
+            alt.X("PCA_1:Q"),
+            alt.Y("PCA_2:Q"),
+            alt.Color("season:N",
+                      scale=alt.Scale(range=["blue", "green", "orange",
+                                             "brown"])),
+        ).properties(width=1200)
+    )
+
+    return chart_data
+
+
+def visualize_with_mds(data, start_date, end, path_fasta=path_genomics_78):
+
+    mds_model = MDS(
+        n_components=2,
+        random_state=SEED,
+        dissimilarity="precomputed",
+        n_jobs=NUM_OF_WORKERS,
+    )
+    mds_pos = mds_model.fit_transform(data)
+
+    list_of_days = [i for i in os.listdir(path_fasta) if
+                    (i.endswith("fa") and i.startswith("D"))]
+
+    temporal_column = create_temporal_column(list_of_days, start_date, end)
+
+    data_transformed = pd.DataFrame(mds_pos)
+    data_transformed.columns = ["MDS_1", "MDS_2"]
+    data_transformed = np.hstack(
+        ((np.asarray(temporal_column))[:, np.newaxis], data_transformed)
+    )
+    data_transformed = pd.DataFrame(
+        data_transformed, columns=["DateTime", "MDS_1", "MDS_2"]
+    )
+
+    data_transformed = season_data(data_transformed, "DateTime")
+
+    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
+            alt.X("MDS_1:Q"),
+            alt.Y("MDS_2:Q"),
+            alt.Color("season:N", scale=alt.Scale(range=["blue", "green",
+                                                         "orange", "brown"])),
+        ))
+
+    return chart_data

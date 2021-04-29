@@ -1,9 +1,5 @@
 import os
 import random
-import math
-import streamlit
-import gensim
-import altair_saver
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -11,10 +7,6 @@ import datetime as dt
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec
-from sklearn.cluster import KMeans, OPTICS
-from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
-from sklearn import preprocessing, model_selection, metrics
 from scipy.spatial.distance import jaccard, pdist, squareform
 
 
@@ -41,7 +33,7 @@ path_figures_save_root = os.path.join("..", "Output_figures")
 
 num_of_mags = len([i for i in os.listdir(path_genomics_78) if
                    i.endswith("fa")])
-num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if
+num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if 
                          i.endswith("faa")])
 
 SEED = 42
@@ -74,35 +66,125 @@ def season_data(data, temporal_column):
     new_df = data
     new_df["season"] = new_df[temporal_column].dt.month % 12 // 3 + 1
 
-    # important_types = [metabolite_column]
-    #                   + important_types new_df['new_name']
-    # = df[important_types].agg('\n'.join, axis=1)
+    # important_types = [metabolite_column] + important_types
+    # new_df['new_name'] = df[important_types].agg('\n'.join, axis=1)
 
     return new_df
 
 
-def create_temporal_column(list_of_days, start_date, end):
+# Everything below is used for proteomics data set exclusively
+def import_proteomics(end=25, path_proteomics=path_proteomics_78):
 
-    list_of_dates = []
+    print("Importing proteomics data")
 
-    # This is specific to the metaomics data set I am using Creating list of
-    # dates for every rMAG
-    for i in list_of_days[:end]:
+    # There are 78 FASTA files I have to traverse every FASTA file, and in each
+    # file every protein sequence
 
-        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
+    fasta_files = [i for i in os.listdir(path_proteomics) if (i[-3:] == "faa")]
+    tmp_all = []
 
-        if tmp_datetime not in list_of_dates:
-            list_of_dates.append(tmp_datetime)
+    # This was done so that I could work with first 100 FASTA files only.
+    # Otherwise, I should just remove: i, and enumerate
+    for i, fasta_file_name in enumerate(fasta_files):
+
+        if i == end:
+            break
 
         else:
-            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
-            list_of_dates.append(tmp_datetime)
+            with open(os.path.join(path_proteomics, fasta_file_name), "r")\
+                     as input_file:
 
-    return list_of_dates
+                one_mag_list = []
+                for fasta_string in SeqIO.parse(input_file, "fasta"):
+
+                    # Analyzing protein (peptide) and creating list of values
+                    # for one MAG
+                    sequence = str(fasta_string.seq)
+
+                    if "*" in sequence:
+                        continue
+
+                    else:
+
+                        sequence_analysis = ProteinAnalysis(sequence)
+
+                        tmp_list = [
+                            sequence_analysis.molecular_weight(),
+                            sequence_analysis.gravy(),
+                            sequence_analysis.aromaticity(),
+                            sequence_analysis.instability_index(),
+                            sequence_analysis.isoelectric_point(),
+                        ]
+
+                        tmp_sec_str =\
+                            sequence_analysis.secondary_structure_fraction()
+                        tmp_list += [tmp_sec_str[0], tmp_sec_str[1],
+                                     tmp_sec_str[2]]
+                        tmp_list.append(
+                            sequence.count("K")
+                            + sequence.count("R")
+                            - sequence.count("D")
+                            - sequence.count("E")
+                        )  # Electricity
+
+                        amino_acid_perc =\
+                            sequence_analysis.get_amino_acids_percent()
+
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "AGILPV"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "STNQ"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "QNHSTYCMW"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "AGILPVF"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "HKR"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "CM"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "DE"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "NQ"]))
+                        tmp_list.append(sum([amino_acid_perc[aa] for aa in
+                                             "ST"]))
+
+                        # Now I put all these values in one_mag_list as a numpy
+                        # arrays
+                        one_mag_list.append(np.asarray(tmp_list))
+
+                # Now I put one mag values, aggregated by mean, into the all
+                # mag list
+                tmp_all.append(np.asarray(one_mag_list).mean(axis=0))
+
+    COLUMN_LIST = [
+        "Molecular weight",
+        "Gravy",
+        "Aromaticity",
+        "Instability index",
+        "Isoelectric point",
+        "Secondary structure fraction 0",
+        "Secondary structure fraction 1",
+        "Secondary structure fraction 2",
+        "Electricity",
+        "Fraction aliphatic",
+        "Fraction uncharged polar",
+        "Fraction polar",
+        "Fraction hydrophobic",
+        "Fraction positive",
+        "Fraction sulfur",
+        "Fraction negative",
+        "Fraction amide",
+        "Fraction alcohol",
+    ]
+    all_mag_df = pd.DataFrame(tmp_all, columns=COLUMN_LIST)
+
+    print("Finished importing")
+
+    return all_mag_df
 
 
-# This functions are used for GENOMICS
-
+# Everything below is used for genomics data set exclusively
 # Function that splits each genome into k-mers thus creating even longer
 # sentence (MAG) It returns tokenized genome i.e. [kmer, kmer,...]
 def split_genome(genome, k=5):
@@ -164,7 +246,8 @@ def vectorize_mags(w2v_model, path_fasta=path_genomics_78, end=25):
             break
 
         else:
-            with open(os.path.join(path_fasta, fasta_file_name), "r") as input_file:
+            with open(os.path.join(path_fasta, fasta_file_name), "r")\
+                    as input_file:
 
                 one_mag = []
                 for fasta_string in SeqIO.parse(input_file, "fasta"):
@@ -206,7 +289,8 @@ def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
             break
 
         else:
-            with open(os.path.join(path_fasta, fasta_file_name), "r") as input_file:
+            with open(os.path.join(path_fasta, fasta_file_name), "r")\
+                    as input_file:
 
                 one_mag = []
                 one_mag_ids = []
@@ -260,7 +344,8 @@ def train_model(w2v_model, epochs, path_fasta=path_genomics_78, end=25):
             break
 
         else:
-            with open(os.path.join(path_fasta, fasta_file_name), "r") as input_file:
+            with open(os.path.join(path_fasta, fasta_file_name), "r")\
+                    as input_file:
 
                 one_mag = []
                 for fasta_string in SeqIO.parse(input_file, "fasta"):
@@ -279,72 +364,6 @@ def train_model(w2v_model, epochs, path_fasta=path_genomics_78, end=25):
     print("Model training finished")
 
     return w2v_model
-
-
-def visualize_with_pca(data, labels, centers):
-
-    pca_model = PCA(n_components=2, random_state=SEED)
-    data_transformed = pca_model.fit_transform(data)
-
-    data_transformed = pd.DataFrame(data_transformed)
-    data_transformed.columns = ["PC_1", "PC_2"]
-    data_transformed["Labels"] = labels
-
-    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("PC_1:Q"),
-            alt.Y("PC_2:Q"),
-            alt.Color("Labels:N", legend=alt.Legend())
-        ))
-
-    # This means we are visualising centroids from k_means (there are less
-    # centroids that data points)
-    if labels.shape[0] != centers.shape[0]:
-
-        centers_transformed = pca_model.fit_transform(centers)
-        centers_transformed = pd.DataFrame(centers_transformed)
-        centers_transformed.columns = ["PC_1", "PC_2"]
-
-        chart_centers = (alt.Chart(centers_transformed)
-                         .mark_point(shape="diamond", color="black", size=50,
-                                     opacity=0.7).encode(
-                                                         alt.X("PC_1:Q"),
-                                                         alt.Y("PC_2:Q"),
-            ))
-
-        return chart_data + chart_centers
-
-    # For DBSCAN there are no centroids
-    else:
-        return chart_data
-
-
-def visualize_temporal_mags(data, list_of_days, start_date, end):
-
-    list_of_dates = create_temporal_column(list_of_days, start_date, end)
-
-    pca_model = PCA(n_components=2, random_state=SEED)
-    data_transformed = pca_model.fit_transform(data)
-
-    data_transformed = np.hstack(
-        ((np.asarray(list_of_dates))[:, np.newaxis], data_transformed)
-    )
-    data_transformed = pd.DataFrame(
-        data_transformed, columns=["DateTime", "PCA_1", "PCA_2"]
-    )
-
-    data_transformed = season_data(data_transformed, "DateTime")
-
-    chart_data = (
-        alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("PCA_1:Q"),
-            alt.Y("PCA_2:Q"),
-            alt.Color("season:N",
-                      scale=alt.Scale(range=["blue", "green", "orange",
-                                             "brown"])),
-        ).properties(width=1200)
-    )
-
-    return chart_data
 
 
 def import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
@@ -424,39 +443,3 @@ def create_pairwise_jaccard(data):
     result = squareform(pdist(tmp_data.astype(bool), jaccard))
 
     return pd.DataFrame(result, index=data.index, columns=data.index)
-
-
-def visualize_with_mds(data, start_date, end, path_fasta=path_genomics_78):
-
-    mds_model = MDS(
-        n_components=2,
-        random_state=SEED,
-        dissimilarity="precomputed",
-        n_jobs=NUM_OF_WORKERS,
-    )
-    mds_pos = mds_model.fit_transform(data)
-
-    list_of_days = [i for i in os.listdir(path_fasta) if
-                    (i.endswith("fa") and i.startswith("D"))]
-
-    temporal_column = create_temporal_column(list_of_days, start_date, end)
-
-    data_transformed = pd.DataFrame(mds_pos)
-    data_transformed.columns = ["MDS_1", "MDS_2"]
-    data_transformed = np.hstack(
-        ((np.asarray(temporal_column))[:, np.newaxis], data_transformed)
-    )
-    data_transformed = pd.DataFrame(
-        data_transformed, columns=["DateTime", "MDS_1", "MDS_2"]
-    )
-
-    data_transformed = season_data(data_transformed, "DateTime")
-
-    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("MDS_1:Q"),
-            alt.Y("MDS_2:Q"),
-            alt.Color("season:N", scale=alt.Scale(range=["blue", "green",
-                                                         "orange", "brown"])),
-        ))
-
-    return chart_data
