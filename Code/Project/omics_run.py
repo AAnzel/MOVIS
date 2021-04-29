@@ -20,8 +20,6 @@ from scipy.spatial.distance import jaccard, pdist, squareform
 
 import genomics
 import proteomics
-import metabolomics
-import phy_che
 
 # Defining paths for each and every omic
 

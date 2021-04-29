@@ -1,23 +1,9 @@
 import os
 import random
-import math
-import streamlit
-import gensim
-import altair_saver
-import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
-import streamlit as st
 import plotly.express as px
-from Bio import SeqIO
-from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from gensim.models import Word2Vec
-from sklearn.cluster import KMeans, OPTICS
-from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
-from sklearn import preprocessing, model_selection, metrics
-from scipy.spatial.distance import jaccard, pdist, squareform
 
 
 # Defining paths for each and every omic
@@ -83,30 +69,10 @@ def season_data(data, temporal_column):
     return new_df
 
 
-def create_temporal_column(list_of_days, start_date, end):
-
-    list_of_dates = []
-
-    # This is specific to the metaomics data set I am using Creating list of
-    # dates for every rMAG
-    for i in list_of_days[:end]:
-
-        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
-
-        if tmp_datetime not in list_of_dates:
-            list_of_dates.append(tmp_datetime)
-
-        else:
-            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
-            list_of_dates.append(tmp_datetime)
-
-    return list_of_dates
-
-
 def visualize_time_feature(df, selected_column, temporal_column):
 
     if str(df[selected_column].dtype) == 'string':
-        chart = alt.Chart(df).mark_point().encode(
+        chart = alt.Chart(df).mark_bar().encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='nominal'))
@@ -116,17 +82,34 @@ def visualize_time_feature(df, selected_column, temporal_column):
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='quantitative'))
 
-    return chart
+    return chart.interactive()
 
 
 def visualize_two_features(df, feature_1, feature_2):
 
-    chart = alt.Chart(df).mark_point().encode(
-        alt.X(feature_1, type='quantitative',
-              scale=alt.Scale(nice=True)),
-        alt.Y(feature_2, type='quantitative'))
+    if (str(df[feature_1].dtype) == 'string' and
+            str(df[feature_2].dtype) != 'string'):
+        chart = alt.Chart(df).mark_bar().encode(
+            alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
+            alt.Y(feature_2, type='quantitative'))
 
-    return chart
+    elif (str(df[feature_1].dtype) != 'string' and
+            str(df[feature_2].dtype) == 'string'):
+        chart = alt.Chart(df).mark_bar().encode(
+            alt.X(feature_2, type='nominal'),
+            alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)))
+
+    elif (str(df[feature_1].dtype) == 'string' and
+            str(df[feature_2].dtype) == 'string'):
+        chart = alt.Chart(df).mark_point().encode(
+            alt.X(feature_1, type='nominal'),
+            alt.Y(feature_2, type='nominal'))
+    else:
+        chart = alt.Chart(df).mark_point().encode(
+            alt.X(feature_1, type='quantitative'),
+            alt.Y(feature_2, type='quantitative'))
+
+    return chart.interactive()
 
 
 def visualize_parallel(df, list_of_features, target):
@@ -178,3 +161,45 @@ def visualize_metabolites(data, temporal_column, metabolite_column,
     # .interactive()
 
     return chart
+
+
+# Everything below is used for phy_che data set exclusively
+def visualize_phy_che(data, temporal_column, list_of_columns):
+
+    # Create repeated chart
+    chart = (
+        alt.Chart(data).mark_line().encode(
+            alt.X(temporal_column, type="temporal"),  # , timeUnit = 'month'),
+            alt.Y(alt.repeat("row"), type="quantitative"),
+        ).properties(width=1200).repeat(row=list_of_columns)
+    )
+    # .resolve_scale(color = 'independent')#.interactive()
+
+    return chart
+
+
+def visualize_phy_che_heatmap(data):
+
+    new_data = data.drop("DateTime", axis=1)
+    corr = new_data.corr().reset_index().melt("index")
+    corr.columns = ["var_1", "var_2", "correlation"]
+
+    # Create correlation chart
+    chart = (alt.Chart(corr).mark_rect().encode(
+            alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
+            alt.Y("var_2", title=None),
+            alt.Color(
+                "correlation",
+                legend=None,
+                scale=alt.Scale(scheme="redblue", reverse=True),
+            ),
+        ).properties(width=alt.Step(40), height=alt.Step(40)))
+
+    chart += chart.mark_text(size=12).encode(
+        alt.Text("correlation", format=".2f"),
+        color=alt.condition("abs(datum.correlation) > 0.5",
+                            alt.value("white"), alt.value("black"))
+    )
+
+    # This returns only lower triangle
+    return chart.transform_filter("datum.var_1 < datum.var_2").interactive()

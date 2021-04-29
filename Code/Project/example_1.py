@@ -19,7 +19,7 @@ from sklearn import preprocessing, model_selection, metrics
 from scipy.spatial.distance import jaccard, pdist, squareform
 
 import omics_run
-import metabolomics
+import visualize
 
 URANDOM_LENGTH = 5
 
@@ -33,12 +33,94 @@ def show_data_set(df):
     return None
 
 
+def find_temporal_feature(df):
+    feature_list = list(df.columns.values)
+
+    temporal_feature = None
+    temporal_feature = str(
+        df.select_dtypes(include=[np.datetime64]).columns[0])
+
+    if temporal_feature is None:
+        st.text('Datetime column not detected.')
+        # TODO: Implement choosing time column and modifying dataframe
+
+    feature_list.remove(temporal_feature)
+
+    return temporal_feature, feature_list
+
+
 def choose_columns(df):
 
     new_columns = st.multiselect('Choose columns to visualize:',
                                  list(df.columns.values),
                                  key=os.urandom(URANDOM_LENGTH))
     return new_columns
+
+
+def visualize_data_set(df, temporal_feature, feature_list):
+
+    visualizations = st.multiselect('Choose your visualization',
+                                    ['Feature through time',
+                                     'Two features scatter-plot',
+                                     'Scatter-plot matrix',
+                                     'Multiple features parallel chart'])
+
+    for i in visualizations:
+        if i == 'Feature through time':
+            selected_feature = st.selectbox('Select feature to visualize',
+                                            feature_list)
+
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    visualize.visualize_time_feature(df, selected_feature,
+                                                     temporal_feature),
+                    use_container_width=True)
+
+        elif i == 'Two features scatter-plot':
+            feature_1 = st.selectbox('Select 1. feature',
+                                     feature_list)
+
+            if feature_1 in feature_list:
+                feature_list.remove(feature_1)
+
+            feature_2 = st.selectbox('Select 2. feature',
+                                     feature_list)
+
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    visualize.visualize_two_features(df, feature_1, feature_2),
+                    use_container_width=True)
+
+        elif i == 'Scatter-plot matrix':
+            pass
+
+        elif i == 'Multiple features parallel chart':
+            target_feature = st.selectbox('Select target feature for color',
+                                          feature_list)
+
+            list_of_features = st.multiselect('Choose features', feature_list)
+
+            if len(list_of_features) < 2:
+                st.stop()
+
+            list_of_features.append(target_feature)
+
+            with st.spinner('Visualizing...'):
+                '''
+                st.altair_chart(
+                    visualize.visualize_parallel(df, list_of_features,
+                                                    target_feature),
+                    use_container_width=True)
+                '''
+                st.plotly_chart(
+                    visualize.visualize_parallel(df, list_of_features,
+                                                 target_feature),
+                    use_container_width=True)
+
+        else:
+            pass
+
+    return None
 
 
 def create_main_example_1_genomics():
@@ -75,81 +157,10 @@ def create_main_example_1_metabolomics():
     with st.spinner('Getting data set...'):
         df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
     show_data_set(df)
-    feature_list = list(df.columns.values)
 
-    temporal_feature = None
-    temporal_feature = str(
-        df.select_dtypes(include=[np.datetime64]).columns[0])
+    temporal_feature, feature_list = find_temporal_feature(df)
 
-    if temporal_feature is None:
-        st.text('Datetime column not detected.')
-        # TODO: Implement choosing time column and modifying dataframe
-
-    feature_list.remove(temporal_feature)
-
-
-    visualizations = st.multiselect('Choose your visualization',
-                                    ['Feature through time',
-                                     'Two features scatter-plot',
-                                     'Scatter-plot matrix',
-                                     'Multiple features parallel chart'])
-
-    for i in visualizations:
-        if i == 'Feature through time':
-            selected_feature = st.selectbox('Select feature to visualize',
-                                            feature_list)
-
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    metabolomics.visualize_time_feature(df, selected_feature,
-                                                        temporal_feature),
-                    use_container_width=True)
-
-        elif i == 'Two features scatter-plot':
-            col_1, col_2 = st.beta_columns(2)
-            feature_1 = col_1.selectbox('Select 1. feature',
-                                        feature_list)
-
-            if feature_1 in feature_list:
-                feature_list.remove(feature_1)
-
-            feature_2 = col_2.selectbox('Select 2. feature',
-                                        feature_list)
-
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    metabolomics.visualize_two_features(df, feature_1,
-                                                        feature_2),
-                    use_container_width=True)
-
-        elif i == 'Scatter-plot matrix':
-            pass
-
-        elif i == 'Multiple features parallel chart':
-            target_feature = st.selectbox('Select target feature for color',
-                                          feature_list)
-
-            list_of_features = st.multiselect('Choose features', feature_list)
-
-            if len(list_of_features) < 2:
-                st.stop()
-
-            list_of_features.append(target_feature)
-
-            with st.spinner('Visualizing...'):
-                '''
-                st.altair_chart(
-                    metabolomics.visualize_parallel(df, list_of_features,
-                                                    target_feature),
-                    use_container_width=True)
-                '''
-                st.plotly_chart(
-                    metabolomics.visualize_parallel(df, list_of_features,
-                                                    target_feature),
-                    use_container_width=True)
-                    
-        else:
-            pass
+    visualize_data_set(df, temporal_feature, feature_list)
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -174,10 +185,14 @@ def create_main_example_1_phy_che():
     # Here I show the head() of the data set and some summary() and info()
     df = omics_run.get_cached_dataframe(omics_run.EX_1, 'phy_che')
     show_data_set(df)
-    
+
+    temporal_feature, feature_list = find_temporal_feature(df)
+
     with st.beta_expander('Show a correlation matrix', expanded=True):
-        st.altair_chart(omics_run.phy_che.visualize_phy_che_heatmap(df),
+        st.altair_chart(visualize.visualize_phy_che_heatmap(df),
                         use_container_width=True)
+
+    visualize_data_set(df, temporal_feature, feature_list)
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
