@@ -45,7 +45,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                     ['Feature through time',
                                      'Two features scatter-plot',
                                      'Scatter-plot matrix',
-                                     'Multiple features parallel chart'],
+                                     'Multiple features parallel chart',
+                                     'Heatmap'],
                                     key='vis_data' + key_prefix)
 
     for i in visualizations:
@@ -112,6 +113,11 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                                    target_feature),
                     use_container_width=True)
 
+        elif i == 'Heatmap':
+            with st.spinner('Visualizing...'):
+                st.altair_chart(
+                    visualize.heatmap(df), use_container_width=True)
+
         else:
             pass
 
@@ -166,7 +172,29 @@ def create_main_example_1_metabolomics():
 def create_main_example_1_proteomics():
     st.header('Proteomics')
 
+    with st.beta_expander('Show folder structure', expanded=True):
+        st.code('''set_of_78/
+            ├── D03_O1.31.2.faa
+            ├── D04_G2.13.faa
+            ├── D04_G2.5.faa
+            ├── D04_L6.faa
+            ├── D04_O2.19.faa
+            ├── D05_G3.14.1.faa
+            ├── D05_G3.4.faa
+            ├── D05_L3.17.faa
+            ├── D08_G1.16.faa
+            ├── D08_O6.faa
+            ...
+                ''')
+
     # Here I show the head() of the data set and some summary() and info()
+    with st.spinner('Creating additional data set...'):
+        df = omics_run.get_cached_dataframe(omics_run.EX_1, 'proteomics')
+    show_data_set(df)
+
+    temporal_feature, feature_list = find_temporal_feature(df)
+
+    visualize_data_set(df, temporal_feature, feature_list, 'metabolomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -182,10 +210,6 @@ def create_main_example_1_phy_che():
     show_data_set(df)
 
     temporal_feature, feature_list = find_temporal_feature(df)
-
-    with st.beta_expander('Show a correlation matrix', expanded=True):
-        st.altair_chart(visualize.visualize_phy_che_heatmap(df),
-                        use_container_width=True)
 
     visualize_data_set(df, temporal_feature, feature_list, 'phy_che')
 

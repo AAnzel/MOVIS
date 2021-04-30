@@ -368,6 +368,17 @@ def example_1_calc_proteomics():
     # that rMAG
 
     proteomics_data = calculate.import_proteomics(end=num_of_proteomics)
+
+    # I have to add temporality to this data set, according to file names
+    fasta_files = [i for i in os.listdir(path_proteomics_78)
+                   if (i[-3:] == "faa")]
+    list_of_dates = create_temporal_column(fasta_files, START_DATE, END)
+    proteomics_data.insert(0, 'DateTime', list_of_dates)
+    cache_dataframe(proteomics_data, EX_1, 'proteomics')
+
+    # I will save this dataframe to show to the end-user
+    cache_dataframe(proteomics_data, EX_1, "proteomics")
+
     chart_proteomics = visualize.visualize_proteomics(proteomics_data)
 
     # save_charts([chart_proteomics], ['proteomics_chart_proteomics.png'])

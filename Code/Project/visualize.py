@@ -62,14 +62,14 @@ def save_charts(list_of_chart, list_of_names):
 # This function creates new dataframe with column that represent season
 # according to date It also concatenates important types with metabolite names
 def season_data(data, temporal_column):
-    new_df = data
-    new_df["season"] = new_df[temporal_column].dt.month % 12 // 3 + 1
+    new_data = data
+    new_data["season"] = new_data[temporal_column].dt.month % 12 // 3 + 1
 
     # important_types = [metabolite_column]
-    #                   + important_types new_df['new_name']
-    # = df[important_types].agg('\n'.join, axis=1)
+    #                   + important_types new_data['new_name']
+    # = data[important_types].agg('\n'.join, axis=1)
 
-    return new_df
+    return new_data
 
 
 def create_temporal_column(list_of_days, start_date, end):
@@ -92,15 +92,15 @@ def create_temporal_column(list_of_days, start_date, end):
     return list_of_dates
 
 
-def time_feature(df, selected_column, temporal_column):
+def time_feature(data, selected_column, temporal_column):
 
-    if str(df[selected_column].dtype) == 'string':
-        chart = alt.Chart(df).mark_bar().encode(
+    if str(data[selected_column].dtype) == 'string':
+        chart = alt.Chart(data).mark_bar().encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='nominal'))
     else:
-        chart = alt.Chart(df).mark_line().encode(
+        chart = alt.Chart(data).mark_line().encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='quantitative'))
@@ -108,38 +108,39 @@ def time_feature(df, selected_column, temporal_column):
     return chart.interactive()
 
 
-def two_features(df, feature_1, feature_2):
+def two_features(data, feature_1, feature_2):
 
-    if (str(df[feature_1].dtype) == 'string' and
-            str(df[feature_2].dtype) != 'string'):
-        chart = alt.Chart(df).mark_bar().encode(
+    if (str(data[feature_1].dtype) == 'string' and
+            str(data[feature_2].dtype) != 'string'):
+        chart = alt.Chart(data).mark_bar().encode(
             alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
             alt.Y(feature_2, type='quantitative'))
 
-    elif (str(df[feature_1].dtype) != 'string' and
-            str(df[feature_2].dtype) == 'string'):
-        chart = alt.Chart(df).mark_bar().encode(
+    elif (str(data[feature_1].dtype) != 'string' and
+            str(data[feature_2].dtype) == 'string'):
+        chart = alt.Chart(data).mark_bar().encode(
             alt.X(feature_2, type='nominal'),
             alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)))
 
-    elif (str(df[feature_1].dtype) == 'string' and
-            str(df[feature_2].dtype) == 'string'):
-        chart = alt.Chart(df).mark_point().encode(
+    elif (str(data[feature_1].dtype) == 'string' and
+            str(data[feature_2].dtype) == 'string'):
+        chart = alt.Chart(data).mark_point().encode(
             alt.X(feature_1, type='nominal'),
             alt.Y(feature_2, type='nominal'))
     else:
-        chart = alt.Chart(df).mark_point().encode(
+        chart = alt.Chart(data).mark_point().encode(
             alt.X(feature_1, type='quantitative'),
             alt.Y(feature_2, type='quantitative'))
 
     return chart.interactive()
 
 
-def parallel_coordinates(df, list_of_features, target):
+def parallel_coordinates(data, list_of_features, target):
     '''
-    new_df = df[list_of_features].reset_index().melt(id_vars=['index', target])
+    new_data = data[list_of_features].reset_index().melt(id_vars=['index',
+                                                                  target])
 
-    chart = alt.Chart(new_df).mark_line().encode(
+    chart = alt.Chart(new_data).mark_line().encode(
         alt.X('variable:N'),
         alt.Y('value:Q'),
         alt.Color(target, type='nominal'),
@@ -148,18 +149,18 @@ def parallel_coordinates(df, list_of_features, target):
     )
     '''
     chart = px.parallel_coordinates(
-        df, color=range(0, len(df[target])), dimensions=list_of_features,
+        data, color=range(0, len(data[target])), dimensions=list_of_features,
         color_continuous_scale=px.colors.diverging.Tealrose,
         color_continuous_midpoint=2)
 
     return chart
 
 
-def scatter_matrix(df, list_of_features, target_feature):
+def scatter_matrix(data, list_of_features, target_feature):
 
     list_of_features.remove(target_feature)
 
-    chart = alt.Chart(df).mark_circle().encode(
+    chart = alt.Chart(data).mark_circle().encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
         color=alt.Color(target_feature, type='quantitative')
@@ -174,6 +175,33 @@ def scatter_matrix(df, list_of_features, target_feature):
     return chart
 
 
+def heatmap(data):
+
+    new_data = data.select_dtypes(include=np.number)
+    corr = new_data.corr().reset_index().melt("index")
+    corr.columns = ["var_1", "var_2", "correlation"]
+
+    # Create correlation chart
+    chart = alt.Chart(corr).mark_rect().encode(
+            alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
+            alt.Y("var_2", title=None),
+            alt.Color(
+                "correlation",
+                legend=None,
+                scale=alt.Scale(scheme="redblue", reverse=True),
+            ),
+        ).properties(width=alt.Step(30), height=alt.Step(30))
+
+    chart += chart.mark_text(size=8).encode(
+        alt.Text("correlation", format=".2f"),
+        color=alt.condition("abs(datum.correlation) > 0.5",
+                            alt.value("white"), alt.value("black"))
+    )
+
+    # This returns only lower triangle
+    return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
+
+
 # Everything below is used for metabolomics data set exclusively
 def visualize_metabolites(data, temporal_column, metabolite_column,
                           type_columns):
@@ -181,12 +209,9 @@ def visualize_metabolites(data, temporal_column, metabolite_column,
     data_seasoned = season_data(data, temporal_column)
 
     # Extract columns with float values
-    float_columns = []
-
-    for i in data_seasoned.columns:
-        if (data_seasoned[i].dtypes == "float64"
-                or data_seasoned[i].dtypes == "float32"):
-            float_columns.append(i)
+    # NOT TESTED, MIGHT NOT WORK AS EXPECTED
+    float_columns = data.select_dtypes(include=[np.float32,
+                                                np.float64]).columns.tolist()
 
     # Create repeated chart with varying size encodings
     chart = (alt.Chart(data_seasoned).mark_point(opacity=1).encode(
@@ -221,45 +246,18 @@ def visualize_phy_che(data, temporal_column, list_of_columns):
     return chart
 
 
-def visualize_phy_che_heatmap(data):
-
-    new_data = data.drop("DateTime", axis=1)
-    corr = new_data.corr().reset_index().melt("index")
-    corr.columns = ["var_1", "var_2", "correlation"]
-
-    # Create correlation chart
-    chart = alt.Chart(corr).mark_rect().encode(
-            alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
-            alt.Y("var_2", title=None),
-            alt.Color(
-                "correlation",
-                legend=None,
-                scale=alt.Scale(scheme="redblue", reverse=True),
-            ),
-        ).properties(width=alt.Step(30), height=alt.Step(30))
-
-    chart += chart.mark_text(size=8).encode(
-        alt.Text("correlation", format=".2f"),
-        color=alt.condition("abs(datum.correlation) > 0.5",
-                            alt.value("white"), alt.value("black"))
-    )
-
-    # This returns only lower triangle
-    return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
-
-
 # Everything below is used for proteomics data set exclusively
 def visualize_proteomics(data):
 
     # Adding another column that replaces temporal data for now
     if "Index_tmp" not in data.columns:
-        data.insert(0, "Index_tmp", data.index.values)
+        data.insert(0, "Index_tmp", data.index.tolist())
 
     # Create repeated chart
     chart = (alt.Chart(data).mark_area().encode(
              alt.X("Index_tmp", type="quantitative"),
              alt.Y(alt.repeat("row"), type="quantitative"),
-             ).properties(width=1200).repeat(row=data.columns.values))
+             ).properties(width=1200).repeat(row=data.columns.tolist()))
     # .resolve_scale(size = 'independent')#.interactive()
 
     return chart

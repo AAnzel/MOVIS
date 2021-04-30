@@ -5,6 +5,7 @@ import example_1
 import example_2
 import upload
 import home
+import omics_run
 
 
 def create_sidebar_and_main():
@@ -57,6 +58,7 @@ def main():
     # I need to run this just once, so I create cache
     # omics_run.example_1_calc_phy_che()
     # omics_run.example_1_calc_metabolomics()
+    # omics_run.example_1_calc_proteomics()
 
     create_sidebar_and_main()
 
