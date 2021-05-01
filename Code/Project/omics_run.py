@@ -144,6 +144,12 @@ def example_1_calc_genomics():
     # ## MAG examination
     # ### KEGG examination
 
+    #######################################################################
+    # CREATE DIFFERENT FUNCTIONS FOR KEGG WORK AND FASTA WORK
+    # CACHE KEGG MATRIX, FASTA MODEL AND MAGS_DF
+    # PUT VISUALIZATION PARTS IN visualize.py
+    #######################################################################
+
     kegg_matrix = calculate.import_kegg_and_create_df(
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)

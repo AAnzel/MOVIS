@@ -187,7 +187,7 @@ def heatmap(data):
             alt.Y("var_2", title=None),
             alt.Color(
                 "correlation",
-                legend=None,
+                legend=alt.Legend(tickCount=5),
                 scale=alt.Scale(scheme="redblue", reverse=True),
             ),
         ).properties(width=alt.Step(30), height=alt.Step(30))

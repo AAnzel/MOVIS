@@ -14,6 +14,18 @@ def show_data_set(df):
     return None
 
 
+# This function is used when working with proteomics data i.e. FASTA files
+# It is used to show calculated features of those FASTA files
+def show_calculated_data_set(df):
+    with st.beta_expander('Calculate features and show the data set',
+                          expanded=True):
+        st.markdown('First 100 entries')
+        st.dataframe(df.head(100))
+        st.dataframe(df.describe())
+
+    return None
+
+
 def find_temporal_feature(df):
     feature_list = list(df.columns.values)
 
@@ -190,7 +202,7 @@ def create_main_example_1_proteomics():
     # Here I show the head() of the data set and some summary() and info()
     with st.spinner('Creating additional data set...'):
         df = omics_run.get_cached_dataframe(omics_run.EX_1, 'proteomics')
-    show_data_set(df)
+    show_calculated_data_set(df)
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
