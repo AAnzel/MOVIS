@@ -150,13 +150,13 @@ def example_1_calc_genomics():
     # CACHE KEGG MATRIX, FASTA MODEL AND MAGS_DF
     # PUT VISUALIZATION PARTS IN visualize.py
     #######################################################################
-
+    '''
     kegg_matrix = calculate.import_kegg_and_create_df(
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)
 
     cache_dataframe(kegg_matrix, EX_1, 'genomics_kegg')
-
+    '''
     # ### KEGG examination but with pairwise Jaccard distance matrix(as
     # seen in paper)
     # kegg_pairwise = calculate.create_pairwise_jaccard(kegg_matrix)
@@ -173,6 +173,7 @@ def example_1_calc_genomics():
 
     # FOR CLUSTERING I SHOULD CREATE A DATAFRAME WITH MAGs INDEXES AND THEIR
     # VECTOR REPRESENTATIONS
+    '''
     final_model, fasta_names, fasta_ids =\
         calculate.import_mags_and_build_model(end=END,
                                               path_fasta=path_genomics_78)
@@ -183,7 +184,7 @@ def example_1_calc_genomics():
     final_model.wv.save_word2vec_format(
         os.path.join(path_model_save_root, "genomics_model_78.bin"),
         binary=True)
-
+    '''
     # Now I should vectorize documents with this model. For further use, I
     # could save this model's weights, and use it to vectorize all mags. That
     # would take a lot, but every MAG will have its vector representation
@@ -193,15 +194,19 @@ def example_1_calc_genomics():
     # > whole MAG(document). If I do that for one MAG at a time, There is no
     # > need to worry about memory
     #
-
+    '''
     list_of_mag_vectors = calculate.vectorize_mags(final_model,
                                                    path_fasta=path_genomics_78,
                                                    end=END)
     mags_df = pd.DataFrame(list_of_mag_vectors)
     cache_dataframe(mags_df, EX_1, 'genomics_mags')
+    '''
+    mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
 
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
     list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
-    temporal_mags_df = mags_df
+    temporal_mags_df = mags_df.copy()
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
 
@@ -209,7 +214,7 @@ def example_1_calc_genomics():
     mag_scaler = preprocessing.StandardScaler()
     scaled_mags_df = mag_scaler.fit_transform(mags_df)
 
-    # PCA for visualizing
+    # PCA for visualizing MAGs
     pca_model = PCA(n_components=2, random_state=SEED)
     temporal_mags_df = pd.DataFrame(
         pca_model.fit_transform(scaled_mags_df), columns=['PCA_1', 'PCA_2'])
@@ -218,15 +223,19 @@ def example_1_calc_genomics():
 
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
 
-    # MDS for visualizing
-    mds_model = MDS(n_components=2, random_state=SEED,
-                    dissimilarity="precomputed", n_jobs=NUM_OF_WORKERS)
-    temporal_mags_df = pd.DataFrame(
-        mds_model.fit_transform(scaled_mags_df), columns=['MDS_1', 'MDS_2'])
+    # THERE IS AN ERROR HERE, CHECK
+    # MDS for visualizing KEGG
+    #kegg_matrix_df = get_cached_dataframe(EX_1, 'genomics_kegg')
 
-    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
+    #mds_model = MDS(n_components=2, random_state=SEED,
+    #                dissimilarity="precomputed", n_jobs=NUM_OF_WORKERS)
+    #kegg_matrix_transformed_df = pd.DataFrame(
+    #    mds_model.fit_transform(kegg_matrix_df), columns=['MDS_1', 'MDS_2'])
 
-    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_MDS')
+    #kegg_matrix_transformed_df.insert(0, 'DateTime', list_of_dates)
+
+    #cache_dataframe(kegg_matrix_transformed_df, EX_1,
+    #                'genomics_kegg_temporal_MDS')
 
 
 def example_1_cluster_genomics():
