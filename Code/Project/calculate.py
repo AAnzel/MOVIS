@@ -5,7 +5,8 @@ import numpy as np
 import altair as alt
 import datetime as dt
 from sklearn.cluster import KMeans, OPTICS
-from sklearn import preprocessing, metrics
+from sklearn import preprocessing
+from sklearn import metrics
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec

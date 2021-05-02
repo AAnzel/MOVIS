@@ -59,6 +59,7 @@ def main():
     # omics_run.example_1_calc_phy_che()
     # omics_run.example_1_calc_metabolomics()
     # omics_run.example_1_calc_proteomics()
+    omics_run.example_1_calc_genomics()
 
     create_sidebar_and_main()
 

@@ -5,8 +5,6 @@ import pandas as pd
 import altair as alt
 import datetime as dt
 import plotly.express as px
-from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
 
 
 # Defining paths for each and every omic

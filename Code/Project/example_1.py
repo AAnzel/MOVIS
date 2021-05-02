@@ -155,6 +155,13 @@ def create_main_example_1_genomics():
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
+    with st.spinner('Embedding MAGs into vectors...'):
+        df_1 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_mags')
+    show_calculated_data_set(df_1)
+
+    with st.spinner('Creating KO dataset...'):
+        df_2 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_kegg')
+    show_calculated_data_set(df_2)
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts

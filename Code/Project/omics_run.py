@@ -1,14 +1,15 @@
 import os
 import random
-import math
 import altair_saver
 import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
 import streamlit as st
-from sklearn.cluster import KMeans, OPTICS
-from sklearn import preprocessing, metrics
+from sklearn.decomposition import PCA
+from sklearn.manifold import MDS
+from sklearn import preprocessing
+from sklearn import metrics
 
 import calculate
 import visualize
@@ -33,7 +34,7 @@ path_second_source = os.path.join("..", "..", "Data", "Extracted",
 
 path_model_save_root = os.path.join("..", "Saved_models")
 path_figures_save_root = os.path.join("..", "Output_figures")
-path_data_frame_save_root = os.path.join("cached")
+path_cached_save_root = os.path.join("cached")
 
 num_of_mags = len([i for i in os.listdir(path_genomics_78) if
                   i.endswith("fa")])
@@ -68,11 +69,11 @@ def save_charts(list_of_chart, list_of_names):
 
 def cache_dataframe(dataframe, num_of_example, name):
     if num_of_example == 1:
-        dataframe.to_pickle(os.path.join(path_data_frame_save_root,
+        dataframe.to_pickle(os.path.join(path_cached_save_root,
                                          "example_1", "data_frames", name +
                                          "_dataframe.pkl"))
     else:
-        dataframe.to_pickle(os.path.join(path_data_frame_save_root,
+        dataframe.to_pickle(os.path.join(path_cached_save_root,
                                          "example_2", "data_frames", name +
                                          "_dataframe.pkl"))
     return None
@@ -81,11 +82,11 @@ def cache_dataframe(dataframe, num_of_example, name):
 @st.cache
 def get_cached_dataframe(num_of_example, name):
     if num_of_example == EX_1:
-        return pd.read_pickle(os.path.join(path_data_frame_save_root,
+        return pd.read_pickle(os.path.join(path_cached_save_root,
                                            "example_1", "data_frames", name +
                                            "_dataframe.pkl")).convert_dtypes()
     else:
-        return pd.read_pickle(os.path.join(path_data_frame_save_root,
+        return pd.read_pickle(os.path.join(path_cached_save_root,
                                            "example_2", "data_frames", name +
                                            "_dataframe.pkl")).convert_dtypes()
 
@@ -180,7 +181,8 @@ def example_1_calc_genomics():
     final_model = calculate.train_model(final_model, epochs=EPOCHS, end=END)
 
     final_model.wv.save_word2vec_format(
-        os.path.join(path_model_save_root, "model_78.bin"), binary=True)
+        os.path.join(path_model_save_root, "genomics_model_78.bin"),
+        binary=True)
 
     # Now I should vectorize documents with this model. For further use, I
     # could save this model's weights, and use it to vectorize all mags. That
@@ -198,6 +200,11 @@ def example_1_calc_genomics():
     mags_df = pd.DataFrame(list_of_mag_vectors)
     cache_dataframe(mags_df, EX_1, 'genomics_mags')
 
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_mags_df = mags_df
+    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
+    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
+
     # ## Data preprocessing
     mag_scaler = preprocessing.StandardScaler()
     scaled_mags_df = mag_scaler.fit_transform(mags_df)
@@ -207,12 +214,11 @@ def example_1_calc_genomics():
     temporal_mags_df = pd.DataFrame(
         pca_model.fit_transform(scaled_mags_df), columns=['PCA_1', 'PCA_2'])
 
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
 
-    # MDS fot visualizing
+    # MDS for visualizing
     mds_model = MDS(n_components=2, random_state=SEED,
                     dissimilarity="precomputed", n_jobs=NUM_OF_WORKERS)
     temporal_mags_df = pd.DataFrame(
@@ -221,6 +227,14 @@ def example_1_calc_genomics():
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_MDS')
+
+
+def example_1_cluster_genomics():
+
+
+
+
+    return None
 
 
 # ---
