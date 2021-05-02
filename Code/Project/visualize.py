@@ -202,6 +202,14 @@ def heatmap(data):
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
 
 
+def elbow_rule(data):
+
+    chart = (alt.Chart(data).mark_line().encode(
+        alt.X("k_range:Q"), alt.Y("k_scores:Q")))
+
+    return chart
+
+
 # Everything below is used for metabolomics data set exclusively
 def visualize_metabolites(data, temporal_column, metabolite_column,
                           type_columns):
@@ -264,103 +272,29 @@ def visualize_proteomics(data):
 
 
 # Everything below is used for genomics data set exclusively
-def visualize_with_pca(data, labels, centers):
+def visualize_clusters(data, labels):
 
-    pca_model = PCA(n_components=2, random_state=SEED)
-    data_transformed = pca_model.fit_transform(data)
+    data.insert(0, 'Labels', labels)
 
-    data_transformed = pd.DataFrame(data_transformed)
-    data_transformed.columns = ["PC_1", "PC_2"]
-    data_transformed["Labels"] = labels
+    chart = alt.Chart(data).mark_circle(opacity=1).encode(
+            alt.X(str(data.columns[0]), type='quantitative'),
+            alt.X(str(data.columns[1]), type='quantitative'),
+            alt.Color("Labels:N")
+        )
 
-    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("PC_1:Q"),
-            alt.Y("PC_2:Q"),
-            alt.Color("Labels:N", legend=alt.Legend())
-        ))
-
-    # This means we are visualising centroids from k_means (there are less
-    # centroids that data points)
-    if labels.shape[0] != centers.shape[0]:
-
-        centers_transformed = pca_model.fit_transform(centers)
-        centers_transformed = pd.DataFrame(centers_transformed)
-        centers_transformed.columns = ["PC_1", "PC_2"]
-
-        chart_centers = (alt.Chart(centers_transformed)
-                         .mark_point(shape="diamond", color="black", size=50,
-                                     opacity=0.7).encode(
-                                                         alt.X("PC_1:Q"),
-                                                         alt.Y("PC_2:Q"),
-            ))
-
-        return chart_data + chart_centers
-
-    # For DBSCAN there are no centroids
-    else:
-        return chart_data
+    return chart
 
 
-def visualize_temporal_mags(data, list_of_days, start_date, end):
+def visualize_seasonal_clusters(data, temporal_column):
 
-    list_of_dates = create_temporal_column(list_of_days, start_date, end)
+    data_transformed = season_data(data, temporal_column)
 
-    pca_model = PCA(n_components=2, random_state=SEED)
-    data_transformed = pca_model.fit_transform(data)
-
-    data_transformed = np.hstack(
-        ((np.asarray(list_of_dates))[:, np.newaxis], data_transformed)
-    )
-    data_transformed = pd.DataFrame(
-        data_transformed, columns=["DateTime", "PCA_1", "PCA_2"]
-    )
-
-    data_transformed = season_data(data_transformed, "DateTime")
-
-    chart_data = (
-        alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("PCA_1:Q"),
-            alt.Y("PCA_2:Q"),
+    chart = alt.Chart(data_transformed).mark_circle(opacity=1).encode(
+            alt.X(str(data.columns[1]), type='quantitative'),
+            alt.X(str(data.columns[2]), type='quantitative'),
             alt.Color("season:N",
                       scale=alt.Scale(range=["blue", "green", "orange",
                                              "brown"])),
-        ).properties(width=1200)
-    )
+        )
 
-    return chart_data
-
-
-def visualize_with_mds(data, start_date, end, path_fasta=path_genomics_78):
-
-    mds_model = MDS(
-        n_components=2,
-        random_state=SEED,
-        dissimilarity="precomputed",
-        n_jobs=NUM_OF_WORKERS,
-    )
-    mds_pos = mds_model.fit_transform(data)
-
-    list_of_days = [i for i in os.listdir(path_fasta) if
-                    (i.endswith("fa") and i.startswith("D"))]
-
-    temporal_column = create_temporal_column(list_of_days, start_date, end)
-
-    data_transformed = pd.DataFrame(mds_pos)
-    data_transformed.columns = ["MDS_1", "MDS_2"]
-    data_transformed = np.hstack(
-        ((np.asarray(temporal_column))[:, np.newaxis], data_transformed)
-    )
-    data_transformed = pd.DataFrame(
-        data_transformed, columns=["DateTime", "MDS_1", "MDS_2"]
-    )
-
-    data_transformed = season_data(data_transformed, "DateTime")
-
-    chart_data = (alt.Chart(data_transformed).mark_circle(opacity=1).encode(
-            alt.X("MDS_1:Q"),
-            alt.Y("MDS_2:Q"),
-            alt.Color("season:N", scale=alt.Scale(range=["blue", "green",
-                                                         "orange", "brown"])),
-        ))
-
-    return chart_data
+    return chart

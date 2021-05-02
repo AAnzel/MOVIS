@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
+from sklearn.cluster import KMeans, OPTICS
+from sklearn import preprocessing, metrics
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from gensim.models import Word2Vec
@@ -435,6 +437,45 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
 
     print("Finished creating")
     return result_matrix_df.T
+
+
+def get_number_of_clusters(data):
+
+    mag_scaler = preprocessing.StandardScaler()
+    scaled_data = mag_scaler.fit_transform(data)
+
+    num_of_entries = data.shape[0] # Getting number of rows
+    k_range_end = int(math.sqrt(num_of_entries)) # Usually it is sqrt(#)
+    k_range = range(1, k_range_end)
+
+    k_mean_models = [KMeans(n_clusters=i, random_state=SEED) for i in k_range]
+    k_scores = [
+        k_mean_model.fit(scaled_data).score(scaled_data)
+        for k_mean_model in k_mean_models
+    ]
+    k_model_data = pd.DataFrame({"k_range": k_range, "k_scores": k_scores})
+
+    return k_model_data
+
+
+def cluster_data(data, num_of_clusters, min_samples, model_name):
+
+    if model_name == 'K-Means':
+        model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
+
+    elif model_name == 'OPTICS':
+        model = OPTICS(min_samples=min_samples, n_jobs=NUM_OF_WORKERS)
+
+    else:
+        pass
+
+    predicted_values = model.fit_predict(data)
+
+    return predicted_values
+
+
+def evaluate_clustering(data, predicted):
+    return metrics.silhouette_score(data, predicted)
 
 
 def create_pairwise_jaccard(data):

@@ -154,39 +154,13 @@ def example_1_calc_genomics():
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)
 
-    mag_scaler = preprocessing.StandardScaler()
-    scaled_keggs_df = mag_scaler.fit_transform(kegg_matrix)
-    # scaled_keggs_df = kegg_matrix.clip(0, 1)
-
-    k_range_end = int(math.sqrt(num_of_mags))  # Usually it is sqrt(# of mags)
-    k_range = range(1, k_range_end)
-
-    k_mean_models = [KMeans(n_clusters=i, random_state=SEED) for i in k_range]
-    k_scores = [
-        k_mean_model.fit(scaled_keggs_df).score(scaled_keggs_df)
-        for k_mean_model in k_mean_models
-    ]
-    k_data = pd.DataFrame({"k_range": k_range, "k_scores": k_scores})
-
-    k_num_chart = (alt.Chart(data=k_data).mark_line().encode(
-                   alt.X("k_range:Q"), alt.Y("k_scores:Q")))
-
-    # We can see from the chart above that 6 or 7 clusters are optimal for this
-    # task(where END = 25 MAGs)
-    num_of_clusters = 4
-
-    k_means_model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
-    k_means_predicted = k_means_model.fit_predict(scaled_keggs_df)
-
-    k_means_chart = visualize.visualize_with_pca(
-        scaled_keggs_df, k_means_predicted, k_means_model.cluster_centers_)
+    cache_dataframe(kegg_matrix, EX_1, 'genomics_kegg')
 
     # ### KEGG examination but with pairwise Jaccard distance matrix(as
     # seen in paper)
-    kegg_pairwise = calculate.create_pairwise_jaccard(kegg_matrix)
-    kegg_mds_chart = visualize.visualize_with_mds(kegg_pairwise, START_DATE,
-                                                  END, path_genomics_78)
-
+    # kegg_pairwise = calculate.create_pairwise_jaccard(kegg_matrix)
+    # kegg_mds_chart = visualize.visualize_with_mds(kegg_pairwise, START_DATE,
+    #                                             END, path_genomics_78)
     # ---
     # # VAZNO:
     # Sledece sto treba da se uradi je da se nadje transcriptomic data set i da
@@ -222,72 +196,31 @@ def example_1_calc_genomics():
                                                    path_fasta=path_genomics_78,
                                                    end=END)
     mags_df = pd.DataFrame(list_of_mag_vectors)
+    cache_dataframe(mags_df, EX_1, 'genomics_mags')
 
     # ## Data preprocessing
     mag_scaler = preprocessing.StandardScaler()
     scaled_mags_df = mag_scaler.fit_transform(mags_df)
 
-    # ## Clustering
+    # PCA for visualizing
+    pca_model = PCA(n_components=2, random_state=SEED)
+    temporal_mags_df = pd.DataFrame(
+        pca_model.fit_transform(scaled_mags_df), columns=['PCA_1', 'PCA_2'])
 
-    # ### 1. K-means
-    k_range_end = int(math.sqrt(num_of_mags))  # Usually it is sqrt(# of mags)
-    k_range = range(1, k_range_end)
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
-    k_mean_models = [KMeans(n_clusters=i, random_state=SEED) for i in k_range]
-    k_scores = [
-        k_mean_model.fit(scaled_mags_df).score(scaled_mags_df)
-        for k_mean_model in k_mean_models
-    ]
-    k_data = pd.DataFrame({"k_range": k_range, "k_scores": k_scores})
+    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
 
-    k_num_chart = (alt.Chart(data=k_data).mark_line().encode(
-                   alt.X("k_range:Q"), alt.Y("k_scores:Q")))
+    # MDS fot visualizing
+    mds_model = MDS(n_components=2, random_state=SEED,
+                    dissimilarity="precomputed", n_jobs=NUM_OF_WORKERS)
+    temporal_mags_df = pd.DataFrame(
+        mds_model.fit_transform(scaled_mags_df), columns=['MDS_1', 'MDS_2'])
 
-    # We can see from the chart above that 6 or 7 clusters are optimal for this
-    # task(where END = 25 MAGs)
-    num_of_clusters = 4
+    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
-    k_means_model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
-    k_means_predicted = k_means_model.fit_predict(scaled_mags_df)
-
-    k_means_chart = visualize.visualize_with_pca(
-        scaled_mags_df, k_means_predicted, k_means_model.cluster_centers_)
-
-    # ### 2. OPTICS
-
-    MIN_SAMPLES = 4
-
-    optics_model = OPTICS(min_samples=MIN_SAMPLES, n_jobs=NUM_OF_WORKERS)
-    optics_predicted = optics_model.fit_predict(scaled_mags_df)
-
-    # Visualize clusters, since there are no centroids, we are sending bogus
-    # array
-    optics_chart = visualize.visualize_with_pca(
-        scaled_mags_df,
-        optics_predicted,
-        np.empty([optics_predicted.shape[0], 1], dtype=int),
-    )
-
-    # Side by side comparison
-    cluster_comparison_chart = alt.hconcat(k_means_chart,
-                                           optics_chart).resolve_scale(
-                                           color="independent")
-
-    # ## Evaluation
-    eval_k_means = metrics.silhouette_score(scaled_mags_df, k_means_predicted)
-    eval_optics = metrics.silhouette_score(scaled_mags_df, optics_predicted)
-
-    print("Silhouette scores: [best = 1, worst = -1]")
-    print("\t1. K-means:", eval_k_means)
-    print("\t2. OPTICS:", eval_optics)
-
-    # ## Visualizing rMAGs with time axis
-    time_chart = visualize.visualize_temporal_mags(scaled_mags_df, fasta_names,
-                                                   START_DATE, END)
-
-    # save_charts([k_means_chart, optics_chart, cluster_comparison_chart,
-    # time_chart], ['genomics_k_means_chart.png', 'genomics_optics_chart.png',
-    # 'genomics_cluster_comparison_chart.png', 'genomics_time_chart.png'])
+    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_MDS')
 
 
 # ---
@@ -380,13 +313,11 @@ def example_1_calc_proteomics():
                    if (i[-3:] == "faa")]
     list_of_dates = create_temporal_column(fasta_files, START_DATE, END)
     proteomics_data.insert(0, 'DateTime', list_of_dates)
-    cache_dataframe(proteomics_data, EX_1, 'proteomics')
 
     # I will save this dataframe to show to the end-user
     cache_dataframe(proteomics_data, EX_1, "proteomics")
 
-    chart_proteomics = visualize.visualize_proteomics(proteomics_data)
-
+    # chart_proteomics = visualize.visualize_proteomics(proteomics_data)
     # save_charts([chart_proteomics], ['proteomics_chart_proteomics.png'])
 
 
