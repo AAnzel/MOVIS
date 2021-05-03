@@ -199,7 +199,7 @@ def example_1_calc_genomics():
                                                    end=END)
     mags_df = pd.DataFrame(list_of_mag_vectors)
     cache_dataframe(mags_df, EX_1, 'genomics_mags')
-    '''
+
     mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
@@ -221,7 +221,7 @@ def example_1_calc_genomics():
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
-
+    '''
     # THERE IS AN ERROR HERE, CHECK
     # MDS for visualizing KEGG
     # kegg_matrix_df = get_cached_dataframe(EX_1, 'genomics_kegg')
@@ -236,8 +236,15 @@ def example_1_calc_genomics():
     # cache_dataframe(kegg_matrix_transformed_df, EX_1,
     #                'genomics_kegg_temporal_MDS')
 
+    annotated_mags_df = calculate.create_annotated_data_set()
+    cache_dataframe(annotated_mags_df, EX_1, 'genomics_mags_annotated')
+
+    return None
+
 
 def example_1_cluster_genomics():
+    # There is already a function calculate.cluster_data
+    # This should only be a wraper
 
     return None
 
@@ -311,6 +318,7 @@ def example_1_calc_metabolomics():
     # Deep learning temporal clustering Should I even do this? Previous
     # visualizations are descriptive enough. It would be a lot of work for not
     # much benefit
+    return None
 
 
 # ---
@@ -338,6 +346,7 @@ def example_1_calc_proteomics():
 
     # chart_proteomics = visualize.visualize_proteomics(proteomics_data)
     # save_charts([chart_proteomics], ['proteomics_chart_proteomics.png'])
+    return None
 
 
 # ---
@@ -387,3 +396,4 @@ def example_1_calc_phy_che():
     # save_charts([chart_phy_che_corr, chart_phy_che],
     # ['physico_chemical_chart_psy_che_corr.png',
     # 'physico_chemical_chart_psy_che.png'])
+    return None

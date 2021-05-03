@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 import omics_run
 
 import visualize
@@ -19,8 +20,8 @@ def show_data_set(df):
 def show_calculated_data_set(df, text_info):
     with st.beta_expander('Calculate features and show the data set',
                           expanded=True):
-        if len(df.columns.to_list()) > 50:
-            st.markdown('First 50 entries and 8 features (columns). '
+        if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
+            st.markdown('First 50 entries and first 8 features (columns). '
                         + '**' + text_info + '**')
             st.dataframe(df.iloc[:50, :8])
             # st.dataframe(df.describe())
@@ -169,6 +170,14 @@ def create_main_example_1_genomics():
         df_2 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_kegg')
     show_calculated_data_set(df_2, 'KO matrix')
 
+    with st.spinner('Creating annotation dataset...'):
+        df_3 = omics_run.get_cached_dataframe(omics_run.EX_1,
+                                              'genomics_mags_annotated')
+    show_calculated_data_set(df_3, 'Product annotations')
+
+    ############
+    # Import also Bins dataset with all 'product' info
+
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
     # st.altair_chart()
@@ -246,7 +255,9 @@ def create_main_example_1_phy_che():
 
 def create_main_example_1():
 
-    st.info('''
+    col_1, col_2 = st.beta_columns(2)
+
+    col_1.info('''
             This data set comes from the following paper:
 
             **Herold, M., Martínez Arbas, S., Narayanasamy, S. et al.\
@@ -258,6 +269,9 @@ def create_main_example_1():
             **physico-chemical** data. The code used to parse the data can be\
             found here: [GitHub](put_link)
             ''')
+
+    col_2.map(pd.DataFrame({'lat': [49.513414], 'lon': [6.017925]}),
+              zoom=13, use_container_width=True)
 
     example_1_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
                             'Physico-chemical']

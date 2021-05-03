@@ -24,11 +24,15 @@ path_all_fasta = os.path.join(path_root_data, "fasta_files", "AllBins")
 path_genomics_78 = os.path.join(path_root_data, "fasta_files",
                                 "rmags_filtered")
 path_genomics_kegg = os.path.join(path_root_data, "Annotations", "KEGG")
+path_genomics_bins = os.path.join(path_root_data, "Annotations", "Bins")
+
 path_normalised_metabolomics = os.path.join(
     path_root_data, "Metabolomics", "Normalised_Tables"
 )
 path_proteomics_78 = os.path.join(path_root_data, "Proteomics", "set_of_78")
+
 path_physico_chemical = os.path.join(path_root_data, "PhysicoChemical")
+
 path_second_source = os.path.join("..", "..", "Data", "Extracted",
                                   "Second source")
 
@@ -36,9 +40,9 @@ path_model_save_root = os.path.join("..", "Saved_models")
 path_figures_save_root = os.path.join("..", "Output_figures")
 
 num_of_mags = len([i for i in os.listdir(path_genomics_78) if
-                   i.endswith("fa")])
+                   (i.endswith("fa") and i.startswith("D"))])
 num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if
-                         i.endswith("faa")])
+                         (i.endswith("faa") and i.startswith("D"))])
 
 SEED = 42
 END = num_of_mags
@@ -84,7 +88,7 @@ def import_proteomics(end=25, path_proteomics=path_proteomics_78):
     # There are 78 FASTA files I have to traverse every FASTA file, and in each
     # file every protein sequence
 
-    fasta_files = [i for i in os.listdir(path_proteomics) if (i[-3:] == "faa")]
+    fasta_files = [i for i in os.listdir(path_proteomics) if i.endswith('faa')]
     tmp_all = []
 
     # This was done so that I could work with first 100 FASTA files only.
@@ -486,3 +490,29 @@ def create_pairwise_jaccard(data):
     result = squareform(pdist(tmp_data.astype(bool), jaccard))
 
     return pd.DataFrame(result, index=data.index, columns=data.index)
+
+
+def create_annotated_data_set():
+
+    rmags_names = [os.path.splitext(i)[0] for i in os.listdir(path_genomics_78)
+                   if (i.endswith("fa") and i.startswith("D"))]
+    relevant_files = [i for i in os.listdir(path_genomics_bins)
+                      if i.startswith(tuple(rmags_names))]
+
+    final_dict = {}
+    # Traversing every annotation file, line by line, and saving only 'product'
+    # column
+    for annotation_file in relevant_files:
+        with open(os.path.join(path_genomics_bins, annotation_file), 'r')\
+                as input_file:
+
+            one_mag_product_list = []
+            for line in input_file:
+                product = line.split('product=')[-1].rstrip()
+                if product not in one_mag_product_list:
+                    one_mag_product_list.append(str(product))
+
+            rmag_name = os.path.splitext(annotation_file)[0]
+            final_dict[rmag_name] = ', '.join(one_mag_product_list)
+
+    return pd.DataFrame.from_dict(final_dict, orient='index')
