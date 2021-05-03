@@ -16,12 +16,18 @@ def show_data_set(df):
 
 # This function is used when working with proteomics data i.e. FASTA files
 # It is used to show calculated features of those FASTA files
-def show_calculated_data_set(df):
+def show_calculated_data_set(df, text_info):
     with st.beta_expander('Calculate features and show the data set',
                           expanded=True):
-        st.markdown('First 100 entries')
-        st.dataframe(df.head(100))
-        st.dataframe(df.describe())
+        if len(df.columns.to_list()) > 50:
+            st.markdown('First 50 entries and 8 features (columns). '
+                        + '**' + text_info + '**')
+            st.dataframe(df.iloc[:50, :8])
+            # st.dataframe(df.describe())
+        else:
+            st.markdown('First 100 entries ' + '**' + text_info + '**')
+            st.dataframe(df.head(100))
+            st.dataframe(df.describe())
 
     return None
 
@@ -157,11 +163,11 @@ def create_main_example_1_genomics():
     # different choices for what kind of chart/computation the user wants
     with st.spinner('Embedding MAGs into vectors...'):
         df_1 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_mags')
-    show_calculated_data_set(df_1)
+    show_calculated_data_set(df_1, 'Embedded MAGs')
 
     with st.spinner('Creating KO dataset...'):
         df_2 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_kegg')
-    show_calculated_data_set(df_2)
+    show_calculated_data_set(df_2, 'KO matrix')
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
@@ -209,7 +215,7 @@ def create_main_example_1_proteomics():
     # Here I show the head() of the data set and some summary() and info()
     with st.spinner('Creating additional data set...'):
         df = omics_run.get_cached_dataframe(omics_run.EX_1, 'proteomics')
-    show_calculated_data_set(df)
+    show_calculated_data_set(df, 'Protein properties')
 
     temporal_feature, feature_list = find_temporal_feature(df)
 

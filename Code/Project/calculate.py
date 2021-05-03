@@ -446,8 +446,8 @@ def get_number_of_clusters(data):
     mag_scaler = preprocessing.StandardScaler()
     scaled_data = mag_scaler.fit_transform(data)
 
-    num_of_entries = data.shape[0] # Getting number of rows
-    k_range_end = int(math.sqrt(num_of_entries)) # Usually it is sqrt(#)
+    num_of_entries = data.shape[0]  # Getting number of rows
+    k_range_end = int(math.sqrt(num_of_entries))  # Usually it is sqrt(#)
     k_range = range(1, k_range_end)
 
     k_mean_models = [KMeans(n_clusters=i, random_state=SEED) for i in k_range]

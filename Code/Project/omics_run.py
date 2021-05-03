@@ -7,12 +7,11 @@ import altair as alt
 import datetime as dt
 import streamlit as st
 from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
+# from sklearn.manifold import MDS
 from sklearn import preprocessing
-from sklearn import metrics
+# from sklearn import metrics
 
 import calculate
-import visualize
 
 # Defining paths for each and every omic
 
@@ -225,23 +224,20 @@ def example_1_calc_genomics():
 
     # THERE IS AN ERROR HERE, CHECK
     # MDS for visualizing KEGG
-    #kegg_matrix_df = get_cached_dataframe(EX_1, 'genomics_kegg')
+    # kegg_matrix_df = get_cached_dataframe(EX_1, 'genomics_kegg')
 
-    #mds_model = MDS(n_components=2, random_state=SEED,
+    # mds_model = MDS(n_components=2, random_state=SEED,
     #                dissimilarity="precomputed", n_jobs=NUM_OF_WORKERS)
-    #kegg_matrix_transformed_df = pd.DataFrame(
+    # kegg_matrix_transformed_df = pd.DataFrame(
     #    mds_model.fit_transform(kegg_matrix_df), columns=['MDS_1', 'MDS_2'])
 
-    #kegg_matrix_transformed_df.insert(0, 'DateTime', list_of_dates)
+    # kegg_matrix_transformed_df.insert(0, 'DateTime', list_of_dates)
 
-    #cache_dataframe(kegg_matrix_transformed_df, EX_1,
+    # cache_dataframe(kegg_matrix_transformed_df, EX_1,
     #                'genomics_kegg_temporal_MDS')
 
 
 def example_1_cluster_genomics():
-
-
-
 
     return None
 
@@ -305,9 +301,9 @@ def example_1_calc_metabolomics():
     metabolomics_df.reset_index(drop=True, inplace=True)
 
     # ## Time series examination
-    metabolites_chart = visualize.visualize_metabolites(
-        metabolomics_df, "date", "Metabolite", ["type", "type2", "measurement",
-                                                "N"])
+    # metabolites_chart = visualize.visualize_metabolites(
+    #   metabolomics_df, "date", "Metabolite", ["type", "type2", "measurement",
+    #                                            "N"])
 
     # save_charts([metabolites_chart], ['metabolomics_metabolites_chart.png'])
 
@@ -382,11 +378,11 @@ def example_1_calc_phy_che():
 
     # Visualize temperature, air_temperature, conductivity, inflow_pH, nitrate,
     # oxygen, pH
-    chart_phy_che = visualize.visualize_phy_che(
-        filtered_phy_che_df, "DateTime", filtered_phy_che_df.columns.values[4:]
-    )
-    chart_phy_che_corr = visualize.visualize_phy_che_heatmap(
-        filtered_phy_che_df)
+    # chart_phy_che = visualize.visualize_phy_che(
+    #   filtered_phy_che_df, "DateTime", filtered_phy_che_df.columns.values[4:]
+    # )
+    # chart_phy_che_corr = visualize.visualize_phy_che_heatmap(
+    #    filtered_phy_che_df)
 
     # save_charts([chart_phy_che_corr, chart_phy_che],
     # ['physico_chemical_chart_psy_che_corr.png',

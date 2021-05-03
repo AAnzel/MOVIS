@@ -1,7 +1,6 @@
 import os
 import random
 import numpy as np
-import pandas as pd
 import altair as alt
 import datetime as dt
 import plotly.express as px
