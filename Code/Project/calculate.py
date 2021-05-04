@@ -499,20 +499,25 @@ def create_annotated_data_set():
     relevant_files = [i for i in os.listdir(path_genomics_bins)
                       if i.startswith(tuple(rmags_names))]
 
+    # Creating nested dictionary where each rmag has a dict of products and
+    # their number of occurence for that rmag
     final_dict = {}
+    rmags_names.sort()
+    for i in rmags_names:
+        final_dict[i] = {}
     # Traversing every annotation file, line by line, and saving only 'product'
     # column
     for annotation_file in relevant_files:
         with open(os.path.join(path_genomics_bins, annotation_file), 'r')\
                 as input_file:
 
-            one_mag_product_list = []
+            rmag_name = os.path.splitext(annotation_file)[0]
             for line in input_file:
                 product = line.split('product=')[-1].rstrip()
-                if product not in one_mag_product_list:
-                    one_mag_product_list.append(str(product))
+                if product not in final_dict[rmag_name]:
+                    final_dict[rmag_name][product] = 0
+                else:
+                    final_dict[rmag_name][product] += 1
 
-            rmag_name = os.path.splitext(annotation_file)[0]
-            final_dict[rmag_name] = ', '.join(one_mag_product_list)
-
-    return pd.DataFrame.from_dict(final_dict, orient='index')
+    result_df = pd.DataFrame.from_dict(final_dict).fillna(0)
+    return result_df

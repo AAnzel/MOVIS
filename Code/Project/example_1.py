@@ -263,7 +263,10 @@ def create_main_example_1():
             **Herold, M., Martínez Arbas, S., Narayanasamy, S. et al.\
             Integration of time-series meta-omics data reveals how microbial\
             ecosystems respond to disturbance. Nat Commun 11, 5281(2020).\
-            https://doi.org/10.1038/s41467-020-19006-2**
+            https://doi.org/10.1038/s41467-020-19006-2**. Analyzed samples\
+            were collected from a biological wastewater treatment plant in\
+            Schifflange, Luxembourg. A precise location is shown on the map\
+            located right.
 
             It contains **genomics**, **metabolomics**, **proteomics**, and\
             **physico-chemical** data. The code used to parse the data can be\
