@@ -431,6 +431,7 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
         for i in os.listdir(path_fasta)
         if (i.endswith("fa") and i.startswith("D"))
     ]
+    
     result_matrix_df = pd.DataFrame(columns=rmags_78_names)
 
     for i in list_data:
@@ -440,9 +441,10 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
             result_matrix_df.at[row["ID"], row["Gene"]] = row[0]
 
     result_matrix_df.fillna(0, inplace=True)
+    result_matrix_df = result_matrix_df.transpose()
 
     print("Finished creating")
-    return result_matrix_df.T
+    return result_matrix_df.sort_index()
 
 
 def get_number_of_clusters(data):
@@ -519,5 +521,5 @@ def create_annotated_data_set():
                 else:
                     final_dict[rmag_name][product] += 1
 
-    result_df = pd.DataFrame.from_dict(final_dict).fillna(0)
+    result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
     return result_df

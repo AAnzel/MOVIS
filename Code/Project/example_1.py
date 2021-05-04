@@ -167,12 +167,13 @@ def create_main_example_1_genomics():
     show_calculated_data_set(df_1, 'Embedded MAGs')
 
     with st.spinner('Creating KO dataset...'):
-        df_2 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_kegg')
+        df_2 = omics_run.get_cached_dataframe(omics_run.EX_1,
+                                              'genomics_kegg_temporal')
     show_calculated_data_set(df_2, 'KO matrix')
 
     with st.spinner('Creating annotation dataset...'):
-        df_3 = omics_run.get_cached_dataframe(omics_run.EX_1,
-                                              'genomics_mags_annotated')
+        df_3 = omics_run.get_cached_dataframe(
+            omics_run.EX_1, 'genomics_mags_annotated_temporal')
     show_calculated_data_set(df_3, 'Product annotations')
 
     ############
@@ -266,7 +267,7 @@ def create_main_example_1():
             https://doi.org/10.1038/s41467-020-19006-2**. Analyzed samples\
             were collected from a biological wastewater treatment plant in\
             Schifflange, Luxembourg. A precise location is shown on the map\
-            located right.
+            located on the right.
 
             It contains **genomics**, **metabolomics**, **proteomics**, and\
             **physico-chemical** data. The code used to parse the data can be\

@@ -6,7 +6,7 @@ import numpy as np
 import altair as alt
 import datetime as dt
 import streamlit as st
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import PCA
 # from sklearn.manifold import MDS
 from sklearn import preprocessing
 # from sklearn import metrics
@@ -150,11 +150,17 @@ def example_1_calc_genomics():
     # PUT VISUALIZATION PARTS IN visualize.py
     #######################################################################
     '''
-    kegg_matrix = calculate.import_kegg_and_create_df(
+    kegg_matrix_df = calculate.import_kegg_and_create_df(
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)
 
-    cache_dataframe(kegg_matrix, EX_1, 'genomics_kegg')
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_kegg_matrix_df = kegg_matrix_df.copy()
+    temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
+
+    cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
     '''
     # ### KEGG examination but with pairwise Jaccard distance matrix(as
     # seen in paper)
@@ -235,10 +241,18 @@ def example_1_calc_genomics():
 
     # cache_dataframe(kegg_matrix_transformed_df, EX_1,
     #                'genomics_kegg_temporal_MDS')
-
+    '''
     annotated_mags_df = calculate.create_annotated_data_set()
-    cache_dataframe(annotated_mags_df, EX_1, 'genomics_mags_annotated')
 
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_annotated_mags_df = annotated_mags_df.copy()
+    temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+
+    cache_dataframe(temporal_annotated_mags_df, EX_1,
+                    'genomics_mags_annotated_temporal')
+    '''
     return None
 
 
