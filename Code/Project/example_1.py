@@ -65,7 +65,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                      'Two features scatter-plot',
                                      'Scatter-plot matrix',
                                      'Multiple features parallel chart',
-                                     'Heatmap'],
+                                     'Heatmap',
+                                     'Top 10 count through time'],
                                     key='vis_data' + key_prefix)
 
     for i in visualizations:
@@ -137,6 +138,11 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                 st.altair_chart(
                     visualize.heatmap(df), use_container_width=True)
 
+        elif i == 'Top 10 count through time':
+            with st.spinner('Visualizing...'):
+                st.altair_chart(visualize.top_10_time(df, temporal_feature),
+                                use_container_width=True)
+
         else:
             pass
 
@@ -162,19 +168,33 @@ def create_main_example_1_genomics():
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
-    with st.spinner('Embedding MAGs into vectors...'):
-        df_1 = omics_run.get_cached_dataframe(omics_run.EX_1, 'genomics_mags')
-    show_calculated_data_set(df_1, 'Embedded MAGs')
+    data_set_list = ['W2V embedded MAGs', 'KEGG matrix',
+                     'Product-annotated MAGs']
+    choose_data_set = st.multiselect('Which data set do you want to see:',
+                                     data_set_list)
 
-    with st.spinner('Creating KO dataset...'):
-        df_2 = omics_run.get_cached_dataframe(omics_run.EX_1,
-                                              'genomics_kegg_temporal')
-    show_calculated_data_set(df_2, 'KO matrix')
+    for i in choose_data_set:
+        if i == 'W2V embedded MAGs':
+            with st.spinner('Embedding MAGs into vectors...'):
+                df_1 = omics_run.get_cached_dataframe(omics_run.EX_1,
+                                                      'genomics_mags')
+            show_calculated_data_set(df_1, 'Embedded MAGs')
 
-    with st.spinner('Creating annotation dataset...'):
-        df_3 = omics_run.get_cached_dataframe(
-            omics_run.EX_1, 'genomics_mags_annotated_temporal')
-    show_calculated_data_set(df_3, 'Product annotations')
+        elif i == 'KEGG matrix':
+            with st.spinner('Creating KO dataset...'):
+                df_2 = omics_run.get_cached_dataframe(omics_run.EX_1,
+                                                      'genomics_kegg_temporal')
+            show_calculated_data_set(df_2, 'KO matrix')
+
+        else:
+            with st.spinner('Creating annotation dataset...'):
+                df_3 = omics_run.get_cached_dataframe(
+                    omics_run.EX_1, 'genomics_mags_annotated_temporal')
+            show_calculated_data_set(df_3, 'Product annotations')
+
+            temporal_feature, feature_list = find_temporal_feature(df_3)
+            visualize_data_set(df_3, temporal_feature, feature_list,
+                               'genomics')
 
     ############
     # Import also Bins dataset with all 'product' info

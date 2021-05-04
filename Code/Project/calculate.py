@@ -431,7 +431,7 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
         for i in os.listdir(path_fasta)
         if (i.endswith("fa") and i.startswith("D"))
     ]
-    
+
     result_matrix_df = pd.DataFrame(columns=rmags_78_names)
 
     for i in list_data:

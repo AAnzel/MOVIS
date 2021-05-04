@@ -105,10 +105,12 @@ def season_data(data, temporal_column):
 def create_temporal_column(list_of_days, start_date, end):
 
     list_of_dates = []
+    list_of_days.sort()
 
     # This is specific to the metaomics data set I am using Creating list of
-    # dates for every rMAG
+    # dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
     for i in list_of_days[:end]:
+
         tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
 
         if tmp_datetime not in list_of_dates:
@@ -351,7 +353,7 @@ def example_1_calc_proteomics():
 
     # I have to add temporality to this data set, according to file names
     fasta_files = [i for i in os.listdir(path_proteomics_78)
-                   if (i[-3:] == "faa")]
+                   if (i.endswith("faa"))]
     list_of_dates = create_temporal_column(fasta_files, START_DATE, END)
     proteomics_data.insert(0, 'DateTime', list_of_dates)
 

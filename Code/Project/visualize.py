@@ -69,26 +69,6 @@ def season_data(data, temporal_column):
     return new_data
 
 
-def create_temporal_column(list_of_days, start_date, end):
-
-    list_of_dates = []
-
-    # This is specific to the metaomics data set I am using Creating list of
-    # dates for every rMAG
-    for i in list_of_days[:end]:
-
-        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
-
-        if tmp_datetime not in list_of_dates:
-            list_of_dates.append(tmp_datetime)
-
-        else:
-            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
-            list_of_dates.append(tmp_datetime)
-
-    return list_of_dates
-
-
 def time_feature(data, selected_column, temporal_column):
 
     if str(data[selected_column].dtype) == 'string':
@@ -197,6 +177,28 @@ def heatmap(data):
 
     # This returns only lower triangle
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
+
+
+def top_10_time(data, temporal_column):
+
+    '''
+    new_data = data[list_of_features].reset_index().melt(id_vars=['index',
+                                                                  target])
+
+    chart = alt.Chart(new_data).mark_line().encode(
+        alt.X('variable:N'),
+        alt.Y('value:Q'),
+        alt.Color(target, type='nominal'),
+        alt.Detail('index:N'),
+        opacity=alt.value(0.4)
+    )
+    '''
+
+    # I want to create a piechart for every week where I have only top 10
+    # features inside pie
+    chart = None
+
+    return chart
 
 
 def elbow_rule(data):
