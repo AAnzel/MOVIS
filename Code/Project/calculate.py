@@ -522,4 +522,13 @@ def create_annotated_data_set():
                     final_dict[rmag_name][product] += 1
 
     result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
-    return result_df
+
+    # I also save only first 10 products in regard to the number of occurence
+    # This is done for easier visualization
+    sorted_columns = result_df.sum(axis=0).sort_values(ascending=False)
+    sorted_columns = sorted_columns.index.tolist()
+    result_df = result_df[sorted_columns]
+    top_10_result_df = result_df.iloc[:, :10]
+    top_10_result_df['Other'] = result_df.iloc[:, 10:].sum(axis=1)
+
+    return result_df, top_10_result_df

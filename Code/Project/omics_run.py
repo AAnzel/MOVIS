@@ -244,16 +244,21 @@ def example_1_calc_genomics():
     # cache_dataframe(kegg_matrix_transformed_df, EX_1,
     #                'genomics_kegg_temporal_MDS')
     '''
-    annotated_mags_df = calculate.create_annotated_data_set()
+    annotated_mags_df, top_10_annotated_mags_df =\
+            calculate.create_annotated_data_set()
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
                    (i.endswith("fa") and i.startswith("D"))]
     list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
     temporal_annotated_mags_df = annotated_mags_df.copy()
     temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+    temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
+    temporal_top_10_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
 
     cache_dataframe(temporal_annotated_mags_df, EX_1,
                     'genomics_mags_annotated_temporal')
+    cache_dataframe(temporal_top_10_annotated_mags_df, EX_1,
+                    'genomics_mags_top_10_annotated_temporal')
     '''
     return None
 

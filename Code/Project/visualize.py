@@ -194,8 +194,9 @@ def top_10_time(data, temporal_column):
     )
     '''
 
-    # I want to create a piechart for every week where I have only top 10
-    # features inside pie
+    # I want to create a stacked bar chart where on x axis I will have time
+    # and on y axis I will have stacked precentages of a whole
+    # Example: https://altair-viz.github.io/gallery/bar_rounded.html
     chart = None
 
     return chart

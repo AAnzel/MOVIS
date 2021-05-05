@@ -190,10 +190,12 @@ def create_main_example_1_genomics():
             with st.spinner('Creating annotation dataset...'):
                 df_3 = omics_run.get_cached_dataframe(
                     omics_run.EX_1, 'genomics_mags_annotated_temporal')
+                df_4 = omics_run.get_cached_dataframe(
+                    omics_run.EX_1, 'genomics_mags_top_10_annotated_temporal')
             show_calculated_data_set(df_3, 'Product annotations')
 
-            temporal_feature, feature_list = find_temporal_feature(df_3)
-            visualize_data_set(df_3, temporal_feature, feature_list,
+            temporal_feature, feature_list = find_temporal_feature(df_4)
+            visualize_data_set(df_4, temporal_feature, feature_list,
                                'genomics')
 
     ############
