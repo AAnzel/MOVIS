@@ -200,8 +200,11 @@ def create_main_example_1_genomics():
             visualize_data_set(df_4, temporal_feature, feature_list,
                                'genomics')
 
-    ############
-    # Import also Bins dataset with all 'product' info
+    #################################################
+    # I SHOULD ESCAPE ALL BRACKETS IN COLUMN NAMES BECAUSE ALTAIR CANNOT
+    # PROCESS THEM AND GIVES BLANK CHART
+    # I SHOULD DO THIS FOR ALL USER UPLOADED DATA SETS AS WELL
+    ###################################################
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts

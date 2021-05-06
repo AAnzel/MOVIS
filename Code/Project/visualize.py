@@ -76,6 +76,13 @@ def time_feature(data, selected_column, temporal_column):
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='nominal'))
+
+    elif str(data[selected_column].dtype) == 'Int64':
+        chart = alt.Chart(data).mark_bar().encode(
+            alt.X(temporal_column, type='temporal',
+                  scale=alt.Scale(nice=True)),
+            alt.Y(selected_column, type='quantitative'))
+
     else:
         chart = alt.Chart(data).mark_line().encode(
             alt.X(temporal_column, type='temporal',
@@ -186,13 +193,21 @@ def top_10_time(data, list_of_features, temporal_column):
     # Example: https://altair-viz.github.io/gallery/bar_rounded.html
     new_data = data.reset_index().melt(id_vars=['index', temporal_column])
 
+    brush = alt.selection(type='interval')
+
     chart = alt.Chart(new_data).mark_bar().encode(
-        alt.X(temporal_column, type='temporal'),
+        alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
-        alt.Color('variable:N', scale=alt.Scale(scheme='category10'))
+        alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
+        tooltip=['value']
     )
 
-    return chart
+    interval_chart = alt.Chart(new_data).mark_line().encode(
+        alt.X(temporal_column, type='temporal'),
+        alt.Y('sum(value):Q')
+    ).add_selection(brush).properties(height=60)
+
+    return alt.vconcat(chart, interval_chart)
 
 
 def elbow_rule(data):
