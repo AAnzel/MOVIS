@@ -111,8 +111,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                     use_container_width=True)
 
         elif i == 'Multiple features parallel chart':
-            target_feature = st.selectbox('Select target feature for color',
-                                          feature_list)
+            target_feature = st.selectbox(
+                    'Select target feature for color',
+                    feature_list + [temporal_feature],
+                    index=len(feature_list))
 
             list_of_features = st.multiselect('Choose features', feature_list)
 

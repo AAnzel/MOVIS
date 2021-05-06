@@ -119,7 +119,7 @@ def two_features(data, feature_1, feature_2):
     return chart.interactive()
 
 
-def parallel_coordinates(data, list_of_features, target):
+def parallel_coordinates(data, list_of_features, target_feature):
     '''
     new_data = data[list_of_features].reset_index().melt(id_vars=['index',
                                                                   target])
@@ -133,8 +133,9 @@ def parallel_coordinates(data, list_of_features, target):
     )
     '''
     chart = px.parallel_coordinates(
-        data, color=range(0, len(data[target])), dimensions=list_of_features,
-        color_continuous_scale=px.colors.diverging.Tealrose,
+        data, color=range(0, len(data[target_feature])),
+        dimensions=list_of_features,
+        color_continuous_scale=px.colors.sequential.Inferno,
         color_continuous_midpoint=2)
 
     return chart
