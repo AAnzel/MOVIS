@@ -179,25 +179,18 @@ def heatmap(data):
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
 
 
-def top_10_time(data, temporal_column):
-
-    '''
-    new_data = data[list_of_features].reset_index().melt(id_vars=['index',
-                                                                  target])
-
-    chart = alt.Chart(new_data).mark_line().encode(
-        alt.X('variable:N'),
-        alt.Y('value:Q'),
-        alt.Color(target, type='nominal'),
-        alt.Detail('index:N'),
-        opacity=alt.value(0.4)
-    )
-    '''
+def top_10_time(data, list_of_features, temporal_column):
 
     # I want to create a stacked bar chart where on x axis I will have time
     # and on y axis I will have stacked precentages of a whole
     # Example: https://altair-viz.github.io/gallery/bar_rounded.html
-    chart = None
+    new_data = data.reset_index().melt(id_vars=['index', temporal_column])
+
+    chart = alt.Chart(new_data).mark_bar().encode(
+        alt.X(temporal_column, type='temporal'),
+        alt.Y('value:Q'),  # , stack='normalize'),
+        alt.Color('variable:N', scale=alt.Scale(scheme='category10'))
+    )
 
     return chart
 

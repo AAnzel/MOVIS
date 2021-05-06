@@ -140,8 +140,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
 
         elif i == 'Top 10 count through time':
             with st.spinner('Visualizing...'):
-                st.altair_chart(visualize.top_10_time(df, temporal_feature),
-                                use_container_width=True)
+                st.altair_chart(
+                    visualize.top_10_time(df, feature_list,
+                                          temporal_feature),
+                    use_container_width=True)
 
         else:
             pass
