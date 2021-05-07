@@ -199,7 +199,8 @@ def top_10_time(data, list_of_features, temporal_column):
     chart = alt.Chart(new_data).mark_bar().encode(
         alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
-        alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
+        alt.Color('variable:N', scale=alt.Scale(scheme='category10'),
+                  legend=alt.Legend(orient='top', direction='vertical')),
         tooltip=['value']
     )
 
@@ -208,7 +209,7 @@ def top_10_time(data, list_of_features, temporal_column):
         alt.Y('sum(value):Q')
     ).add_selection(brush).properties(height=60)
 
-    return alt.vconcat(chart, interval_chart)
+    return alt.vconcat(interval_chart, chart)
 
 
 def elbow_rule(data):
