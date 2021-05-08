@@ -69,22 +69,22 @@ def season_data(data, temporal_column):
     return new_data
 
 
-def time_feature(data, selected_column, temporal_column):
+def time_feature(data, selected_column, temporal_column, selected_color):
 
     if str(data[selected_column].dtype) == 'string':
-        chart = alt.Chart(data).mark_bar().encode(
+        chart = alt.Chart(data).mark_bar(fill=selected_color).encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='nominal'))
 
     elif str(data[selected_column].dtype) == 'Int64':
-        chart = alt.Chart(data).mark_bar().encode(
+        chart = alt.Chart(data).mark_bar(fill=selected_color).encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='quantitative'))
 
     else:
-        chart = alt.Chart(data).mark_line().encode(
+        chart = alt.Chart(data).mark_line(fill=selected_color).encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='quantitative'))

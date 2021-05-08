@@ -73,11 +73,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
         if i == 'Feature through time':
             selected_feature = st.selectbox('Select feature to visualize',
                                             feature_list)
+            selected_color = st.color_picker('Select line color')
 
             with st.spinner('Visualizing...'):
                 st.altair_chart(
                     visualize.time_feature(df, selected_feature,
-                                           temporal_feature),
+                                           temporal_feature, selected_color),
                     use_container_width=True)
 
         elif i == 'Two features scatter-plot':
@@ -203,6 +204,7 @@ def create_main_example_1_genomics():
                                'genomics')
 
     #################################################
+    # TODO:
     # I SHOULD ESCAPE ALL BRACKETS IN COLUMN NAMES BECAUSE ALTAIR CANNOT
     # PROCESS THEM AND GIVES BLANK CHART
     # I SHOULD DO THIS FOR ALL USER UPLOADED DATA SETS AS WELL
