@@ -18,9 +18,8 @@ def create_sidebar_and_main():
     st.markdown(' ')
     st.markdown('---')
 
-    st.sidebar.markdown('Above should be a logo. Below should be a github repo\
-                        logo that is clickable, and on the right should be\
-                        the link to the paper.')
+    st.sidebar.image(os.path.join('images', 'movis_logo.png'),
+                     use_column_width=True)
 
     # We need 5 columns so that we have nicely aligned images
     col_1, col_2, col_3, col_4, col_5 = st.sidebar.beta_columns([1, 2, 1,
@@ -30,7 +29,7 @@ def create_sidebar_and_main():
     col_4.markdown('Paper doi with journal logo')
 
     st.sidebar.markdown('---')
-    st.sidebar.markdown('Here put some info about the app.')
+    st.sidebar.markdown('MOVIS - Multi-Omics VISualization tool')
     st.sidebar.markdown('---')
 
     st.sidebar.markdown('**Navigation:**')
