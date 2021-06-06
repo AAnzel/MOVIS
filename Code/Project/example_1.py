@@ -7,7 +7,8 @@ import visualize
 
 
 def show_data_set(df):
-    with st.beta_expander('Show the data set and related info', expanded=True):
+    
+    with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
         st.dataframe(df.head(100))
         st.dataframe(df.describe())
@@ -18,8 +19,7 @@ def show_data_set(df):
 # This function is used when working with proteomics data i.e. FASTA files
 # It is used to show calculated features of those FASTA files
 def show_calculated_data_set(df, text_info):
-    with st.beta_expander('Calculate features and show the data set',
-                          expanded=True):
+    with st.spinner('Calculating features and showing the data set'):
         if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
             st.markdown('First 50 entries and first 8 features (columns). '
                         + '**' + text_info + '**')
@@ -67,7 +67,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                      'Multiple features parallel chart',
                                      'Heatmap',
                                      'Top 10 count through time'],
-                                    key='vis_data' + key_prefix)
+                                    key='vis_data_' + key_prefix)
 
     for i in visualizations:
         if i == 'Feature through time':
@@ -156,7 +156,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
 
 def create_main_example_1_genomics():
     st.header('Genomics')
-    with st.beta_expander('Show folder structure', expanded=True):
+    with st.spinner('Showing folder structure'):
         st.code('''rmags_filtered/
             ├── D03_O1.31.2.fa
             ├── D04_G2.13.fa
@@ -238,7 +238,7 @@ def create_main_example_1_metabolomics():
 def create_main_example_1_proteomics():
     st.header('Proteomics')
 
-    with st.beta_expander('Show folder structure', expanded=True):
+    with st.spinner('Showing folder structure'):
         st.code('''set_of_78/
             ├── D03_O1.31.2.faa
             ├── D04_G2.13.faa
@@ -260,7 +260,7 @@ def create_main_example_1_proteomics():
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
-    visualize_data_set(df, temporal_feature, feature_list, 'metabolomics')
+    visualize_data_set(df, temporal_feature, feature_list, 'proteomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -302,7 +302,8 @@ def create_main_example_1():
 
             It contains **genomics**, **metabolomics**, **proteomics**, and\
             **physico-chemical** data. The code used to parse the data can be\
-            found here: [GitHub](put_link)
+            found here: [GitLab]
+            (https://git-r3lab.uni.lu/malte.herold/laots_niche_ecology_analysis)
             ''')
 
     col_2.map(pd.DataFrame({'lat': [49.513414], 'lon': [6.017925]}),
@@ -315,36 +316,38 @@ def create_main_example_1():
 
     num_of_columns = len(choose_omics)
 
-    if num_of_columns >= 2:
-        column_list = st.beta_columns(num_of_columns)
-        curr_pos = 0
+    with st.beta_expander('Show/hide data sets and related info', expanded=True):
+        if num_of_columns >= 2:
+            column_list = st.beta_columns(num_of_columns)
+            curr_pos = 0
 
-        for i in choose_omics:
-            if i == 'Genomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
+            for i in choose_omics:
+                if i == 'Genomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        create_main_example_1_genomics()
+                elif i == 'Metabolomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        create_main_example_1_metabolomics()
+                elif i == 'Proteomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        create_main_example_1_proteomics()
+                else:
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        create_main_example_1_phy_che()
+
+        else:
+            for i in choose_omics:
+                if i == 'Genomics':
                     create_main_example_1_genomics()
-            elif i == 'Metabolomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
+                elif i == 'Metabolomics':
                     create_main_example_1_metabolomics()
-            elif i == 'Proteomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
+                elif i == 'Proteomics':
                     create_main_example_1_proteomics()
-            else:
-                with column_list[curr_pos]:
-                    curr_pos += 1
+                else:
                     create_main_example_1_phy_che()
-
-    else:
-        for i in choose_omics:
-            if i == 'Genomics':
-                create_main_example_1_genomics()
-            elif i == 'Metabolomics':
-                create_main_example_1_metabolomics()
-            elif i == 'Proteomics':
-                create_main_example_1_proteomics()
-            else:
-                create_main_example_1_phy_che()
+    
     return None

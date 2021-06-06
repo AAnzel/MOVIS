@@ -51,8 +51,9 @@ def create_sidebar_and_main():
 def main():
 
     st.set_page_config(page_title='Tool title', layout='wide',
-                       initial_sidebar_state='auto')
-    # , page_icon='path_to_image')
+                       initial_sidebar_state='auto',
+                       page_icon=os.path.join('images',
+                                              'movis_logo_transparent.png'))
 
     # I need to run this just once, so I create cache
     # omics_run.example_1_calc_phy_che()

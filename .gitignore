@@ -5,3 +5,4 @@ New_project*
 *.log
 .vscode/
 __pycache__/
+*.backup
