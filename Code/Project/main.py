@@ -18,7 +18,7 @@ def create_sidebar_and_main():
     st.markdown(' ')
     st.markdown('---')
 
-    st.sidebar.image(os.path.join('images', 'movis_logo.png'),
+    st.sidebar.image(os.path.join('images', 'movis_logo_transparent.png'),
                      use_column_width=True)
 
     # We need 5 columns so that we have nicely aligned images
