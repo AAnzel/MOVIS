@@ -7,7 +7,6 @@ import visualize
 
 
 def show_data_set(df):
-    
     with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
         st.dataframe(df.head(100))
@@ -68,6 +67,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                      'Heatmap',
                                      'Top 10 count through time'],
                                     key='vis_data_' + key_prefix)
+    chosen_charts = []
 
     for i in visualizations:
         if i == 'Feature through time':
@@ -75,11 +75,9 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                             feature_list)
             selected_color = st.color_picker('Select line color')
 
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    visualize.time_feature(df, selected_feature,
-                                           temporal_feature, selected_color),
-                    use_container_width=True)
+            chosen_charts.append(
+                visualize.time_feature(df, selected_feature, temporal_feature,
+                                       selected_color))
 
         elif i == 'Two features scatter-plot':
             feature_1 = st.selectbox('Select 1. feature', feature_list)
@@ -89,69 +87,57 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
 
             feature_2 = st.selectbox('Select 2. feature', feature_list)
 
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    visualize.two_features(df, feature_1, feature_2),
-                    use_container_width=True)
+            chosen_charts.append(
+                visualize.two_features(df, feature_1, feature_2))
 
         elif i == 'Scatter-plot matrix':
-            target_feature = st.selectbox('Select target feature for color',
-                                          feature_list)
+            with st.form('Form_Scatter-plot matrix'):
+                target_feature = st.selectbox(
+                    'Select target feature for color', feature_list)
 
-            list_of_features = st.multiselect('Choose features', feature_list)
+                list_of_features = st.multiselect('Choose at least 2 features',
+                                                  feature_list)
+                list_of_features.append(target_feature)
+                finished = st.form_submit_button('Visualize')
 
-            if len(list_of_features) < 2:
-                st.stop()
-
-            list_of_features.append(target_feature)
-
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    visualize.scatter_matrix(df, list_of_features,
-                                             target_feature),
-                    use_container_width=True)
+                if finished:
+                    chosen_charts.append(
+                        visualize.scatter_matrix(df, list_of_features,
+                                                 target_feature))
 
         elif i == 'Multiple features parallel chart':
-            target_feature = st.selectbox(
-                    'Select target feature for color',
-                    feature_list + [temporal_feature],
-                    index=len(feature_list))
+            with st.form('Form_Multiple features parallel chart'):
+                target_feature = st.selectbox(
+                        'Select target feature for color',
+                        feature_list + [temporal_feature],
+                        index=len(feature_list))
 
-            list_of_features = st.multiselect('Choose features', feature_list)
+                list_of_features = st.multiselect('Choose at least 2 features',
+                                                  feature_list)
+                list_of_features.append(target_feature)
+                finished = st.form_submit_button('Visualize')
 
-            if len(list_of_features) < 2:
-                st.stop()
-
-            list_of_features.append(target_feature)
-
-            with st.spinner('Visualizing...'):
-                '''
-                st.altair_chart(
-                    visualize.parallel_coordinates(df, list_of_features,
-                                                   target_feature),
-                    use_container_width=True)
-                '''
-                st.plotly_chart(
-                    visualize.parallel_coordinates(df, list_of_features,
-                                                   target_feature),
-                    use_container_width=True)
+                if finished:
+                    chosen_charts.append(
+                        visualize.parallel_coordinates(df, list_of_features,
+                                                       target_feature))
+            # st.altair_chart(
+            #    visualize.parallel_coordinates(df, list_of_features,
+            #                                target_feature),
+            #    use_container_width=True)
+            #
 
         elif i == 'Heatmap':
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    visualize.heatmap(df), use_container_width=True)
+            chosen_charts.append(visualize.heatmap(df))
 
         elif i == 'Top 10 count through time':
-            with st.spinner('Visualizing...'):
-                st.altair_chart(
-                    visualize.top_10_time(df, feature_list,
-                                          temporal_feature),
-                    use_container_width=True)
+            chosen_charts.append(visualize.top_10_time(df, feature_list,
+                                                       temporal_feature))
 
         else:
             pass
 
-    return None
+    return chosen_charts
 
 
 def create_main_example_1_genomics():
@@ -200,8 +186,10 @@ def create_main_example_1_genomics():
             show_calculated_data_set(df_3, 'Product annotations')
 
             temporal_feature, feature_list = find_temporal_feature(df_4)
-            visualize_data_set(df_4, temporal_feature, feature_list,
-                               'genomics')
+            chosen_charts = visualize_data_set(df_4, temporal_feature,
+                                               feature_list, 'Genomics')
+
+            return chosen_charts
 
     #################################################
     # TODO:
@@ -227,12 +215,13 @@ def create_main_example_1_metabolomics():
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
-    visualize_data_set(df, temporal_feature, feature_list, 'metabolomics')
+    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
+                                       'Metabolomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
 
-    return None
+    return chosen_charts
 
 
 def create_main_example_1_proteomics():
@@ -260,12 +249,13 @@ def create_main_example_1_proteomics():
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
-    visualize_data_set(df, temporal_feature, feature_list, 'proteomics')
+    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
+                                       'Proteomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
 
-    return None
+    return chosen_charts
 
 
 def create_main_example_1_phy_che():
@@ -277,12 +267,13 @@ def create_main_example_1_phy_che():
 
     temporal_feature, feature_list = find_temporal_feature(df)
 
-    visualize_data_set(df, temporal_feature, feature_list, 'phy_che')
+    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
+                                       'Physico-Chemical')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
 
-    return None
+    return chosen_charts
 
 
 def create_main_example_1():
@@ -322,6 +313,7 @@ def create_main_example_1():
     # elements from the 'visualization' function (which will now have a return
     # value). For start, I will lay-out all visualizations one below the other,
     # filling the whole width of the viewport/screen area.
+    charts = []  # An empty list to hold all visualizations/charts
 
     with st.beta_expander('Show/hide data sets and related info',
                           expanded=True):
@@ -333,29 +325,40 @@ def create_main_example_1():
                 if i == 'Genomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        create_main_example_1_genomics()
+                        charts += create_main_example_1_genomics()
                 elif i == 'Metabolomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        create_main_example_1_metabolomics()
+                        charts += create_main_example_1_metabolomics()
                 elif i == 'Proteomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        create_main_example_1_proteomics()
+                        charts += create_main_example_1_proteomics()
                 else:
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        create_main_example_1_phy_che()
+                        charts += create_main_example_1_phy_che()
 
         else:
             for i in choose_omics:
                 if i == 'Genomics':
-                    create_main_example_1_genomics()
+                    charts += create_main_example_1_genomics()
                 elif i == 'Metabolomics':
-                    create_main_example_1_metabolomics()
+                    charts += create_main_example_1_metabolomics()
                 elif i == 'Proteomics':
-                    create_main_example_1_proteomics()
+                    charts += create_main_example_1_proteomics()
                 else:
-                    create_main_example_1_phy_che()
+                    charts += create_main_example_1_phy_che()
+
+    with st.beta_expander('Show/hide visualizations', expanded=True):
+        for i in charts:
+            type_of_chart = type(i)
+            with st.spinner('Visualizing...'):
+                if 'altair' in str(type_of_chart):
+                    st.altair_chart(i, use_container_width=True)
+                elif 'plotly' in str(type_of_chart):
+                    st.plotly_chart(i, use_container_width=True)
+                else:
+                    pass
     
     return None
