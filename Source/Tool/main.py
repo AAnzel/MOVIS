@@ -12,8 +12,8 @@ def create_sidebar_and_main():
 
     # TODO: Be careful when placing values in beta_columns
     # These are hardcoded values for column width
-    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.5, 2, 1])
-    tmp_col_2.title('Tool title - Multi-omics time series')
+    tmp_col_1, tmp_col_2, tmp_col_3 = st.beta_columns([1.9, 2, 1])
+    tmp_col_2.title('MOVIS')
     st.markdown(' ')
     st.markdown(' ')
     st.markdown('---')
@@ -29,7 +29,8 @@ def create_sidebar_and_main():
     col_4.markdown('Paper doi with journal logo')
 
     st.sidebar.markdown('---')
-    st.sidebar.markdown('MOVIS - Multi-Omics VISualization tool')
+    st.sidebar.markdown('**MOVIS** - **M**ulti-**O**mics **VIS**ualization tool\
+                        for time series data sets')
     st.sidebar.markdown('---')
 
     st.sidebar.markdown('**Navigation:**')
@@ -50,7 +51,7 @@ def create_sidebar_and_main():
 
 def main():
 
-    st.set_page_config(page_title='Tool title', layout='wide',
+    st.set_page_config(page_title='MOVIS', layout='wide',
                        initial_sidebar_state='auto',
                        page_icon=os.path.join('images',
                                               'movis_logo_transparent.png'))

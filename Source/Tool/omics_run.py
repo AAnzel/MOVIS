@@ -90,6 +90,26 @@ def get_cached_dataframe(num_of_example, name):
                                            "_dataframe.pkl")).convert_dtypes()
 
 
+def fix_dataframe_columns(dataframe):
+
+    old_columns = dataframe.columns.to_list()
+    new_columns_map = {}
+    bad_symbols = ['[', ']']
+
+    for column in old_columns:
+        if any(char in column for char in bad_symbols):
+            new_column = column
+            for i in bad_symbols:
+                new_column = new_column.replace(i, '(')
+
+        else:
+            new_column = column
+
+        new_columns_map[column] = new_column
+
+    return dataframe.rename(columns=new_columns_map)
+
+
 # This function creates new dataframe with column that represent season
 # according to date It also concatenates important types with metabolite names
 def season_data(data, temporal_column):

@@ -6,6 +6,27 @@ import omics_run
 import visualize
 
 
+def get_data_set(omic_name):
+
+    spinner_text_map =\
+        {'genomics_mags': 'Embedding MAGs into vectors...',
+         'genomics_kegg_temporal': 'Creating KO dataset...',
+         'genomics_mags_annotated_temporal': 'Creating annotation dataset...',
+         'genomics_mags_top_10_annotated_temporal': 'Creating annotation\
+                                                     dataset...',
+         'proteomics': 'Creating additional data set...',
+         'metabolomics': 'Creating additional data set...',
+         'phy_che': 'Creating additional data set...'}
+
+    with st.spinner(spinner_text_map[omic_name]):
+        df = omics_run.get_cached_dataframe(omics_run.EX_1, omic_name)
+
+    # Fixing dataframe columns
+    df = omics_run.fix_dataframe_columns(df)
+
+    return df
+
+
 def show_data_set(df):
     with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
@@ -73,7 +94,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
         if i == 'Feature through time':
             selected_feature = st.selectbox('Select feature to visualize',
                                             feature_list)
-            selected_color = st.color_picker('Select line color')
+            selected_color = st.color_picker('Select line color',
+                                             value='#ffffff')
 
             chosen_charts.append(
                 visualize.time_feature(df, selected_feature, temporal_feature,
@@ -164,53 +186,43 @@ def create_main_example_1_genomics():
     choose_data_set = st.multiselect('Which data set do you want to see:',
                                      data_set_list)
 
+    chosen_charts = None
     for i in choose_data_set:
         if i == 'W2V embedded MAGs':
-            with st.spinner('Embedding MAGs into vectors...'):
-                df_1 = omics_run.get_cached_dataframe(omics_run.EX_1,
-                                                      'genomics_mags')
+            df_1 = get_data_set('genomics_mags')
             show_calculated_data_set(df_1, 'Embedded MAGs')
 
         elif i == 'KEGG matrix':
-            with st.spinner('Creating KO dataset...'):
-                df_2 = omics_run.get_cached_dataframe(omics_run.EX_1,
-                                                      'genomics_kegg_temporal')
+            df_2 = get_data_set('genomics_kegg_temporal')
             show_calculated_data_set(df_2, 'KO matrix')
 
         else:
-            with st.spinner('Creating annotation dataset...'):
-                df_3 = omics_run.get_cached_dataframe(
-                    omics_run.EX_1, 'genomics_mags_annotated_temporal')
-                df_4 = omics_run.get_cached_dataframe(
-                    omics_run.EX_1, 'genomics_mags_top_10_annotated_temporal')
+            df_3 = get_data_set('genomics_mags_annotated_temporal')
+            df_4 = get_data_set('genomics_mags_top_10_annotated_temporal')
             show_calculated_data_set(df_3, 'Product annotations')
 
             temporal_feature, feature_list = find_temporal_feature(df_4)
             chosen_charts = visualize_data_set(df_4, temporal_feature,
                                                feature_list, 'Genomics')
 
-            return chosen_charts
-
-    #################################################
-    # TODO:
-    # I SHOULD ESCAPE ALL BRACKETS IN COLUMN NAMES BECAUSE ALTAIR CANNOT
-    # PROCESS THEM AND GIVES BLANK CHART
-    # I SHOULD DO THIS FOR ALL USER UPLOADED DATA SETS AS WELL
-    ###################################################
-
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
     # st.altair_chart()
 
-    return None
+    #################################################
+    # TODO:
+    # I HAVE TO CHECK HOW TO HANDLE OTHER DATAFRAMES EXCEPT df_4
+    # BECAUSE I VISUALIZE ONLY THAT DATAFRAME
+    ##################################################
+
+    return chosen_charts
 
 
 def create_main_example_1_metabolomics():
     st.header('Metabolomics')
 
     # Here I show the head() of the data set and some summary() and info()
-    with st.spinner('Getting data set...'):
-        df = omics_run.get_cached_dataframe(omics_run.EX_1, 'metabolomics')
+    df = get_data_set('metabolomics')
     show_data_set(df)
 
     temporal_feature, feature_list = find_temporal_feature(df)
@@ -243,8 +255,7 @@ def create_main_example_1_proteomics():
                 ''')
 
     # Here I show the head() of the data set and some summary() and info()
-    with st.spinner('Creating additional data set...'):
-        df = omics_run.get_cached_dataframe(omics_run.EX_1, 'proteomics')
+    df = get_data_set('proteomics')
     show_calculated_data_set(df, 'Protein properties')
 
     temporal_feature, feature_list = find_temporal_feature(df)
@@ -262,7 +273,7 @@ def create_main_example_1_phy_che():
     st.header('Physico-chemical')
 
     # Here I show the head() of the data set and some summary() and info()
-    df = omics_run.get_cached_dataframe(omics_run.EX_1, 'phy_che')
+    df = get_data_set('phy_che')
     show_data_set(df)
 
     temporal_feature, feature_list = find_temporal_feature(df)
@@ -344,6 +355,9 @@ def create_main_example_1():
                 else:
                     charts += create_main_example_1_phy_che()
 
+    # TODO: Here I should implement the size selection for each chart
+    # I should create 2 columns, left one will contain a chart, and the right
+    # one will contain some button to input desired height/width of the chart
     with st.beta_expander('Show/hide visualizations', expanded=True):
         for i in charts:
             type_of_chart = type(i)
