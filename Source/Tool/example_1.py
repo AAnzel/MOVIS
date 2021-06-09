@@ -307,12 +307,6 @@ def create_main_example_1():
 
     num_of_columns = len(choose_omics)
 
-    # TODO: Visualization canvas
-    # In order to implement one big canvas for all visualizations I have to
-    # maintain a list of all visualizations I create. That list will get its
-    # elements from the 'visualization' function (which will now have a return
-    # value). For start, I will lay-out all visualizations one below the other,
-    # filling the whole width of the viewport/screen area.
     charts = []  # An empty list to hold all visualizations/charts
 
     with st.beta_expander('Show/hide data sets and related info',
@@ -360,5 +354,5 @@ def create_main_example_1():
                     st.plotly_chart(i, use_container_width=True)
                 else:
                     pass
-    
+
     return None
