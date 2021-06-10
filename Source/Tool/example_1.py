@@ -91,7 +91,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
     chosen_charts = []
 
     for i in visualizations:
-        if i == 'Feature through time':
+        if i == 'Feature through time' and temporal_feature is not None:
             selected_feature = st.selectbox('Select feature to visualize',
                                             feature_list)
             selected_color = st.color_picker('Select line color',
@@ -113,36 +113,36 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                 visualize.two_features(df, feature_1, feature_2))
 
         elif i == 'Scatter-plot matrix':
-            with st.form('Form_Scatter-plot matrix'):
-                target_feature = st.selectbox(
-                    'Select target feature for color', feature_list)
+            target_feature = st.selectbox(
+                'Select target feature for color', feature_list)
 
-                list_of_features = st.multiselect('Choose at least 2 features',
-                                                  feature_list)
-                list_of_features.append(target_feature)
-                finished = st.form_submit_button('Visualize')
+            list_of_features = st.multiselect('Choose at least 2 features',
+                                              feature_list)
+            list_of_features.append(target_feature)
 
-                if finished:
-                    chosen_charts.append(
-                        visualize.scatter_matrix(df, list_of_features,
-                                                 target_feature))
+            chosen_charts.append(
+                    visualize.scatter_matrix(df, list_of_features,
+                                             target_feature))
 
         elif i == 'Multiple features parallel chart':
-            with st.form('Form_Multiple features parallel chart'):
+            if temporal_feature is not None:
                 target_feature = st.selectbox(
-                        'Select target feature for color',
-                        feature_list + [temporal_feature],
-                        index=len(feature_list))
+                    'Select target feature for color',
+                    feature_list + [temporal_feature],
+                    index=len(feature_list))
+            else:
+                target_feature = st.selectbox(
+                    'Select target feature for color',
+                    feature_list,
+                    index=len(feature_list))
 
-                list_of_features = st.multiselect('Choose at least 2 features',
-                                                  feature_list)
-                list_of_features.append(target_feature)
-                finished = st.form_submit_button('Visualize')
+            list_of_features = st.multiselect('Choose at least 2 features',
+                                              feature_list)
+            list_of_features.append(target_feature)
 
-                if finished:
-                    chosen_charts.append(
-                        visualize.parallel_coordinates(df, list_of_features,
-                                                       target_feature))
+            chosen_charts.append(
+                    visualize.parallel_coordinates(df, list_of_features,
+                                                   target_feature))
             # st.altair_chart(
             #    visualize.parallel_coordinates(df, list_of_features,
             #                                target_feature),
@@ -152,7 +152,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
         elif i == 'Heatmap':
             chosen_charts.append(visualize.heatmap(df))
 
-        elif i == 'Top 10 count through time':
+        elif i == 'Top 10 count through time' and temporal_feature is not None:
             chosen_charts.append(visualize.top_10_time(df, feature_list,
                                                        temporal_feature))
 
@@ -186,7 +186,7 @@ def create_main_example_1_genomics():
     choose_data_set = st.multiselect('Which data set do you want to see:',
                                      data_set_list)
 
-    chosen_charts = None
+    chosen_charts = []
     for i in choose_data_set:
         if i == 'W2V embedded MAGs':
             df_1 = get_data_set('genomics_mags')
@@ -202,18 +202,12 @@ def create_main_example_1_genomics():
             show_calculated_data_set(df_3, 'Product annotations')
 
             temporal_feature, feature_list = find_temporal_feature(df_4)
-            chosen_charts = visualize_data_set(df_4, temporal_feature,
-                                               feature_list, 'Genomics')
+            chosen_charts += visualize_data_set(df_4, temporal_feature,
+                                                feature_list, 'Genomics_4')
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
     # st.altair_chart()
-
-    #################################################
-    # TODO:
-    # I HAVE TO CHECK HOW TO HANDLE OTHER DATAFRAMES EXCEPT df_4
-    # BECAUSE I VISUALIZE ONLY THAT DATAFRAME
-    ##################################################
 
     return chosen_charts
 

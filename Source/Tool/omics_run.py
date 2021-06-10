@@ -93,6 +93,7 @@ def get_cached_dataframe(num_of_example, name):
 def fix_dataframe_columns(dataframe):
 
     old_columns = dataframe.columns.to_list()
+    old_columns = [str(i) for i in old_columns]
     new_columns_map = {}
     bad_symbols = ['[', ']']
 
