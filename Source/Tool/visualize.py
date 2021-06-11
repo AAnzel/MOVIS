@@ -3,7 +3,7 @@ import random
 import numpy as np
 import altair as alt
 import datetime as dt
-import plotly.express as px
+# import plotly.express as px
 
 
 # Defining paths for each and every omic
@@ -120,14 +120,16 @@ def two_features(data, feature_1, feature_2):
 
 
 def parallel_coordinates(data, list_of_features, target_feature):
-    '''
-    new_data = data[list_of_features].reset_index().melt(id_vars=['index',
-                                                                  target])
+
+    # TODO: Implement normalization before creating a chart
+
+    new_data = data[list_of_features].reset_index().melt(
+        id_vars=['index', target_feature])
 
     chart = alt.Chart(new_data).mark_line().encode(
         alt.X('variable:N'),
         alt.Y('value:Q'),
-        alt.Color(target, type='nominal'),
+        alt.Color(target_feature, type='quantitative'),
         alt.Detail('index:N'),
         opacity=alt.value(0.4)
     )
@@ -137,6 +139,7 @@ def parallel_coordinates(data, list_of_features, target_feature):
         dimensions=list_of_features,
         color_continuous_scale=px.colors.sequential.Inferno,
         color_continuous_midpoint=2)
+    '''
 
     return chart
 
@@ -199,8 +202,8 @@ def top_10_time(data, list_of_features, temporal_column):
     chart = alt.Chart(new_data).mark_bar().encode(
         alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
-        alt.Color('variable:N', scale=alt.Scale(scheme='category10'),
-                  legend=alt.Legend(orient='top', direction='vertical')),
+        alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
+                  # legend=alt.Legend(orient='top', direction='vertical')),
         tooltip=['value']
     )
 
