@@ -1,5 +1,7 @@
 import os
 import random
+import base64
+import json
 import altair_saver
 import pandas as pd
 import numpy as np
@@ -109,6 +111,41 @@ def fix_dataframe_columns(dataframe):
         new_columns_map[column] = new_column
 
     return dataframe.rename(columns=new_columns_map)
+
+
+def get_hashed_name(list_of_strings):
+    return (base64.urlsafe_b64encode(
+        ('_'.join(list_of_strings)).encode("utf-8"))).decode("utf-8")
+
+
+def cache_chart(chart, num_of_example, name):
+    if num_of_example == 1:
+        chart.save(os.path.join(path_cached_save_root, "example_1", "charts",
+                                name + "_chart.json"))
+    else:
+        chart.save(os.path.join(path_cached_save_root, "example_2", "charts",
+                                name + "_chart.json"))
+    return None
+
+
+def get_cached_chart(num_of_example, name):
+    if num_of_example == 1:
+        tmp_path = os.path.join(path_cached_save_root, "example_1", "charts",
+                                name + "_chart.json")
+
+    else:
+        tmp_path = os.path.join(path_cached_save_root, "example_2", "charts",
+                                name + "_chart.json")
+
+    # If we cached the chart, we return it. If not, we return None as a signal
+    if os.path.exists(tmp_path):
+        with open(tmp_path) as f:
+            tmp_json_data = json.load(f)
+            
+        print(tmp_json_data)
+        return alt.Chart.from_dict(tmp_json_data)
+    else:
+        return None
 
 
 # This function creates new dataframe with column that represent season
