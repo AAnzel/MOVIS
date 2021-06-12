@@ -141,8 +141,7 @@ def get_cached_chart(num_of_example, name):
     if os.path.exists(tmp_path):
         with open(tmp_path) as f:
             tmp_json_data = json.load(f)
-            
-        print(tmp_json_data)
+
         return alt.Chart.from_dict(tmp_json_data)
     else:
         return None

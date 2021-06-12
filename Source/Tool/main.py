@@ -13,7 +13,7 @@ def create_sidebar_and_main():
     # TODO: Be careful when placing values in beta_columns
     # These are hardcoded values for column width
     tmp_col_1, tmp_col_2, tmp_col_3, tmp_col_4, tmp_col_5 = st.beta_columns(5)
-    tmp_col_2.title('MOVIS')
+    tmp_col_3.title('MOVIS')
     st.markdown(' ')
     st.markdown(' ')
     st.markdown('---')

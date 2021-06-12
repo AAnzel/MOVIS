@@ -69,16 +69,16 @@ def find_temporal_feature(df):
     return temporal_feature, feature_list
 
 
-def choose_columns(df, key_prefix):
+def choose_columns(df, key_suffix):
 
     new_columns = st.multiselect('Choose columns to visualize:',
                                  list(df.columns.values),
-                                 key='choose_col' + key_prefix)
+                                 key='choose_col' + key_suffix)
 
     return new_columns
 
 
-def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
+def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     visualizations = st.multiselect('Choose your visualization',
                                     ['Feature through time',
@@ -87,7 +87,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                      'Multiple features parallel chart',
                                      'Heatmap',
                                      'Top 10 count through time'],
-                                    key='vis_data_' + key_prefix)
+                                    key='vis_data_' + key_suffix)
     chosen_charts = []
 
     for i in visualizations:
@@ -98,8 +98,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
                                              value='#ffffff')
 
             chosen_charts.append(
-                visualize.time_feature(df, selected_feature, temporal_feature,
-                                       selected_color))
+                (visualize.time_feature(df, selected_feature, temporal_feature,
+                                       selected_color), i + key_suffix))
 
         elif i == 'Two features scatter-plot':
             feature_1 = st.selectbox('Select 1. feature', feature_list)
@@ -110,7 +110,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
             feature_2 = st.selectbox('Select 2. feature', feature_list)
 
             chosen_charts.append(
-                visualize.two_features(df, feature_1, feature_2))
+                (visualize.two_features(df, feature_1, feature_2),
+                i + key_suffix))
 
         elif i == 'Scatter-plot matrix':
             target_feature = st.selectbox(
@@ -121,8 +122,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
             list_of_features.append(target_feature)
 
             chosen_charts.append(
-                    visualize.scatter_matrix(df, list_of_features,
-                                             target_feature))
+                    (visualize.scatter_matrix(df, list_of_features,
+                                             target_feature), i + key_suffix))
 
         elif i == 'Multiple features parallel chart':
             if temporal_feature is not None:
@@ -141,8 +142,9 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
             list_of_features.append(target_feature)
 
             chosen_charts.append(
-                    visualize.parallel_coordinates(df, list_of_features,
-                                                   target_feature))
+                    (visualize.parallel_coordinates(df, list_of_features,
+                                                   target_feature)),
+                     i + key_suffix)
             # st.altair_chart(
             #    visualize.parallel_coordinates(df, list_of_features,
             #                                target_feature),
@@ -150,11 +152,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_prefix):
             #
 
         elif i == 'Heatmap':
-            chosen_charts.append(visualize.heatmap(df))
+            chosen_charts.append((visualize.heatmap(df), i + key_suffix))
 
         elif i == 'Top 10 count through time' and temporal_feature is not None:
-            chosen_charts.append(visualize.top_10_time(df, feature_list,
-                                                       temporal_feature))
+            chosen_charts.append((visualize.top_10_time(df, feature_list,
+                                                       temporal_feature),
+                                  i + key_suffix))
 
         else:
             pass
@@ -312,7 +315,7 @@ def create_main_example_1():
 
     num_of_columns = len(choose_omics)
 
-    charts = []  # An empty list to hold all visualizations/charts
+    charts = []  # An empty list to hold all pairs (visualizations, key)
 
     with st.beta_expander('Show/hide data sets and related info',
                           expanded=True):
@@ -349,17 +352,31 @@ def create_main_example_1():
                 else:
                     charts += create_main_example_1_phy_che()
 
-    # TODO: Here I should implement the size selection for each chart
-    # I should create 2 columns, left one will contain a chart, and the right
-    # one will contain some button to input desired height/width of the chart
+
+    # TODO: Here I should implement a switch that would allow size adjustments
+    # only to some plots, and not all of them (for example heatmap)
     with st.beta_expander('Show/hide visualizations', expanded=True):
+        vis_column, size_column = st.beta_columns([3, 1])
+
         for i in charts:
-            type_of_chart = type(i)
+            type_of_chart = type(i[0])
+
+            tmp_width = size_column.slider(
+                'Select width in pixels:', min_value=50, max_value=600,
+                value=0, step=50, format='%d', key=i[1] + 'slider_width'
+            )
+            tmp_height = size_column.slider(
+                'Select height in pixels:', min_value=50, max_value=600,
+                value=0, step=50, format='%d', key=i[1] + 'slider_height'
+            )
+
             with st.spinner('Visualizing...'):
                 if 'altair' in str(type_of_chart):
-                    st.altair_chart(i, use_container_width=True)
-                elif 'plotly' in str(type_of_chart):
-                    st.plotly_chart(i, use_container_width=True)
+                    if tmp_width == 0 and tmp_height == 0:
+                        vis_column.altair_chart(i[0], use_container_width=True)
+                    else:
+                        vis_column.altair_chart(i[0].properties(
+                            height=tmp_height, width=tmp_width))
                 else:
                     pass
 

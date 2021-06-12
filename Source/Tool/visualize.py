@@ -203,7 +203,7 @@ def top_10_time(data, list_of_features, temporal_column):
         alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
         alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
-                  # legend=alt.Legend(orient='top', direction='vertical')),
+        # legend=alt.Legend(orient='top', direction='vertical')),
         tooltip=['value']
     )
 
@@ -212,6 +212,8 @@ def top_10_time(data, list_of_features, temporal_column):
         alt.Y('sum(value):Q')
     ).add_selection(brush).properties(height=60)
 
+    # IMPORTANT: There is a streamlit bug that prevents vconcatenated chart
+    # to fill the full width of the screen area
     return alt.vconcat(interval_chart, chart)
 
 
