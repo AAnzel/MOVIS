@@ -148,13 +148,9 @@ def get_cached_chart(num_of_example, name):
 
 
 # This function creates new dataframe with column that represent season
-# according to date It also concatenates important types with metabolite names
 def season_data(data, temporal_column):
     new_df = data
     new_df["season"] = new_df[temporal_column].dt.month % 12 // 3 + 1
-
-    # important_types = [metabolite_column] + important_types
-    # new_df['new_name'] = df[important_types].agg('\n'.join, axis=1)
 
     return new_df
 
@@ -184,71 +180,38 @@ def create_temporal_column(list_of_days, start_date, end):
 # # GENOMIC ANALYSIS
 # ---
 def example_1_calc_genomics():
-    # **Important**: I should review the way I look at MAGs. The names of all
-    # fasta files beggining with 'D_##' represent the days those MAGs were
-    # obtained. Therefore, I should look at this also as timeseries data. Also,
-    # maybe I should only consider 78 MAGs, and not all ~1300. After some
-    # consideration, I conclude that I should definetly use only 78 MAGs,
-    # because that way I wouldn't be tied to meta-omics data only. I also
-    # thinked about what should I visualize in that case. One idea is that I
-    # should also encode those MAGs with word2wec, and then make a 3D chart
-    # where one dimension is time, and other two dimensions would be PCA
-    # dimensions of those MAGs. I could also use this function to visualize
-    # proteomics data if I want.
 
-    # Another important thing is that I should actually include FASTA headers
-    # and possibly use only them. That way, I could make figures like in a
-    # relevant paper where MAGs are groupped according to their taxonomy etc. I
-    # should look more into this.
-    # ## MAG examination
-    # ### KEGG examination
+    # kegg_matrix_df = calculate.import_kegg_and_create_df(
+    #     end=ALL_DAYS, path_fasta=path_genomics_78,
+    #     path_all_keggs=path_genomics_kegg)
 
-    #######################################################################
-    # CREATE DIFFERENT FUNCTIONS FOR KEGG WORK AND FASTA WORK
-    # CACHE KEGG MATRIX, FASTA MODEL AND MAGS_DF
-    # PUT VISUALIZATION PARTS IN visualize.py
-    #######################################################################
-    '''
-    kegg_matrix_df = calculate.import_kegg_and_create_df(
-        end=ALL_DAYS, path_fasta=path_genomics_78,
-        path_all_keggs=path_genomics_kegg)
+    # fasta_names = [i for i in os.listdir(path_genomics_78) if
+    #                (i.endswith("fa") and i.startswith("D"))]
+    # list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    # temporal_kegg_matrix_df = kegg_matrix_df.copy()
+    # temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
 
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
-    temporal_kegg_matrix_df = kegg_matrix_df.copy()
-    temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
-
-    cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
-    '''
+    # cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
+    ###########
     # ### KEGG examination but with pairwise Jaccard distance matrix(as
     # seen in paper)
     # kegg_pairwise = calculate.create_pairwise_jaccard(kegg_matrix)
     # kegg_mds_chart = visualize.visualize_with_mds(kegg_pairwise, START_DATE,
     #                                             END, path_genomics_78)
-    # ---
-    # # VAZNO:
-    # Sledece sto treba da se uradi je da se nadje transcriptomic data set i da
-    # se obradi i on u potpunosti. Nakon toga, treba da se sve podeli po
-    # skriptama i da se odluci o dizajnu. Posle ostaje jos da se napravi front
-    # end.
-    #
-    # ---
 
-    # FOR CLUSTERING I SHOULD CREATE A DATAFRAME WITH MAGs INDEXES AND THEIR
-    # VECTOR REPRESENTATIONS
-    '''
-    final_model, fasta_names, fasta_ids =\
-        calculate.import_mags_and_build_model(end=END,
-                                              path_fasta=path_genomics_78)
+    ########
 
-    # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
-    final_model = calculate.train_model(final_model, epochs=EPOCHS, end=END)
+    # final_model, fasta_names, fasta_ids =\
+    #     calculate.import_mags_and_build_model(end=END,
+    #                                           path_fasta=path_genomics_78)
 
-    final_model.wv.save_word2vec_format(
-        os.path.join(path_model_save_root, "genomics_model_78.bin"),
-        binary=True)
-    '''
+    # # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
+    # final_model = calculate.train_model(final_model, epochs=EPOCHS, end=END)
+
+    # final_model.wv.save_word2vec_format(
+    #     os.path.join(path_model_save_root, "genomics_model_78.bin"),
+    #     binary=True)
+
     # Now I should vectorize documents with this model. For further use, I
     # could save this model's weights, and use it to vectorize all mags. That
     # would take a lot, but every MAG will have its vector representation
@@ -257,37 +220,38 @@ def example_1_calc_genomics():
     # > sentences(genomes) and then finding the vector representation of the
     # > whole MAG(document). If I do that for one MAG at a time, There is no
     # > need to worry about memory
-    #
-    '''
-    list_of_mag_vectors = calculate.vectorize_mags(final_model,
-                                                   path_fasta=path_genomics_78,
-                                                   end=END)
-    mags_df = pd.DataFrame(list_of_mag_vectors)
-    cache_dataframe(mags_df, EX_1, 'genomics_mags')
+    ##################
+    # list_of_mag_vectors = calculate.vectorize_mags(final_model,
+    #                                                path_fasta=path_genomics_78,
+    #                                                end=END)
+    # mags_df = pd.DataFrame(list_of_mag_vectors)
+    # cache_dataframe(mags_df, EX_1, 'genomics_mags')
 
-    mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
+    # mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
 
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
-    temporal_mags_df = mags_df.copy()
-    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
-    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
+    # fasta_names = [i for i in os.listdir(path_genomics_78) if
+    #                (i.endswith("fa") and i.startswith("D"))]
+    # list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    # temporal_mags_df = mags_df.copy()
+    # temporal_mags_df.insert(0, 'DateTime', list_of_dates)
+    # cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
 
-    # ## Data preprocessing
-    mag_scaler = preprocessing.StandardScaler()
-    scaled_mags_df = mag_scaler.fit_transform(mags_df)
+    # # ## Data preprocessing
+    # mag_scaler = preprocessing.StandardScaler()
+    # scaled_mags_df = mag_scaler.fit_transform(mags_df)
 
-    # PCA for visualizing MAGs
-    pca_model = PCA(n_components=2, random_state=SEED)
-    temporal_mags_df = pd.DataFrame(
-        pca_model.fit_transform(scaled_mags_df), columns=['PCA_1', 'PCA_2'])
+    # # PCA for visualizing MAGs
+    # pca_model = PCA(n_components=2, random_state=SEED)
+    # temporal_mags_df = pd.DataFrame(
+    #     pca_model.fit_transform(scaled_mags_df), columns=['PCA_1', 'PCA_2'])
 
-    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
+    # temporal_mags_df.insert(0, 'DateTime', list_of_dates)
 
-    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
-    '''
+    # cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal_PCA')
+
+    ###############################
     # THERE IS AN ERROR HERE, CHECK
+    ###############################
     # MDS for visualizing KEGG
     # kegg_matrix_df = get_cached_dataframe(EX_1, 'genomics_kegg')
 
@@ -300,27 +264,28 @@ def example_1_calc_genomics():
 
     # cache_dataframe(kegg_matrix_transformed_df, EX_1,
     #                'genomics_kegg_temporal_MDS')
-    '''
-    annotated_mags_df, top_10_annotated_mags_df =\
-            calculate.create_annotated_data_set()
 
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
-    temporal_annotated_mags_df = annotated_mags_df.copy()
-    temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
-    temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
-    temporal_top_10_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+    ##################
+    # annotated_mags_df, top_10_annotated_mags_df =\
+    #         calculate.create_annotated_data_set()
 
-    cache_dataframe(temporal_annotated_mags_df, EX_1,
-                    'genomics_mags_annotated_temporal')
-    cache_dataframe(temporal_top_10_annotated_mags_df, EX_1,
-                    'genomics_mags_top_10_annotated_temporal')
-    '''
+    # fasta_names = [i for i in os.listdir(path_genomics_78) if
+    #                (i.endswith("fa") and i.startswith("D"))]
+    # list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    # temporal_annotated_mags_df = annotated_mags_df.copy()
+    # temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+    # temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
+    # temporal_top_10_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+
+    # cache_dataframe(temporal_annotated_mags_df, EX_1,
+    #                 'genomics_mags_annotated_temporal')
+    # cache_dataframe(temporal_top_10_annotated_mags_df, EX_1,
+    #                 'genomics_mags_top_10_annotated_temporal')
+
     return None
 
 
-def example_1_cluster_genomics():
+def example_1_cluster_elbow():
     # There is already a function calculate.cluster_data
     # This should only be a wraper
 
@@ -385,17 +350,6 @@ def example_1_calc_metabolomics():
     metabolomics_df.dropna(inplace=True)
     metabolomics_df.reset_index(drop=True, inplace=True)
 
-    # ## Time series examination
-    # metabolites_chart = visualize.visualize_metabolites(
-    #   metabolomics_df, "date", "Metabolite", ["type", "type2", "measurement",
-    #                                            "N"])
-
-    # save_charts([metabolites_chart], ['metabolomics_metabolites_chart.png'])
-
-    # ## Clustering
-    # Deep learning temporal clustering Should I even do this? Previous
-    # visualizations are descriptive enough. It would be a lot of work for not
-    # much benefit
     return None
 
 
@@ -422,8 +376,6 @@ def example_1_calc_proteomics():
     # I will save this dataframe to show to the end-user
     cache_dataframe(proteomics_data, EX_1, "proteomics")
 
-    # chart_proteomics = visualize.visualize_proteomics(proteomics_data)
-    # save_charts([chart_proteomics], ['proteomics_chart_proteomics.png'])
     return None
 
 
@@ -463,15 +415,4 @@ def example_1_calc_phy_che():
     # I will save this dataframe to show to the end-user
     cache_dataframe(filtered_phy_che_df, EX_1, "phy_che")
 
-    # Visualize temperature, air_temperature, conductivity, inflow_pH, nitrate,
-    # oxygen, pH
-    # chart_phy_che = visualize.visualize_phy_che(
-    #   filtered_phy_che_df, "DateTime", filtered_phy_che_df.columns.values[4:]
-    # )
-    # chart_phy_che_corr = visualize.visualize_phy_che_heatmap(
-    #    filtered_phy_che_df)
-
-    # save_charts([chart_phy_che_corr, chart_phy_che],
-    # ['physico_chemical_chart_psy_che_corr.png',
-    # 'physico_chemical_chart_psy_che.png'])
     return None

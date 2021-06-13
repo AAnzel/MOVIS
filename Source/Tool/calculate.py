@@ -449,6 +449,9 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
 
 def get_number_of_clusters(data):
 
+    if 'DateTime' in data.columns.to_list():
+        data = data.drop('DateTime', axis=1)
+
     mag_scaler = preprocessing.StandardScaler()
     scaled_data = mag_scaler.fit_transform(data)
 
@@ -467,6 +470,9 @@ def get_number_of_clusters(data):
 
 
 def cluster_data(data, num_of_clusters, min_samples, model_name):
+
+    if 'DateTime' in data.columns.to_list():
+        data = data.drop('DateTime', axis=1)
 
     if model_name == 'K-Means':
         model = KMeans(n_clusters=num_of_clusters, random_state=SEED)

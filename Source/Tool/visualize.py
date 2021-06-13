@@ -1,8 +1,12 @@
 import os
 import random
 import numpy as np
+import pandas as pd
 import altair as alt
 import datetime as dt
+from sklearn.decomposition import PCA
+from sklearn.manifold import MDS
+from sklearn import preprocessing
 # import plotly.express as px
 
 
@@ -287,14 +291,39 @@ def visualize_proteomics(data):
 
 
 # Everything below is used for genomics data set exclusively
-def visualize_clusters(data, labels):
+def visualize_clusters(data, temporal_feature, labels_feature, method):
 
-    data.insert(0, 'Labels', labels)
+    temporal_series = data[temporal_feature]
+    tmp_data = data.drop(temporal_feature, axis=1)
 
-    chart = alt.Chart(data).mark_circle(opacity=1).encode(
-            alt.X(str(data.columns[0]), type='quantitative'),
-            alt.X(str(data.columns[1]), type='quantitative'),
-            alt.Color("Labels:N")
+    labels_series = tmp_data[labels_feature]
+    tmp_data = tmp_data.drop(labels_feature, axis=1)
+
+    scaler = preprocessing.StandardScaler()
+    scaled_data = scaler.fit_transform(tmp_data)
+
+    if method == 'PCA':
+        pca_model = PCA(n_components=2, random_state=SEED)
+        tmp_data = pd.DataFrame(
+            pca_model.fit_transform(scaled_data), columns=['PCA_1', 'PCA_2'])
+
+    elif method == 'MDS':
+        mds_model = MDS(n_components=2, random_state=SEED,
+                        dissimilarity="euclidean", n_jobs=NUM_OF_WORKERS)
+        tmp_data = pd.DataFrame(
+            mds_model.fit_transform(scaled_data), columns=['MDS_1', 'MDS_2'])
+
+    else:
+        pass
+
+    tmp_data.insert(0, temporal_feature, temporal_series)
+    tmp_data.insert(1, labels_feature, labels_series)
+
+    chart = alt.Chart(tmp_data).mark_circle(opacity=1).encode(
+            alt.X(str(tmp_data.columns[2]), type='quantitative'),
+            alt.Y(str(tmp_data.columns[3]), type='quantitative'),
+            alt.Color(str(tmp_data.columns[1]), type='nominal'),
+            alt.Tooltip(str(tmp_data.columns[0]), type='temporal')
         )
 
     return chart

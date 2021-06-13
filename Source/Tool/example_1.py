@@ -11,6 +11,7 @@ def get_data_set(omic_name):
     spinner_text_map =\
         {'genomics_mags': 'Embedding MAGs into vectors...',
          'genomics_mags_temporal': 'Embedding MAGs into vectors...',
+         'genomics_mags_temporal_PCA': 'Embedding MAGs into vectors...',
          'genomics_kegg_temporal': 'Creating KO dataset...',
          'genomics_mags_annotated_temporal': 'Creating annotation dataset...',
          'genomics_mags_top_10_annotated_temporal': 'Creating annotation\
@@ -54,6 +55,54 @@ def show_calculated_data_set(df, text_info):
     return None
 
 
+def show_clustering_info(df, key_suffix):
+
+    clustering_methods = st.multiselect(
+        'Choose clustering method:', ['K-Means', 'OPTICS'],
+        key='choose_clus' + key_suffix
+        )
+
+    elbow_vis_col, num_input_col = st.beta_columns([3, 1])
+
+    tmp_df = omics_run.calculate.get_number_of_clusters(df)
+    elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
+                               use_container_width=True)
+
+    ###############
+    # BUG:
+    # DOESN'T WORK WHEN I HAVE BOTH KMEANS AND OPTICS SELECTED
+    # IT WONT INITIALIZE OPTICS SLIDER AT ALL
+    ###############
+    cluster_number = 0
+    cluster_samples = 0
+    print(clustering_methods)
+    print('K-Means' in clustering_methods and 'OPTICS' in clustering_methods)
+    if 'K-Means' in clustering_methods:
+        cluster_number = num_input_col.slider(
+            'Select a number of clusters using the elbow rule:', min_value=1,
+            max_value=15, value=1, step=1, format='%d',
+            key='slider_cluster_Kmeans_' + key_suffix)
+
+    elif 'OPTICS' in clustering_methods:
+        cluster_samples = num_input_col.slider(
+            'Select a minimum number of samples to be considered as a core\
+            point:', min_value=1, max_value=15, value=1, step=1, format='%d',
+            key='slider_cluster_Optics_' + key_suffix)
+
+    else:
+        pass
+    # We create new columns that hold labels for each chosen method
+    # it holds pairs (name of method, labels)
+    print(cluster_number, cluster_samples)
+
+    labels_list = []
+    for i in clustering_methods:
+        labels_list.append((i, omics_run.calculate.cluster_data(
+            df, cluster_number, cluster_samples, i)))
+
+    return labels_list
+
+
 def find_temporal_feature(df):
     feature_list = list(df.columns.values)
 
@@ -83,11 +132,11 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     chosen_charts = []
 
-    if key_suffix == 'Genomics_1':
+    if key_suffix.startswith('Genomics_1'):
         # TODO: Implement t-SNE reduction
         visualizations = st.multiselect('Choose your visualization',
-                                        ['Cluster and PCA visualization',
-                                         'Cluster and MDS visualization'],
+                                        ['PCA visualization',
+                                         'MDS visualization'],
                                         key='vis_data_' + key_suffix)
 
     else:
@@ -101,10 +150,20 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                                         key='vis_data_' + key_suffix)
 
     for i in visualizations:
-        if i == 'Cluster and PCA visualization':
-            pass
-        elif i == 'Cluster and MDS visualization':
-            pass
+        # I have to check which clustering method was used and visualize it
+        if i == 'PCA visualization':
+            chosen_charts.append(
+                (visualize.visualize_clusters(df, temporal_feature,
+                                              feature_list, 'PCA'),
+                 i + '_' + key_suffix + '_PCA')
+            )
+
+        elif i == 'MDS visualization':
+            chosen_charts.append(
+                (visualize.visualize_clusters(df, temporal_feature,
+                                              feature_list, 'MDS'),
+                 i + '_' + key_suffix + '_MDS')
+            )
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_feature = st.selectbox('Select feature to visualize',
@@ -208,14 +267,18 @@ def create_main_example_1_genomics():
     chosen_charts = []
     for i in choose_data_set:
         if i == 'W2V embedded MAGs':
-            tmp_df_1 = get_data_set('genomics_mags_temporal')
-            show_calculated_data_set(tmp_df_1, 'Embedded MAGs')
-            df_1 = get_data_set('genomics_mags_temporal_PCA')
-            # TODO: Cache MDS data set
-            #  df_2 = get_data_set('genomics_mags_temporal_MDS')
-            temporal_feature, feature_list = find_temporal_feature(df_1)
-            chosen_charts += visualize_data_set(df_1, temporal_feature,
-                                                feature_list, 'Genomics_1')
+            df_1 = get_data_set('genomics_mags_temporal')
+            show_calculated_data_set(df_1, 'Embedded MAGs')
+            labels_list = show_clustering_info(df_1, 'Genomics_1')
+
+            # Traversing pairs in list
+            for i in labels_list:
+                temporal_feature, feature_list = find_temporal_feature(df_1)
+                feature_list = i[0]
+                df_1[i[0]] = i[1]
+                chosen_charts += visualize_data_set(
+                        df_1, temporal_feature, feature_list,
+                        'Genomics_1_' + i[0])
 
         elif i == 'KEGG matrix':
             df_3 = get_data_set('genomics_kegg_temporal')
