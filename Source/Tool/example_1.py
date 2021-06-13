@@ -81,18 +81,32 @@ def choose_columns(df, key_suffix):
 
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
-    visualizations = st.multiselect('Choose your visualization',
-                                    ['Feature through time',
-                                     'Two features scatter-plot',
-                                     'Scatter-plot matrix',
-                                     'Multiple features parallel chart',
-                                     'Heatmap',
-                                     'Top 10 count through time'],
-                                    key='vis_data_' + key_suffix)
     chosen_charts = []
 
+    if key_suffix == 'Genomics_1':
+        # TODO: Implement t-SNE reduction
+        visualizations = st.multiselect('Choose your visualization',
+                                        ['Cluster and PCA visualization',
+                                         'Cluster and MDS visualization'],
+                                        key='vis_data_' + key_suffix)
+
+    else:
+        visualizations = st.multiselect('Choose your visualization',
+                                        ['Feature through time',
+                                         'Two features scatter-plot',
+                                         'Scatter-plot matrix',
+                                         'Multiple features parallel chart',
+                                         'Heatmap',
+                                         'Top 10 count through time'],
+                                        key='vis_data_' + key_suffix)
+
     for i in visualizations:
-        if i == 'Feature through time' and temporal_feature is not None:
+        if i == 'Cluster and PCA visualization':
+            pass
+        elif i == 'Cluster and MDS visualization':
+            pass
+
+        elif i == 'Feature through time' and temporal_feature is not None:
             selected_feature = st.selectbox('Select feature to visualize',
                                             feature_list)
             selected_color = st.color_picker('Select line color',
@@ -194,17 +208,23 @@ def create_main_example_1_genomics():
     chosen_charts = []
     for i in choose_data_set:
         if i == 'W2V embedded MAGs':
-            df_1 = get_data_set('genomics_mags_temporal')
-            show_calculated_data_set(df_1, 'Embedded MAGs')
+            tmp_df_1 = get_data_set('genomics_mags_temporal')
+            show_calculated_data_set(tmp_df_1, 'Embedded MAGs')
+            df_1 = get_data_set('genomics_mags_temporal_PCA')
+            # TODO: Cache MDS data set
+            #  df_2 = get_data_set('genomics_mags_temporal_MDS')
+            temporal_feature, feature_list = find_temporal_feature(df_1)
+            chosen_charts += visualize_data_set(df_1, temporal_feature,
+                                                feature_list, 'Genomics_1')
 
         elif i == 'KEGG matrix':
-            df_2 = get_data_set('genomics_kegg_temporal')
-            show_calculated_data_set(df_2, 'KO matrix')
+            df_3 = get_data_set('genomics_kegg_temporal')
+            show_calculated_data_set(df_3, 'KO matrix')
 
         else:
-            df_3 = get_data_set('genomics_mags_annotated_temporal')
+            tmp_df_4 = get_data_set('genomics_mags_annotated_temporal')
             df_4 = get_data_set('genomics_mags_top_10_annotated_temporal')
-            show_calculated_data_set(df_3, 'Product annotations')
+            show_calculated_data_set(tmp_df_4, 'Product annotations')
 
             temporal_feature, feature_list = find_temporal_feature(df_4)
             chosen_charts += visualize_data_set(df_4, temporal_feature,
