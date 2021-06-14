@@ -126,6 +126,7 @@ def two_features(data, feature_1, feature_2):
 def parallel_coordinates(data, list_of_features, target_feature):
 
     # TODO: Implement normalization before creating a chart
+    # See: https://github.com/AAnzel/DataVis_Supplementary_Material/
 
     new_data = data[list_of_features].reset_index().melt(
         id_vars=['index', target_feature])
@@ -145,7 +146,7 @@ def parallel_coordinates(data, list_of_features, target_feature):
         color_continuous_midpoint=2)
     '''
 
-    return chart
+    return chart.interactive()
 
 
 def scatter_matrix(data, list_of_features, target_feature):

@@ -114,17 +114,20 @@ def show_clustering_info(df, key_suffix):
 def find_temporal_feature(df):
     feature_list = list(df.columns.values)
 
-    temporal_feature = None
-    temporal_feature = str(
-        df.select_dtypes(include=[np.datetime64]).columns[0])
+    # BUG: This might induce unexpected behavior, and should be checked
+    try:
+        df_of_temporals = df.select_dtypes(include=[np.datetime64])
+        temporal_feature = str(df_of_temporals.columns[0])
 
-    if temporal_feature is None:
+        feature_list.remove(temporal_feature)
+
+        return temporal_feature, feature_list
+
+    except ValueError:
         st.text('Datetime column not detected.')
+        st.stop()
         # TODO: Implement choosing time column and modifying dataframe
-
-    feature_list.remove(temporal_feature)
-
-    return temporal_feature, feature_list
+        return None, None
 
 
 def choose_columns(df, key_suffix):
@@ -164,15 +167,13 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             chosen_charts.append(
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 'PCA'),
-                 i + '_' + key_suffix + '_PCA')
-            )
+                 i + '_' + key_suffix + '_PCA'))
 
         elif i == 'MDS visualization':
             chosen_charts.append(
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 'MDS'),
-                 i + '_' + key_suffix + '_MDS')
-            )
+                 i + '_' + key_suffix + '_MDS'))
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_feature = st.selectbox('Select feature to visualize',
@@ -227,8 +228,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             chosen_charts.append(
                     (visualize.parallel_coordinates(df, list_of_features,
-                                                    target_feature)),
-                    i + '_' + key_suffix)
+                                                    target_feature),
+                     i + '_' + key_suffix))
             # st.altair_chart(
             #    visualize.parallel_coordinates(df, list_of_features,
             #                                target_feature),
