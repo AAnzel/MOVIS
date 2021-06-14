@@ -68,33 +68,35 @@ def show_clustering_info(df, key_suffix):
     elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
                                use_container_width=True)
 
+    help_text = '''Choose the number according to the elbow rule. The number of
+                   clusters should be the number on the x-axis of the Elbow
+                   chart where is the "elbow".'''
 
     if all(i in clustering_methods for i in ['K-Means', 'OPTICS']):
-        print('IN ALL')
         cluster_number = num_input_col.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix)
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
         cluster_samples = num_input_col.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=1, max_value=15, value=1, step=1,
-            format='%d', key='slider_cluster_Optics_' + key_suffix)
+            format='%d', key='slider_cluster_Optics_' + key_suffix,
+            help=help_text)
 
     elif 'K-Means' in clustering_methods:
-        print('IN KMEANS')
         cluster_number = num_input_col.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix)
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
         cluster_samples = 0
 
     elif 'OPTICS' in clustering_methods:
-        print('IN OPTICS')
         cluster_number = 0
         cluster_samples = num_input_col.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=1, max_value=15, value=1, step=1,
-            format='%d', key='slider_cluster_Optics_' + key_suffix)
+            format='%d', key='slider_cluster_Optics_' + key_suffix,
+            help=help_text)
 
     else:
         pass
@@ -138,7 +140,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     chosen_charts = []
 
-    if key_suffix.startswith('Genomics_1'):
+    if key_suffix.startswith('Genomics_1') or\
+       key_suffix.startswith('Genomics_2'):
         # TODO: Implement t-SNE reduction
         visualizations = st.multiselect('Choose your visualization',
                                         ['PCA visualization',
@@ -287,17 +290,27 @@ def create_main_example_1_genomics():
                         'Genomics_1_' + i[0])
 
         elif i == 'KEGG matrix':
-            df_3 = get_data_set('genomics_kegg_temporal')
-            show_calculated_data_set(df_3, 'KO matrix')
+            df_2 = get_data_set('genomics_kegg_temporal')
+            show_calculated_data_set(df_2, 'KO matrix')
+            labels_list = show_clustering_info(df_2, 'Genomics_2')
+
+            # Traversing pairs in list
+            for i in labels_list:
+                temporal_feature, feature_list = find_temporal_feature(df_2)
+                feature_list = i[0]
+                df_2[i[0]] = i[1]
+                chosen_charts += visualize_data_set(
+                        df_2, temporal_feature, feature_list,
+                        'Genomics_2_' + i[0])
 
         else:
-            tmp_df_4 = get_data_set('genomics_mags_annotated_temporal')
-            df_4 = get_data_set('genomics_mags_top_10_annotated_temporal')
-            show_calculated_data_set(tmp_df_4, 'Product annotations')
+            tmp_df_3 = get_data_set('genomics_mags_annotated_temporal')
+            df_3 = get_data_set('genomics_mags_top_10_annotated_temporal')
+            show_calculated_data_set(tmp_df_3, 'Product annotations')
 
-            temporal_feature, feature_list = find_temporal_feature(df_4)
-            chosen_charts += visualize_data_set(df_4, temporal_feature,
-                                                feature_list, 'Genomics_4')
+            temporal_feature, feature_list = find_temporal_feature(df_3)
+            chosen_charts += visualize_data_set(df_3, temporal_feature,
+                                                feature_list, 'Genomics_3')
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
@@ -327,6 +340,9 @@ def create_main_example_1_metabolomics():
 def create_main_example_1_proteomics():
     st.header('Proteomics')
 
+    # TODO: Implement the same data set creation as with the genomics data
+    # Create a data set with w2v and then implement all data set visulizations
+    # as with the genomics data
     with st.spinner('Showing folder structure'):
         st.code('''set_of_78/
             ├── D03_O1.31.2.faa

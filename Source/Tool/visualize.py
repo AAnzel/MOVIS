@@ -223,8 +223,10 @@ def top_10_time(data, list_of_features, temporal_column):
 
 def elbow_rule(data):
 
-    chart = (alt.Chart(data).mark_line().encode(
-        alt.X("k_range:Q"), alt.Y("k_scores:Q")))
+    chart = alt.Chart(
+        data, title='Elbow rule chart', description='Description'
+    ).mark_line().encode(
+        alt.X("k_range:Q"), alt.Y("k_scores:Q"))
 
     return chart
 
@@ -318,6 +320,14 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
 
     tmp_data.insert(0, temporal_feature, temporal_series)
     tmp_data.insert(1, labels_feature, labels_series)
+    # tmp_data['New_DateTime'] =\
+    #     tmp_data[temporal_feature].apply(lambda x: x.value)
+
+    # time_start = tmp_data['New_DateTime'].min()
+    # time_end = tmp_data['New_DateTime'].max()
+    # slider = alt.binding_range(min=time_start, max=time_end, step=100)
+    # select_time = alt.selection_single(
+    #     fields=['New_DateTime'], bind=slider)
 
     chart = alt.Chart(tmp_data).mark_circle(opacity=1).encode(
             alt.X(str(tmp_data.columns[2]), type='quantitative'),
@@ -325,8 +335,9 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
             alt.Color(str(tmp_data.columns[1]), type='nominal'),
             alt.Tooltip(str(tmp_data.columns[0]), type='temporal')
         )
+    # .add_selection(select_time).transform_filter(select_time)
 
-    return chart
+    return chart.interactive()
 
 
 def visualize_seasonal_clusters(data, temporal_column):
