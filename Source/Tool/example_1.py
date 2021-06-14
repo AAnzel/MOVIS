@@ -68,33 +68,39 @@ def show_clustering_info(df, key_suffix):
     elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
                                use_container_width=True)
 
-    ###############
-    # BUG:
-    # DOESN'T WORK WHEN I HAVE BOTH KMEANS AND OPTICS SELECTED
-    # IT WONT INITIALIZE OPTICS SLIDER AT ALL
-    ###############
-    cluster_number = 0
-    cluster_samples = 0
-    print(clustering_methods)
-    print('K-Means' in clustering_methods and 'OPTICS' in clustering_methods)
-    if 'K-Means' in clustering_methods:
+
+    if all(i in clustering_methods for i in ['K-Means', 'OPTICS']):
+        print('IN ALL')
         cluster_number = num_input_col.slider(
-            'Select a number of clusters using the elbow rule:', min_value=1,
-            max_value=15, value=1, step=1, format='%d',
+            'Select a number of clusters for K-Means using the elbow rule:',
+            min_value=1, max_value=15, value=1, step=1, format='%d',
             key='slider_cluster_Kmeans_' + key_suffix)
+        cluster_samples = num_input_col.slider(
+            'Select a minimum number of samples for OPTICS to be considered as\
+            a core point:', min_value=1, max_value=15, value=1, step=1,
+            format='%d', key='slider_cluster_Optics_' + key_suffix)
+
+    elif 'K-Means' in clustering_methods:
+        print('IN KMEANS')
+        cluster_number = num_input_col.slider(
+            'Select a number of clusters for K-Means using the elbow rule:',
+            min_value=1, max_value=15, value=1, step=1, format='%d',
+            key='slider_cluster_Kmeans_' + key_suffix)
+        cluster_samples = 0
 
     elif 'OPTICS' in clustering_methods:
+        print('IN OPTICS')
+        cluster_number = 0
         cluster_samples = num_input_col.slider(
-            'Select a minimum number of samples to be considered as a core\
-            point:', min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Optics_' + key_suffix)
+            'Select a minimum number of samples for OPTICS to be considered as\
+            a core point:', min_value=1, max_value=15, value=1, step=1,
+            format='%d', key='slider_cluster_Optics_' + key_suffix)
 
     else:
         pass
+
     # We create new columns that hold labels for each chosen method
     # it holds pairs (name of method, labels)
-    print(cluster_number, cluster_samples)
-
     labels_list = []
     for i in clustering_methods:
         labels_list.append((i, omics_run.calculate.cluster_data(
