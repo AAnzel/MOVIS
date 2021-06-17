@@ -1,8 +1,5 @@
-import os
 import streamlit as st
 import pandas as pd
-
-URANDOM_LENGTH = 5
 
 
 def show_data_set(df):
@@ -14,15 +11,15 @@ def show_data_set(df):
     return None
 
 
-def upload_data_set():
+def upload_data_set(key_suffix):
 
     # I should put some random number as a key, because I get errors
     imported_file = st.file_uploader('Upload your data set here. Maximum size\
                                      is 200MB.', type=['csv', 'xlsx', 'xls'],
-                                     key=os.urandom(URANDOM_LENGTH))
+                                     key='Upload_' + key_suffix)
     delimiter = st.selectbox('Select the delimiter in your data set',
                              ['Comma(,)', 'Semicolon(;)', 'Tab(\\t)',
-                              'Excel File'], key=os.urandom(URANDOM_LENGTH))
+                              'Excel File'], key='Upload_' + key_suffix)
 
     if imported_file is not None:
         return pd.read_csv(imported_file, delimiter=delimiter)
@@ -34,7 +31,7 @@ def upload_genomics():
     st.header('Genomics')
     st.markdown('')
 
-    df = upload_data_set()
+    df = upload_data_set('genomics')
 
     if df is None:
         return None
@@ -48,7 +45,7 @@ def upload_proteomics():
     st.header('Proteomics')
     st.markdown('')
 
-    df = upload_data_set()
+    df = upload_data_set('proteomics')
 
     if df is None:
         return None
@@ -62,7 +59,7 @@ def upload_metabolomics():
     st.header('Metabolomics')
     st.markdown('')
 
-    df = upload_data_set()
+    df = upload_data_set('metabolomics')
 
     if df is None:
         return None
@@ -76,7 +73,7 @@ def upload_transcriptomics():
     st.header('Transcriptomics')
     st.markdown('')
 
-    df = upload_data_set()
+    df = upload_data_set('transcriptomics')
 
     if df is None:
         return None
@@ -90,7 +87,7 @@ def upload_phy_che():
     st.header('Physico-chemical')
     st.markdown('')
 
-    df = upload_data_set()
+    df = upload_data_set('phy_che')
 
     if df is None:
         return None
@@ -104,54 +101,51 @@ def create_main_upload():
 
     st.header('Dataset')
 
-    upload_omics_dict = {'Genomics': 0, 'Metabolomics': 0, 'Proteomics': 0,
-                         'Physico-chemical': 0, 'Transcriptomics': 0}
-    choose_omics = st.multiselect('Which omic data do you want to upload:',
-                                  list(upload_omics_dict.keys()))
+    upload_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
+                         'Physico-chemical', 'Transcriptomics']
 
-    num_of_columns = 0
-    for i in choose_omics:
-        upload_omics_dict[i] = 1
-        num_of_columns += 1
+    choose_omics = st.multiselect('Which omic data do you want to upload:',
+                                  upload_omics_list)
+
+    num_of_columns = len(choose_omics)
 
     if num_of_columns >= 2:
         column_list = st.beta_columns(num_of_columns)
         curr_pos = 0
 
-        for i in list(upload_omics_dict.keys()):
-            if upload_omics_dict[i] != 0:
-                if i == 'Genomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        upload_genomics()
-                elif i == 'Metabolomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        upload_metabolomics()
-                elif i == 'Proteomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        upload_proteomics()
-                elif i == 'Transcriptomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        upload_transcriptomics()
-                else:
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        upload_phy_che()
+        for i in choose_omics:
+            if i == 'Genomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    upload_genomics()
+            elif i == 'Metabolomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    upload_metabolomics()
+            elif i == 'Proteomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    upload_proteomics()
+            elif i == 'Transcriptomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    upload_transcriptomics()
+            else:
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    upload_phy_che()
 
     else:
-        for i in list(upload_omics_dict.keys()):
-            if upload_omics_dict[i] != 0:
-                if i == 'Genomics':
-                    upload_genomics()
-                elif i == 'Metabolomics':
-                    upload_metabolomics()
-                elif i == 'Proteomics':
-                    upload_proteomics()
-                elif i == 'Transcriptomics':
-                    upload_transcriptomics()
-                else:
-                    upload_phy_che()
+        for i in choose_omics:
+            if i == 'Genomics':
+                upload_genomics()
+            elif i == 'Metabolomics':
+                upload_metabolomics()
+            elif i == 'Proteomics':
+                upload_proteomics()
+            elif i == 'Transcriptomics':
+                upload_transcriptomics()
+            else:
+                upload_phy_che()
+
     return None
