@@ -628,7 +628,7 @@ def example_1_calc_genomics():
     temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
 
     cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
-    
+
     ##########
 
     # KEGG examination but with pairwise Jaccard distance matrix(as
