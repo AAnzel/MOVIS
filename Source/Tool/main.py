@@ -5,13 +5,11 @@ import example_1
 import example_2
 import upload
 import home
-# import omics_run
+# import common
 
 
 def create_sidebar_and_main():
 
-    # TODO: Be careful when placing values in beta_columns
-    # These are hardcoded values for column width
     tmp_col_1, tmp_col_2, tmp_col_3, tmp_col_4, tmp_col_5 = st.beta_columns(5)
     tmp_col_3.title('MOVIS')
     st.markdown(' ')
@@ -57,10 +55,10 @@ def main():
                                               'movis_logo_transparent.png'))
 
     # I need to run this just once, so I create cache
-    # omics_run.example_1_calc_phy_che()
-    # omics_run.example_1_calc_metabolomics()
-    # omics_run.example_1_calc_proteomics()
-    # omics_run.example_1_calc_genomics()
+    # common.example_1_calc_phy_che()
+    # common.example_1_calc_metabolomics()
+    # common.example_1_calc_proteomics()
+    # common.example_1_calc_genomics()
 
     create_sidebar_and_main()
 

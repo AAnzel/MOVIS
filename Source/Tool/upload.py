@@ -1,5 +1,6 @@
 import os
 import shutil
+import common
 from tempfile import NamedTemporaryFile
 import streamlit as st
 import pandas as pd
@@ -128,12 +129,14 @@ def upload_genomics():
     st.header('Genomics')
     st.markdown('')
 
+    # TODO: Deal with other types of genomics data, like KEGG etc.
     df = upload_data_set(type_list_zip, 'genomics')
 
     if df is None:
-        st.warning('Upload your data set')
+        st.warning('Please upload your data set')
         return []
 
+    st.success('Data set succesfully uploaded')
     show_data_set(df)
 
     return []
@@ -149,6 +152,7 @@ def upload_proteomics():
         st.warning('Upload your data set')
         return []
 
+    st.success('Data set succesfully uploaded')
     show_data_set(df)
 
     return []
@@ -164,9 +168,14 @@ def upload_metabolomics():
         st.warning('Upload your data set')
         return []
 
+    st.success('Data set succesfully uploaded')
     show_data_set(df)
+    temporal_feature, feature_list = common.find_temporal_feature(df)
 
-    return []
+    chosen_charts = common.visualize_data_set(
+        df, temporal_feature, feature_list, 'Metabolomics')
+
+    return chosen_charts
 
 
 def upload_transcriptomics():
@@ -179,6 +188,7 @@ def upload_transcriptomics():
         st.warning('Upload your data set')
         return []
 
+    st.success('Data set succesfully uploaded')
     show_data_set(df)
 
     return []
@@ -194,6 +204,7 @@ def upload_phy_che():
         st.warning('Upload your data set')
         return []
 
+    st.success('Data set succesfully uploaded')
     show_data_set(df)
 
     return []

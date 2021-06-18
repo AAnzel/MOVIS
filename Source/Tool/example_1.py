@@ -1,7 +1,6 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import omics_run
+import common
 
 import visualize
 
@@ -21,10 +20,10 @@ def get_data_set(omic_name):
          'phy_che': 'Creating additional data set...'}
 
     with st.spinner(spinner_text_map[omic_name]):
-        df = omics_run.get_cached_dataframe(omics_run.EX_1, omic_name)
+        df = common.get_cached_dataframe(common.EX_1, omic_name)
 
     # Fixing dataframe columns
-    df = omics_run.fix_dataframe_columns(df)
+    df = common.fix_dataframe_columns(df)
 
     return df
 
@@ -64,7 +63,7 @@ def show_clustering_info(df, key_suffix):
 
     elbow_vis_col, num_input_col = st.beta_columns([3, 1])
 
-    tmp_df = omics_run.calculate.get_number_of_clusters(df)
+    tmp_df = common.get_number_of_clusters(df)
     elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
                                use_container_width=True)
 
@@ -105,149 +104,10 @@ def show_clustering_info(df, key_suffix):
     # it holds pairs (name of method, labels)
     labels_list = []
     for i in clustering_methods:
-        labels_list.append((i, omics_run.calculate.cluster_data(
+        labels_list.append((i, common.cluster_data(
             df, cluster_number, cluster_samples, i)))
 
     return labels_list
-
-
-def find_temporal_feature(df):
-    feature_list = list(df.columns.values)
-
-    # BUG: This might induce unexpected behavior, and should be checked
-    try:
-        df_of_temporals = df.select_dtypes(include=[np.datetime64])
-        temporal_feature = str(df_of_temporals.columns[0])
-
-        feature_list.remove(temporal_feature)
-
-        return temporal_feature, feature_list
-
-    except ValueError:
-        st.text('Datetime column not detected.')
-        st.stop()
-        # TODO: Implement choosing time column and modifying dataframe
-        return None, None
-
-
-def choose_columns(df, key_suffix):
-
-    new_columns = st.multiselect('Choose columns to visualize:',
-                                 list(df.columns.values),
-                                 key='choose_col' + key_suffix)
-
-    return new_columns
-
-
-def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
-
-    chosen_charts = []
-
-    if key_suffix.startswith('Genomics_1') or\
-       key_suffix.startswith('Genomics_2'):
-        # TODO: Implement t-SNE reduction
-        visualizations = st.multiselect('Choose your visualization',
-                                        ['PCA visualization',
-                                         'MDS visualization'],
-                                        key='vis_data_' + key_suffix)
-
-    else:
-        visualizations = st.multiselect('Choose your visualization',
-                                        ['Feature through time',
-                                         'Two features scatter-plot',
-                                         'Scatter-plot matrix',
-                                         'Multiple features parallel chart',
-                                         'Heatmap',
-                                         'Top 10 count through time'],
-                                        key='vis_data_' + key_suffix)
-
-    for i in visualizations:
-        # I have to check which clustering method was used and visualize it
-        if i == 'PCA visualization':
-            chosen_charts.append(
-                (visualize.visualize_clusters(df, temporal_feature,
-                                              feature_list, 'PCA'),
-                 i + '_' + key_suffix + '_PCA'))
-
-        elif i == 'MDS visualization':
-            chosen_charts.append(
-                (visualize.visualize_clusters(df, temporal_feature,
-                                              feature_list, 'MDS'),
-                 i + '_' + key_suffix + '_MDS'))
-
-        elif i == 'Feature through time' and temporal_feature is not None:
-            selected_feature = st.selectbox('Select feature to visualize',
-                                            feature_list)
-            selected_color = st.color_picker('Select line color',
-                                             value='#ffffff')
-
-            chosen_charts.append(
-                (visualize.time_feature(df, selected_feature, temporal_feature,
-                                        selected_color), i + '_' + key_suffix))
-
-        elif i == 'Two features scatter-plot':
-            feature_1 = st.selectbox('Select 1. feature', feature_list)
-
-            if feature_1 in feature_list:
-                feature_list.remove(feature_1)
-
-            feature_2 = st.selectbox('Select 2. feature', feature_list)
-
-            chosen_charts.append(
-                (visualize.two_features(df, feature_1, feature_2),
-                 i + '_' + key_suffix))
-
-        elif i == 'Scatter-plot matrix':
-            target_feature = st.selectbox(
-                'Select target feature for color', feature_list)
-
-            list_of_features = st.multiselect('Choose at least 2 features',
-                                              feature_list)
-            list_of_features.append(target_feature)
-
-            chosen_charts.append(
-                    (visualize.scatter_matrix(df, list_of_features,
-                                              target_feature),
-                     i + '_' + key_suffix))
-
-        elif i == 'Multiple features parallel chart':
-            if temporal_feature is not None:
-                target_feature = st.selectbox(
-                    'Select target feature for color',
-                    feature_list + [temporal_feature],
-                    index=len(feature_list))
-            else:
-                target_feature = st.selectbox(
-                    'Select target feature for color',
-                    feature_list,
-                    index=len(feature_list))
-
-            list_of_features = st.multiselect('Choose at least 2 features',
-                                              feature_list)
-            list_of_features.append(target_feature)
-
-            chosen_charts.append(
-                    (visualize.parallel_coordinates(df, list_of_features,
-                                                    target_feature),
-                     i + '_' + key_suffix))
-            # st.altair_chart(
-            #    visualize.parallel_coordinates(df, list_of_features,
-            #                                target_feature),
-            #    use_container_width=True)
-            #
-
-        elif i == 'Heatmap':
-            chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
-
-        elif i == 'Top 10 count through time' and temporal_feature is not None:
-            chosen_charts.append((visualize.top_10_time(df, feature_list,
-                                                        temporal_feature),
-                                  i + '_' + key_suffix))
-
-        else:
-            pass
-
-    return chosen_charts
 
 
 def create_main_example_1_genomics():
@@ -283,10 +143,11 @@ def create_main_example_1_genomics():
 
             # Traversing pairs in list
             for i in labels_list:
-                temporal_feature, feature_list = find_temporal_feature(df_1)
+                temporal_feature, feature_list = common.find_temporal_feature(
+                    df_1)
                 feature_list = i[0]
                 df_1[i[0]] = i[1]
-                chosen_charts += visualize_data_set(
+                chosen_charts += common.visualize_data_set(
                         df_1, temporal_feature, feature_list,
                         'Genomics_1_' + i[0])
 
@@ -297,10 +158,11 @@ def create_main_example_1_genomics():
 
             # Traversing pairs in list
             for i in labels_list:
-                temporal_feature, feature_list = find_temporal_feature(df_2)
+                temporal_feature, feature_list = common.find_temporal_feature(
+                    df_2)
                 feature_list = i[0]
                 df_2[i[0]] = i[1]
-                chosen_charts += visualize_data_set(
+                chosen_charts += common.visualize_data_set(
                         df_2, temporal_feature, feature_list,
                         'Genomics_2_' + i[0])
 
@@ -309,9 +171,9 @@ def create_main_example_1_genomics():
             df_3 = get_data_set('genomics_mags_top_10_annotated_temporal')
             show_calculated_data_set(tmp_df_3, 'Product annotations')
 
-            temporal_feature, feature_list = find_temporal_feature(df_3)
-            chosen_charts += visualize_data_set(df_3, temporal_feature,
-                                                feature_list, 'Genomics_3')
+            temporal_feature, feature_list = common.find_temporal_feature(df_3)
+            chosen_charts += common.visualize_data_set(
+                df_3, temporal_feature, feature_list, 'Genomics_3')
 
     # I should put cluster charts here, however I have to run it first
     # because I have rendered images and not altair charts
@@ -327,10 +189,10 @@ def create_main_example_1_metabolomics():
     df = get_data_set('metabolomics')
     show_data_set(df)
 
-    temporal_feature, feature_list = find_temporal_feature(df)
+    temporal_feature, feature_list = common.find_temporal_feature(df)
 
-    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
-                                       'Metabolomics')
+    chosen_charts = common.visualize_data_set(
+        df, temporal_feature, feature_list, 'Metabolomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -363,10 +225,10 @@ def create_main_example_1_proteomics():
     df = get_data_set('proteomics')
     show_calculated_data_set(df, 'Protein properties')
 
-    temporal_feature, feature_list = find_temporal_feature(df)
+    temporal_feature, feature_list = common.find_temporal_feature(df)
 
-    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
-                                       'Proteomics')
+    chosen_charts = common.visualize_data_set(
+        df, temporal_feature, feature_list, 'Proteomics')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants
@@ -381,10 +243,10 @@ def create_main_example_1_phy_che():
     df = get_data_set('phy_che')
     show_data_set(df)
 
-    temporal_feature, feature_list = find_temporal_feature(df)
+    temporal_feature, feature_list = common.find_temporal_feature(df)
 
-    chosen_charts = visualize_data_set(df, temporal_feature, feature_list,
-                                       'Physico-Chemical')
+    chosen_charts = common.visualize_data_set(
+        df, temporal_feature, feature_list, 'Physico-Chemical')
 
     # Here I should implement multiple select where I provide user with
     # different choices for what kind of chart/computation the user wants

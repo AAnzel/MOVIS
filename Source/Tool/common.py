@@ -1,10 +1,12 @@
 import os
 import math
 import random
+import visualize
 import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
+import streamlit as st
 from sklearn.cluster import KMeans, OPTICS
 from sklearn import preprocessing
 from sklearn import metrics
@@ -19,6 +21,8 @@ from scipy.spatial.distance import jaccard, pdist, squareform
 path_root_data = os.path.join(
     "..", "..", "Data", "Extracted", "First source", "Databases"
 )
+
+path_cached_save_root = 'cached'
 
 path_all_fasta = os.path.join(path_root_data, "fasta_files", "AllBins")
 path_genomics_78 = os.path.join(path_root_data, "fasta_files",
@@ -51,6 +55,8 @@ MAX_ROWS = 15000
 EPOCHS = 10
 NUM_OF_WORKERS = 8
 START_DATE = dt.datetime.strptime("2011-03-21", "%Y-%m-%d")
+EX_1 = 1
+EX_2 = 2
 random.seed(SEED)
 np.random.seed(SEED)
 alt.data_transformers.enable(
@@ -538,3 +544,412 @@ def create_annotated_data_set():
     top_10_result_df['Other'] = result_df.iloc[:, 10:].sum(axis=1)
 
     return result_df, top_10_result_df
+
+
+def cache_dataframe(dataframe, num_of_example, name):
+    if num_of_example == 1:
+        dataframe.to_pickle(os.path.join(path_cached_save_root,
+                                         "example_1", "data_frames", name +
+                                         "_dataframe.pkl"))
+    else:
+        dataframe.to_pickle(os.path.join(path_cached_save_root,
+                                         "example_2", "data_frames", name +
+                                         "_dataframe.pkl"))
+    return None
+
+
+@st.cache
+def get_cached_dataframe(num_of_example, name):
+    if num_of_example == EX_1:
+        return pd.read_pickle(os.path.join(path_cached_save_root,
+                                           "example_1", "data_frames", name +
+                                           "_dataframe.pkl")).convert_dtypes()
+    else:
+        return pd.read_pickle(os.path.join(path_cached_save_root,
+                                           "example_2", "data_frames", name +
+                                           "_dataframe.pkl")).convert_dtypes()
+
+
+def fix_dataframe_columns(dataframe):
+
+    old_columns = dataframe.columns.to_list()
+    old_columns = [str(i) for i in old_columns]
+    new_columns_map = {}
+    bad_symbols = ['[', ']']
+
+    for column in old_columns:
+        if any(char in column for char in bad_symbols):
+            new_column = column
+            for i in bad_symbols:
+                new_column = new_column.replace(i, '(')
+
+        else:
+            new_column = column
+
+        new_columns_map[column] = new_column
+
+    return dataframe.rename(columns=new_columns_map)
+
+
+def create_temporal_column(list_of_days, start_date, end):
+
+    list_of_dates = []
+    list_of_days.sort()
+
+    # This is specific to the metaomics data set I am using Creating list of
+    # dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
+    for i in list_of_days[:end]:
+
+        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
+
+        if tmp_datetime not in list_of_dates:
+            list_of_dates.append(tmp_datetime)
+
+        else:
+            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
+            list_of_dates.append(tmp_datetime)
+
+    return list_of_dates
+
+
+# ---
+# # GENOMIC ANALYSIS
+# ---
+def example_1_calc_genomics():
+
+    kegg_matrix_df = import_kegg_and_create_df(
+        end=ALL_DAYS, path_fasta=path_genomics_78,
+        path_all_keggs=path_genomics_kegg)
+
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_kegg_matrix_df = kegg_matrix_df.copy()
+    temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
+
+    cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
+    
+    ##########
+
+    # KEGG examination but with pairwise Jaccard distance matrix(as
+    #   seen in paper)
+    # kegg_pairwise = create_pairwise_jaccard(kegg_matrix_df)
+    # kegg_mds_chart = visualize.visualize_with_mds(
+    #    kegg_pairwise, START_DATE, END, path_genomics_78)
+
+    #######
+
+    final_model, fasta_names, fasta_ids =\
+        import_mags_and_build_model(end=END, path_fasta=path_genomics_78)
+
+    # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
+    final_model = train_model(final_model, epochs=EPOCHS, end=END)
+
+    final_model.wv.save_word2vec_format(
+        os.path.join(path_model_save_root, "genomics_model_78.bin"),
+        binary=True)
+
+    # Now I should vectorize documents with this model. For further use, I
+    # could save this model's weights, and use it to vectorize all mags. That
+    # would take a lot, but every MAG will have its vector representation
+    # > This could be done by importing one MAG at a time, then tokenizing
+    # > it(like before), then getting vector representations of that MAG's
+    # > sentences(genomes) and then finding the vector representation of the
+    # > whole MAG(document). If I do that for one MAG at a time, There is no
+    # > need to worry about memory
+    #################
+    list_of_mag_vectors = vectorize_mags(
+        final_model, path_fasta=path_genomics_78, end=END)
+    mags_df = pd.DataFrame(list_of_mag_vectors)
+    cache_dataframe(mags_df, EX_1, 'genomics_mags')
+
+    mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
+
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_mags_df = mags_df.copy()
+    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
+    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
+
+    #################
+    annotated_mags_df, top_10_annotated_mags_df =\
+        create_annotated_data_set()
+
+    fasta_names = [i for i in os.listdir(path_genomics_78) if
+                   (i.endswith("fa") and i.startswith("D"))]
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    temporal_annotated_mags_df = annotated_mags_df.copy()
+    temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+    temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
+    temporal_top_10_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
+
+    cache_dataframe(temporal_annotated_mags_df, EX_1,
+                    'genomics_mags_annotated_temporal')
+    cache_dataframe(temporal_top_10_annotated_mags_df, EX_1,
+                    'genomics_mags_top_10_annotated_temporal')
+
+    return None
+
+
+def example_1_cluster_elbow():
+    # There is already a function cluster_data
+    # This should only be a wraper
+
+    return None
+
+
+# ---
+# # METABOLOMIC ANALYSIS
+# ---
+def example_1_calc_metabolomics():
+    # ## Importing Metabolomic data
+    metabolomics_file_name = os.path.join(
+        path_normalised_metabolomics,
+        os.listdir(path_normalised_metabolomics)[0])
+    metabolomics_df = pd.read_csv(metabolomics_file_name, delimiter="\t")
+
+    # ## Data preprocessing
+
+    metabolomics_df["date"] = pd.to_datetime(metabolomics_df["date"])
+    metabolomics_df.insert(0, "date", metabolomics_df.pop("date"))
+    metabolomics_df.sort_values("date", inplace=True, ignore_index=True)
+
+    cache_dataframe(metabolomics_df, EX_1, "metabolomics")
+
+    # Changing metabolite name if it is unknown
+    metabolomics_df.loc[
+        metabolomics_df["known_type"].eq("unknown"), "Metabolite"
+    ] = np.nan
+
+    print("Dataset uniqueness:")
+    print("\t1. Timestamps:", len(metabolomics_df["date"].unique()))
+    print("\t2. Metabolites:", len(metabolomics_df["Metabolite"].unique()))
+    print("\t3. Types:", len(metabolomics_df["type"].unique()))
+    print("\t4. Known types:", len(metabolomics_df["known_type"].unique()))
+    print("\t5. Ns:", len(metabolomics_df["N"].unique()))
+    print("\t6. Type 2s:", len(metabolomics_df["type2"].unique()))
+    print("\t7. Measurements:", len(metabolomics_df["measurement"].unique()))
+
+    # Saving the name column and removing unnecessairy columns metabolite_names
+    # = metabolomics_df['Metabolite'] metabolomics_df.drop(labels =
+    # ['Metabolite', 'tp', 'KEGG.Compound.ID', 'Chebi.Name',
+    # 'Chebi.Name_combined'], axis = 1, inplace = True)
+    metabolomics_df.drop(
+        labels=["tp", "KEGG.Compound.ID", "Chebi.Name", "Chebi.Name_combined"],
+        axis=1,
+        inplace=True,
+    )
+
+    # Dummy eencoding categorical data
+    scaled_metabolomics_df = pd.get_dummies(metabolomics_df,
+                                            columns=["type", "known_type", "N",
+                                                     "type2", "measurement"])
+
+    # Standardizing data
+    metabolomics_scaler = preprocessing.StandardScaler()
+    scaled_metabolomics_df[
+        ["means", "medians", "sds", "se", "ci"]
+    ] = metabolomics_scaler.fit_transform(
+        metabolomics_df[["means", "medians", "sds", "se", "ci"]]
+    )
+
+    metabolomics_df.dropna(inplace=True)
+    metabolomics_df.reset_index(drop=True, inplace=True)
+
+    return None
+
+
+# ---
+# # PROTEOMIC ANALYSIS
+# ---
+def example_1_calc_proteomics():
+    # ## Importing Proteomic data
+
+    # I could create something similar to Fig. 5 of the original paper, where I
+    # would calculate mean of different proteomic feature values for each rMAG
+    # calculated by days So I would have a table: date | feature 1 | feature 2
+    # | ... Where each feature is mean of all values for one day of each MAG in
+    # that rMAG
+
+    proteomics_data = import_proteomics(end=num_of_proteomics)
+
+    # I have to add temporality to this data set, according to file names
+    fasta_files = [i for i in os.listdir(path_proteomics_78)
+                   if (i.endswith("faa"))]
+    list_of_dates = create_temporal_column(fasta_files, START_DATE, END)
+    proteomics_data.insert(0, 'DateTime', list_of_dates)
+
+    # I will save this dataframe to show to the end-user
+    cache_dataframe(proteomics_data, EX_1, "proteomics")
+
+    return None
+
+
+# ---
+# # PHYSICO-CHEMICAL ANALYSIS
+# ---
+def example_1_calc_phy_che():
+    # ## Importing Physico-chemical data
+    phy_che_file_name = os.path.join(
+        path_physico_chemical,
+        [
+            i
+            for i in os.listdir(path_physico_chemical)
+            if (i.endswith((".tsv", ".csv")))
+        ][1],
+    )
+    phy_che_df = pd.read_csv(phy_che_file_name, decimal=",")
+
+    # ## Data preprocessing
+    phy_che_df.drop(index=0, axis=1, inplace=True)
+    phy_che_df["Date"] = pd.to_datetime(phy_che_df["Date"])
+    phy_che_df["Time"] = pd.to_timedelta(phy_che_df["Time"], unit="h")
+
+    filtered_phy_che_df = phy_che_df[
+                                     (phy_che_df["Date"] >= "2011-03-21") &
+                                     (phy_che_df["Date"] <= "2012-05-03")]
+    tmp_column = pd.Series(filtered_phy_che_df["Date"] +
+                           filtered_phy_che_df["Time"])
+
+    filtered_phy_che_df.drop(["Date", "Time"], axis=1, inplace=True)
+    filtered_phy_che_df.reset_index(inplace=True, drop=True)
+    filtered_phy_che_df = filtered_phy_che_df.apply(
+        lambda x: pd.to_numeric(x.astype(str).str.replace(",", "."))
+    )  # , errors='coerce'))
+    filtered_phy_che_df.insert(0, "DateTime", tmp_column.values)
+
+    # I will save this dataframe to show to the end-user
+    cache_dataframe(filtered_phy_che_df, EX_1, "phy_che")
+
+    return None
+
+
+def find_temporal_feature(df):
+    feature_list = list(df.columns.values)
+
+    # BUG: This might induce unexpected behavior, and should be checked
+    try:
+        df_of_temporals = df.select_dtypes(include=[np.datetime64])
+        temporal_feature = str(df_of_temporals.columns[0])
+
+        feature_list.remove(temporal_feature)
+
+        return temporal_feature, feature_list
+
+    except ValueError:
+        st.text('Datetime column not detected.')
+        st.stop()
+        # TODO: Implement choosing time column and modifying dataframe
+        return None, None
+
+
+def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
+
+    chosen_charts = []
+
+    if key_suffix.startswith('Genomics_1') or\
+       key_suffix.startswith('Genomics_2'):
+        # TODO: Implement t-SNE reduction
+        visualizations = st.multiselect('Choose your visualization',
+                                        ['PCA visualization',
+                                         'MDS visualization'],
+                                        key='vis_data_' + key_suffix)
+
+    else:
+        visualizations = st.multiselect('Choose your visualization',
+                                        ['Feature through time',
+                                         'Two features scatter-plot',
+                                         'Scatter-plot matrix',
+                                         'Multiple features parallel chart',
+                                         'Heatmap',
+                                         'Top 10 count through time'],
+                                        key='vis_data_' + key_suffix)
+
+    for i in visualizations:
+        # I have to check which clustering method was used and visualize it
+        if i == 'PCA visualization':
+            chosen_charts.append(
+                (visualize.visualize_clusters(df, temporal_feature,
+                                              feature_list, 'PCA'),
+                 i + '_' + key_suffix + '_PCA'))
+
+        elif i == 'MDS visualization':
+            chosen_charts.append(
+                (visualize.visualize_clusters(df, temporal_feature,
+                                              feature_list, 'MDS'),
+                 i + '_' + key_suffix + '_MDS'))
+
+        elif i == 'Feature through time' and temporal_feature is not None:
+            selected_feature = st.selectbox('Select feature to visualize',
+                                            feature_list)
+            selected_color = st.color_picker('Select line color',
+                                             value='#ffffff')
+
+            chosen_charts.append(
+                (visualize.time_feature(df, selected_feature, temporal_feature,
+                                        selected_color), i + '_' + key_suffix))
+
+        elif i == 'Two features scatter-plot':
+            feature_1 = st.selectbox('Select 1. feature', feature_list)
+
+            if feature_1 in feature_list:
+                feature_list.remove(feature_1)
+
+            feature_2 = st.selectbox('Select 2. feature', feature_list)
+
+            chosen_charts.append(
+                (visualize.two_features(df, feature_1, feature_2),
+                 i + '_' + key_suffix))
+
+        elif i == 'Scatter-plot matrix':
+            target_feature = st.selectbox(
+                'Select target feature for color', feature_list)
+
+            list_of_features = st.multiselect('Choose at least 2 features',
+                                              feature_list)
+            list_of_features.append(target_feature)
+
+            chosen_charts.append(
+                    (visualize.scatter_matrix(df, list_of_features,
+                                              target_feature),
+                     i + '_' + key_suffix))
+
+        elif i == 'Multiple features parallel chart':
+            if temporal_feature is not None:
+                target_feature = st.selectbox(
+                    'Select target feature for color',
+                    feature_list + [temporal_feature],
+                    index=len(feature_list))
+            else:
+                target_feature = st.selectbox(
+                    'Select target feature for color',
+                    feature_list,
+                    index=len(feature_list))
+
+            list_of_features = st.multiselect('Choose at least 2 features',
+                                              feature_list)
+            list_of_features.append(target_feature)
+
+            chosen_charts.append(
+                    (visualize.parallel_coordinates(df, list_of_features,
+                                                    target_feature),
+                     i + '_' + key_suffix))
+            # st.altair_chart(
+            #    visualize.parallel_coordinates(df, list_of_features,
+            #                                target_feature),
+            #    use_container_width=True)
+            #
+
+        elif i == 'Heatmap':
+            chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
+
+        elif i == 'Top 10 count through time' and temporal_feature is not None:
+            chosen_charts.append((visualize.top_10_time(df, feature_list,
+                                                        temporal_feature),
+                                  i + '_' + key_suffix))
+
+        else:
+            pass
+
+    return chosen_charts
