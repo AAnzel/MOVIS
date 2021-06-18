@@ -15,6 +15,7 @@ path_ramdisk = os.path.join('dev', 'shm')
 
 # TODO: Implement removing previously extracted archives and files
 # it should be done at the end of tool in main
+# Take care of everything
 
 type_list_csv = ['csv']
 type_list_zip = []
