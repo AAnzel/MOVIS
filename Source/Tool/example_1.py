@@ -470,42 +470,4 @@ def create_main_example_1():
                 else:
                     pass
 
-    # Version with size controls
-    # with st.beta_expander('Show/hide visualizations', expanded=True):
-    #     vis_column, size_column = st.beta_columns([3, 1])
-
-    #     for i in charts:
-    #         type_of_chart = type(i[0])
-
-    #         with st.spinner('Visualizing...'):
-    #             if 'altair' in str(type_of_chart):
-    #                 if i[1].split('_')[0] in ['Heatmap',
-    #                                           'Top 10 count through time']:
-    #                     vis_column.altair_chart(
-    #                         i[0], use_container_width=True)
-
-    #                 else:
-    #                     size_column.markdown('---')
-    #                     size_column.markdown(i[1].split('_')[0])
-    #                     tmp_width = size_column.slider(
-    #                         'Select width in pixels:', min_value=50,
-    #                         max_value=600, value=0, step=50, format='%d',
-    #                         key=i[1] + 'slider_width'
-    #                     )
-    #                     tmp_height = size_column.slider(
-    #                         'Select height in pixels:', min_value=50,
-    #                         max_value=600, value=0, step=50, format='%d',
-    #                         key=i[1] + 'slider_height'
-    #                     )
-    #                     size_column.markdown('---')
-
-    #                     if tmp_width == 0 and tmp_height == 0:
-    #                         vis_column.altair_chart(
-    #                             i[0], use_container_width=True)
-    #                     else:
-    #                         vis_column.altair_chart(i[0].properties(
-    #                             height=tmp_height, width=tmp_width))
-    #             else:
-    #                 pass
-
     return None

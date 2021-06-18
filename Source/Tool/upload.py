@@ -65,9 +65,18 @@ def import_archive(imported_file, key_suffix):
 def upload_data_set(file_types, key_suffix):
 
     upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
-    upload_text_zip = '''Upload your archive here. Archive should contain only
-                         FASTA (.fa) files named: D[day_number].fa\n
-                         For example: D01.fa'''
+
+    # TODO: Change the text for transcriptomics
+    upload_text_zip_genomics = '''Upload your archive here. Archive should
+                                  contain only FASTA (.fa) files named:
+                                  D[day_number].fa\nFor example: D01.fa'''
+    upload_text_zip_proteomics = '''Upload your archive here. Archive should
+                                    contain only FASTA (.faa) files named:
+                                    D[day_number].fa\nFor example: D01.faa'''
+    upload_text_zip_transcriptomics = '''Upload your archive here. Archive
+                                         should contain only FASTA (.fa) files
+                                         named: D[day_number].fa\nFor example:
+                                         D01.fa'''
 
     if file_types == type_list_csv:
         imported_file = st.file_uploader(upload_text_csv, type=file_types,
@@ -95,9 +104,18 @@ def upload_data_set(file_types, key_suffix):
             return None
 
     else:
-        imported_file = st.file_uploader(upload_text_zip, type=file_types,
-                                         accept_multiple_files=False,
-                                         key='Upload_file_' + key_suffix)
+        if key_suffix == 'genomics':
+            imported_file = st.file_uploader(
+                upload_text_zip_genomics, type=file_types,
+                accept_multiple_files=False, key='Upload_file_' + key_suffix)
+        elif key_suffix == 'proteomics':
+            imported_file = st.file_uploader(
+                upload_text_zip_proteomics, type=file_types,
+                accept_multiple_files=False, key='Upload_file_' + key_suffix)
+        else:
+            imported_file = st.file_uploader(
+                upload_text_zip_transcriptomics, type=file_types,
+                accept_multiple_files=False, key='Upload_file_' + key_suffix)
 
         if imported_file is not None:
             return import_archive(imported_file, key_suffix)
@@ -113,11 +131,12 @@ def upload_genomics():
     df = upload_data_set(type_list_zip, 'genomics')
 
     if df is None:
-        return None
+        st.warning('Upload your data set')
+        return []
 
     show_data_set(df)
 
-    return None
+    return []
 
 
 def upload_proteomics():
@@ -127,11 +146,12 @@ def upload_proteomics():
     df = upload_data_set(type_list_zip, 'proteomics')
 
     if df is None:
-        return None
+        st.warning('Upload your data set')
+        return []
 
     show_data_set(df)
 
-    return None
+    return []
 
 
 def upload_metabolomics():
@@ -141,11 +161,12 @@ def upload_metabolomics():
     df = upload_data_set(type_list_csv, 'metabolomics')
 
     if df is None:
-        return None
+        st.warning('Upload your data set')
+        return []
 
     show_data_set(df)
 
-    return None
+    return []
 
 
 def upload_transcriptomics():
@@ -155,11 +176,12 @@ def upload_transcriptomics():
     df = upload_data_set(type_list_zip, 'transcriptomics')
 
     if df is None:
-        return None
+        st.warning('Upload your data set')
+        return []
 
     show_data_set(df)
 
-    return None
+    return []
 
 
 def upload_phy_che():
@@ -169,11 +191,12 @@ def upload_phy_che():
     df = upload_data_set(type_list_csv, 'phy_che')
 
     if df is None:
-        return None
+        st.warning('Upload your data set')
+        return []
 
     show_data_set(df)
 
-    return None
+    return []
 
 
 def create_main_upload():
@@ -187,44 +210,58 @@ def create_main_upload():
                                   upload_omics_list)
 
     num_of_columns = len(choose_omics)
+    charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    if num_of_columns >= 2:
-        column_list = st.beta_columns(num_of_columns)
-        curr_pos = 0
+    with st.beta_expander('Show/hide data sets and related info',
+                          expanded=True):
+        if num_of_columns >= 2:
+            column_list = st.beta_columns(num_of_columns)
+            curr_pos = 0
 
-        for i in choose_omics:
-            if i == 'Genomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
-                    upload_genomics()
-            elif i == 'Metabolomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
-                    upload_metabolomics()
-            elif i == 'Proteomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
-                    upload_proteomics()
-            elif i == 'Transcriptomics':
-                with column_list[curr_pos]:
-                    curr_pos += 1
-                    upload_transcriptomics()
-            else:
-                with column_list[curr_pos]:
-                    curr_pos += 1
-                    upload_phy_che()
+            for i in choose_omics:
+                if i == 'Genomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        charts += upload_genomics()
+                elif i == 'Metabolomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        charts += upload_metabolomics()
+                elif i == 'Proteomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        charts += upload_proteomics()
+                elif i == 'Transcriptomics':
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        charts += upload_transcriptomics()
+                else:
+                    with column_list[curr_pos]:
+                        curr_pos += 1
+                        charts += upload_phy_che()
 
-    else:
-        for i in choose_omics:
-            if i == 'Genomics':
-                upload_genomics()
-            elif i == 'Metabolomics':
-                upload_metabolomics()
-            elif i == 'Proteomics':
-                upload_proteomics()
-            elif i == 'Transcriptomics':
-                upload_transcriptomics()
-            else:
-                upload_phy_che()
+        else:
+            for i in choose_omics:
+                if i == 'Genomics':
+                    charts += upload_genomics()
+                elif i == 'Metabolomics':
+                    charts += upload_metabolomics()
+                elif i == 'Proteomics':
+                    charts += upload_proteomics()
+                elif i == 'Transcriptomics':
+                    charts += upload_transcriptomics()
+                else:
+                    charts += upload_phy_che()
+
+    # TODO: Uncomment when you deal with all upload_* functions
+    # with st.beta_expander('Show/hide visualizations', expanded=True):
+    #     for i in charts:
+    #         type_of_chart = type(i[0])
+
+    #         with st.spinner('Visualizing...'):
+    #             if 'altair' in str(type_of_chart):
+    #                 st.altair_chart(i[0], use_container_width=True)
+    #             else:
+    #                 pass
 
     return None
