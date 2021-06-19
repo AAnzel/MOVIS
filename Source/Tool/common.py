@@ -835,6 +835,26 @@ def show_data_set(df):
     return None
 
 
+# This functions will hold different fixes for uploaded data sets
+def fix_data_set(df):
+
+    # FIX 1:
+    # We want to change ',' to '.' for all columns exept datetime eventhough
+    # this is important only for float columns
+    columns_to_fix = df.select_dtypes(
+        exclude=[np.datetime64, 'datetime', 'datetime64',
+                 np.timedelta64, 'timedelta', 'timedelta64',
+                 'category', 'datetimetz']).columns.to_list()
+
+    for column in columns_to_fix:
+        df[column] = df[column].apply(
+            lambda x: str(x).replace(",", "."))
+
+    # FIX 2:
+
+    return df
+
+
 def find_temporal_feature(df):
     feature_list = df.columns.to_list()
     temporal_feature = None
@@ -870,13 +890,14 @@ def find_temporal_feature(df):
                     tmp_date = pd.to_datetime(df[i])
                     df[i] = tmp_date
                 else:
-                    tmp_time = pd.to_timedelta(df[i], unit='h')
+                    tmp_time = pd.to_timedelta(pd.to_numeric(df[i]), unit='h')
                     df[i] = tmp_time
 
             tmp_combined = tmp_date + tmp_time
-            df.insert(0, 'DateTime', tmp_combined.values)
+            df.insert(0, 'DateTime', tmp_combined.values,
+                      allow_duplicates=True)
             temporal_feature = 'DateTime'
-            df.drop(temporal_columns, axis=1, inplace=0)
+            df.drop(temporal_columns, axis=1, inplace=True)
 
         # We are not providing any functionality if there are >=3 columns
         else:
@@ -884,11 +905,12 @@ def find_temporal_feature(df):
 
         feature_list = df.columns.to_list()
         feature_list.remove(temporal_feature)
+        df = df.convert_dtypes()
 
         return temporal_feature, feature_list
 
     except ValueError:
-        st.text('Datetime column not detected.')
+        st.error('Datetime column not detected.')
         st.stop()
         # TODO: Implement choosing time column and modifying dataframe
         return None, None

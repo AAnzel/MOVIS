@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import common
 
+import common
 import visualize
 
 
@@ -26,15 +26,6 @@ def get_data_set(omic_name):
     df = common.fix_dataframe_columns(df)
 
     return df
-
-
-def show_data_set(df):
-    with st.spinner('Showing the data set and related info'):
-        st.markdown('First 100 entries')
-        st.dataframe(df.head(100))
-        st.dataframe(df.describe())
-
-    return None
 
 
 # This function is used when working with proteomics data i.e. FASTA files
@@ -187,7 +178,7 @@ def create_main_example_1_metabolomics():
 
     # Here I show the head() of the data set and some summary() and info()
     df = get_data_set('metabolomics')
-    show_data_set(df)
+    common.show_data_set(df)
 
     temporal_feature, feature_list = common.find_temporal_feature(df)
 
@@ -241,7 +232,7 @@ def create_main_example_1_phy_che():
 
     # Here I show the head() of the data set and some summary() and info()
     df = get_data_set('phy_che')
-    show_data_set(df)
+    common.show_data_set(df)
 
     temporal_feature, feature_list = common.find_temporal_feature(df)
 

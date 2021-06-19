@@ -4,6 +4,7 @@ import common
 from tempfile import NamedTemporaryFile
 import streamlit as st
 import pandas as pd
+import datetime as dt
 
 
 path_uploaded = 'uploaded'
@@ -54,7 +55,7 @@ def import_archive(imported_file, key_suffix):
         os.remove(tmp_file_path)
 
 
-def modify_data_set(df, key_suffix):
+def modify_data_set(df, temporal_column, key_suffix):
 
     columns_to_remove = st.multiselect(
         'Select columns to remove', df.columns.to_list(),
@@ -64,12 +65,26 @@ def modify_data_set(df, key_suffix):
         df.drop(columns_to_remove, axis=1, inplace=True)
 
     rows_to_remove_text = st.text_input(
-        'Insert row numbers to remove, seperated by comma', value='',
-        key='Row_remove_' + key_suffix, help='Example: 42 or 2, 3, 15, 55')
+        'Insert row numbers to remove, seperated by comma. See help (right)\
+         for example.', value='', key='Row_remove_' + key_suffix,
+        help='Example: 42 or 2, 3, 15, 55')
 
     if rows_to_remove_text != '':
         rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
         df.drop(rows_to_remove, axis=0, inplace=True)
+
+    time_to_remove_text = st.text_input(
+        'Insert the begining and the end of a time period to keep, seperated\
+         by comma. See help (right) for example.',
+        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
+        help='Example: 2011-03-21, 2012-05-03')
+
+    # TODO: Implement checks for every input here
+    if time_to_remove_text != '':
+        time_to_remove = [dt.datetime.strptime(
+            i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
+        df = df[(df[temporal_column] >= time_to_remove[0]) &
+                (df[temporal_column] <= time_to_remove[1])]
 
     return df
 
@@ -113,7 +128,6 @@ def upload_data_set(file_types, key_suffix):
             except ValueError:
                 st.warning('Please choose the right delimiter')
 
-            df = modify_data_set(df, key_suffix)
             df = df.convert_dtypes()
 
             return df
@@ -187,7 +201,9 @@ def upload_metabolomics():
 
     st.success('Data set succesfully uploaded')
     common.show_data_set(df)
+    df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
+    df = modify_data_set(df, temporal_feature, 'Metabolomics')
 
     chosen_charts = common.visualize_data_set(
         df, temporal_feature, feature_list, 'Metabolomics')
@@ -223,8 +239,14 @@ def upload_phy_che():
 
     st.success('Data set succesfully uploaded')
     common.show_data_set(df)
+    df = common.fix_data_set(df)
+    temporal_feature, feature_list = common.find_temporal_feature(df)
+    df = modify_data_set(df, temporal_feature, 'Phy_che')
 
-    return []
+    chosen_charts = common.visualize_data_set(
+        df, temporal_feature, feature_list, 'Phy_che')
+
+    return chosen_charts
 
 
 def create_main_upload():
