@@ -839,18 +839,50 @@ def find_temporal_feature(df):
     feature_list = df.columns.to_list()
     temporal_feature = None
     datetime_strings = ['date', 'time']
+    temporal_columns = []
 
     # BUG: This might induce unexpected behavior, and should be checked
+    # IF THERE ARE TWO COLUMNS, THAT MEANS ONE IS FOR DATE AND THE OTHER FOR
+    # TIME, SO WE WILL COMBINE THEM INTO ONE
+    # I HAVE TO INFORM THE USER ABOUT THIS
+    # ALSO ADD FUNCTIONALITY THAT IS PRESENT IN PHY_CHE WHICH REMOVES COMMAS
+    # FOR DOTS IN FLOAT NUMBERS!!!
     try:
         for i in feature_list:
             # This means that i is datetime column
             if any(datetime in i.lower() for datetime in datetime_strings):
-                df[i] = pd.to_datetime(df[i])
-                temporal_feature = i
+                temporal_columns.append(i)
 
-        if temporal_feature is None:
+        if len(temporal_columns) == 0:
             raise ValueError
 
+        # This means that we have only one temporal column with date or date
+        # and time combined
+        elif len(temporal_columns) == 1:
+            df[i] = pd.to_datetime(df[i])
+            temporal_feature = i
+
+        # This means that we have 2 temporal columns, one for date and the
+        # other one for time
+        elif len(temporal_columns) == 2:
+            for i in temporal_columns:
+                if i.lower() == 'date':
+                    tmp_date = pd.to_datetime(df[i])
+                    df[i] = tmp_date
+                else:
+                    tmp_time = pd.to_timedelta(df[i], unit='h')
+                    df[i] = tmp_time
+
+            tmp_combined = tmp_date + tmp_time
+            df.insert(0, 'DateTime', tmp_combined.values)
+            temporal_feature = 'DateTime'
+            df.drop(temporal_columns, axis=1, inplace=0)
+
+        # We are not providing any functionality if there are >=3 columns
+        else:
+            raise ValueError
+
+        feature_list = df.columns.to_list()
         feature_list.remove(temporal_feature)
 
         return temporal_feature, feature_list
