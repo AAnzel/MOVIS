@@ -18,19 +18,10 @@ path_ramdisk = os.path.join('dev', 'shm')
 # it should be done at the end of tool in main
 # Take care of everything
 
-type_list_csv = ['csv']
+type_list_csv = ['csv', 'tsv']
 type_list_zip = []
 for i in shutil.get_unpack_formats():
     type_list_zip += i[1]
-
-
-def show_data_set(df):
-    with st.beta_expander('Show the data set and related info', expanded=True):
-        st.markdown('First 100 entries')
-        st.dataframe(df.head(100))
-        st.dataframe(df.describe())
-
-    return None
 
 
 def import_archive(imported_file, key_suffix):
@@ -63,6 +54,26 @@ def import_archive(imported_file, key_suffix):
         os.remove(tmp_file_path)
 
 
+def modify_data_set(df, key_suffix):
+
+    columns_to_remove = st.multiselect(
+        'Select columns to remove', df.columns.to_list(),
+        key='Col_remove_' + key_suffix)
+
+    if len(columns_to_remove) != 0:
+        df.drop(columns_to_remove, axis=1, inplace=True)
+
+    rows_to_remove_text = st.text_input(
+        'Insert row numbers to remove, seperated by comma', value='',
+        key='Row_remove_' + key_suffix, help='Example: 42 or 2, 3, 15, 55')
+
+    if rows_to_remove_text != '':
+        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
+        df.drop(rows_to_remove, axis=0, inplace=True)
+
+    return df
+
+
 def upload_data_set(file_types, key_suffix):
 
     upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
@@ -87,6 +98,8 @@ def upload_data_set(file_types, key_suffix):
         delimiter_dict = {
             'Comma (,)': ',', 'Semicolon (;)': ';', 'Tab (\\t)': '\t'}
 
+        # TODO: Change default delimiter base on file extension
+        # If .csv = ',', .tsv = '\t'
         delimiter = st.selectbox('Select the delimiter in your data set',
                                  list(delimiter_dict.keys()),
                                  key='Upload_delim_' + key_suffix)
@@ -95,9 +108,13 @@ def upload_data_set(file_types, key_suffix):
             df = None
             try:
                 df = pd.read_csv(
-                    imported_file, delimiter=delimiter_dict[delimiter])
+                    imported_file, delimiter=delimiter_dict[delimiter],
+                    keep_default_na=False)
             except ValueError:
                 st.warning('Please choose the right delimiter')
+
+            df = modify_data_set(df, key_suffix)
+            df = df.convert_dtypes()
 
             return df
 
@@ -137,7 +154,7 @@ def upload_genomics():
         return []
 
     st.success('Data set succesfully uploaded')
-    show_data_set(df)
+    common.show_data_set(df)
 
     return []
 
@@ -153,7 +170,7 @@ def upload_proteomics():
         return []
 
     st.success('Data set succesfully uploaded')
-    show_data_set(df)
+    common.show_data_set(df)
 
     return []
 
@@ -169,7 +186,7 @@ def upload_metabolomics():
         return []
 
     st.success('Data set succesfully uploaded')
-    show_data_set(df)
+    common.show_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
 
     chosen_charts = common.visualize_data_set(
@@ -189,7 +206,7 @@ def upload_transcriptomics():
         return []
 
     st.success('Data set succesfully uploaded')
-    show_data_set(df)
+    common.show_data_set(df)
 
     return []
 
@@ -205,7 +222,7 @@ def upload_phy_che():
         return []
 
     st.success('Data set succesfully uploaded')
-    show_data_set(df)
+    common.show_data_set(df)
 
     return []
 
@@ -264,15 +281,14 @@ def create_main_upload():
                 else:
                     charts += upload_phy_che()
 
-    # TODO: Uncomment when you deal with all upload_* functions
-    # with st.beta_expander('Show/hide visualizations', expanded=True):
-    #     for i in charts:
-    #         type_of_chart = type(i[0])
+    with st.beta_expander('Show/hide visualizations', expanded=True):
+        for i in charts:
+            type_of_chart = type(i[0])
 
-    #         with st.spinner('Visualizing...'):
-    #             if 'altair' in str(type_of_chart):
-    #                 st.altair_chart(i[0], use_container_width=True)
-    #             else:
-    #                 pass
+            with st.spinner('Visualizing...'):
+                if 'altair' in str(type_of_chart):
+                    st.altair_chart(i[0], use_container_width=True)
+                else:
+                    pass
 
     return None

@@ -825,13 +825,31 @@ def example_1_calc_phy_che():
     return None
 
 
+########
+def show_data_set(df):
+    with st.spinner('Showing the data set and related info'):
+        st.markdown('First 100 entries')
+        st.dataframe(df.head(100))
+        st.dataframe(df.describe())
+
+    return None
+
+
 def find_temporal_feature(df):
-    feature_list = list(df.columns.values)
+    feature_list = df.columns.to_list()
+    temporal_feature = None
+    datetime_strings = ['date', 'time']
 
     # BUG: This might induce unexpected behavior, and should be checked
     try:
-        df_of_temporals = df.select_dtypes(include=[np.datetime64])
-        temporal_feature = str(df_of_temporals.columns[0])
+        for i in feature_list:
+            # This means that i is datetime column
+            if any(datetime in i.lower() for datetime in datetime_strings):
+                df[i] = pd.to_datetime(df[i])
+                temporal_feature = i
+
+        if temporal_feature is None:
+            raise ValueError
 
         feature_list.remove(temporal_feature)
 
@@ -883,20 +901,29 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_feature = st.selectbox('Select feature to visualize',
                                             feature_list)
-            selected_color = st.color_picker('Select line color',
-                                             value='#ffffff')
+            selected_color = None
+
+            if str(df[selected_feature].dtype) not in ['string', 'Int64']:
+                selected_color = st.color_picker(
+                    'Select line color', value='#000000')
 
             chosen_charts.append(
                 (visualize.time_feature(df, selected_feature, temporal_feature,
                                         selected_color), i + '_' + key_suffix))
 
         elif i == 'Two features scatter-plot':
+            feature_1 = None
+            feature_2 = None
+
             feature_1 = st.selectbox('Select 1. feature', feature_list)
 
             if feature_1 in feature_list:
                 feature_list.remove(feature_1)
 
             feature_2 = st.selectbox('Select 2. feature', feature_list)
+
+            if feature_1 is None or feature_2 is None:
+                st.stop()
 
             chosen_charts.append(
                 (visualize.two_features(df, feature_1, feature_2),
@@ -908,6 +935,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
+
+            if len(list_of_features) < 2:
+                st.stop()
+
             list_of_features.append(target_feature)
 
             chosen_charts.append(
@@ -929,6 +960,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
+
+            if len(list_of_features) < 2:
+                st.stop()
+
             list_of_features.append(target_feature)
 
             chosen_charts.append(

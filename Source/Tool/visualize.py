@@ -75,20 +75,17 @@ def season_data(data, temporal_column):
 
 def time_feature(data, selected_column, temporal_column, selected_color):
 
-    if str(data[selected_column].dtype) == 'string':
-        chart = alt.Chart(data).mark_bar(fill=selected_color).encode(
+    seelcted_column_type = str(data[selected_column].dtype)
+    if seelcted_column_type == 'string' or seelcted_column_type == 'Int64':
+        chart = alt.Chart(data).mark_bar().encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
-            alt.Y(selected_column, type='nominal'))
-
-    elif str(data[selected_column].dtype) == 'Int64':
-        chart = alt.Chart(data).mark_bar(fill=selected_color).encode(
-            alt.X(temporal_column, type='temporal',
-                  scale=alt.Scale(nice=True)),
-            alt.Y(selected_column, type='quantitative'))
+            alt.Y('count(' + selected_column + ')', type='nominal'),
+            alt.Color(selected_column, type='nominal'),
+            alt.Tooltip('count(' + selected_column + ')', type='nominal'))
 
     else:
-        chart = alt.Chart(data).mark_line(fill=selected_color).encode(
+        chart = alt.Chart(data).mark_line(stroke=selected_color).encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
             alt.Y(selected_column, type='quantitative'))
