@@ -575,13 +575,13 @@ def fix_dataframe_columns(dataframe):
     old_columns = dataframe.columns.to_list()
     old_columns = [str(i) for i in old_columns]
     new_columns_map = {}
-    bad_symbols = ['[', ']']
+    bad_symbols = ['[', ']', '.']
 
     for column in old_columns:
         if any(char in column for char in bad_symbols):
             new_column = column
             for i in bad_symbols:
-                new_column = new_column.replace(i, '(')
+                new_column = new_column.replace(i, '_')
 
         else:
             new_column = column
@@ -964,7 +964,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                                             feature_list)
             selected_color = None
 
-            if str(df[selected_feature].dtype) not in ['string', 'Int64']:
+            if str(df[selected_feature].dtype) not in ['string']:  # ,'Int64']:
                 selected_color = st.color_picker(
                     'Select line color', value='#000000')
 
@@ -1019,6 +1019,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                     feature_list,
                     index=len(feature_list))
 
+            feature_list.remove(target_feature)
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
 

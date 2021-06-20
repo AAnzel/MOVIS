@@ -143,9 +143,11 @@ def upload_data_set(file_types, key_suffix):
                 index=default_delimiter_dict[imported_file_extension],
                 key='Upload_delim_' + key_suffix)
             try:
+                # TODO: Implement data imputation, maybe
                 df = pd.read_csv(
-                    imported_file, delimiter=delimiter_dict[delimiter],
-                    keep_default_na=False)
+                    imported_file,
+                    delimiter=delimiter_dict[delimiter]).dropna()
+                df = common.fix_dataframe_columns(df)
             except ValueError:
                 st.warning('Please choose the right delimiter')
 

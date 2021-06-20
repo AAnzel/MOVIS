@@ -75,8 +75,8 @@ def season_data(data, temporal_column):
 
 def time_feature(data, selected_column, temporal_column, selected_color):
 
-    seelcted_column_type = str(data[selected_column].dtype)
-    if seelcted_column_type == 'string' or seelcted_column_type == 'Int64':
+    selected_column_type = str(data[selected_column].dtype)
+    if selected_column_type == 'string':  # or selected_column_type == 'Int64':
         chart = alt.Chart(data).mark_bar().encode(
             alt.X(temporal_column, type='temporal',
                   scale=alt.Scale(nice=True)),
