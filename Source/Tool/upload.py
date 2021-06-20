@@ -129,14 +129,19 @@ def upload_data_set(file_types, key_suffix):
         delimiter_dict = {
             'Comma (,)': ',', 'Semicolon (;)': ';', 'Tab (\\t)': '\t'}
 
-        # TODO: Change default delimiter base on file extension
-        # If .csv = ',', .tsv = '\t'
-        delimiter = st.selectbox('Select the delimiter in your data set',
-                                 list(delimiter_dict.keys()),
-                                 key='Upload_delim_' + key_suffix)
+        # TODO: Check what happens with semicolon
+        default_delimiter_dict = {'csv': 0, 'tsv': 2}
 
         if imported_file is not None:
             df = None
+            imported_file_extension = os.path.splitext(
+                imported_file.name)[1][1:].strip().lower()
+
+            delimiter = st.selectbox(
+                'Select the delimiter in your data set',
+                list(delimiter_dict.keys()),
+                index=default_delimiter_dict[imported_file_extension],
+                key='Upload_delim_' + key_suffix)
             try:
                 df = pd.read_csv(
                     imported_file, delimiter=delimiter_dict[delimiter],
@@ -213,7 +218,7 @@ def upload_metabolomics():
 
     if df is None:
         st.warning('Upload your data set')
-        return []
+        st.stop()
 
     st.success('Data set succesfully uploaded')
     common.show_data_set(df)
@@ -252,7 +257,7 @@ def upload_phy_che():
 
     if df is None:
         st.warning('Upload your data set')
-        return []
+        st.stop()
 
     st.success('Data set succesfully uploaded')
     common.show_data_set(df)
