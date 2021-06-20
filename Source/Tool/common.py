@@ -879,8 +879,8 @@ def find_temporal_feature(df):
         # This means that we have only one temporal column with date or date
         # and time combined
         elif len(temporal_columns) == 1:
-            df[i] = pd.to_datetime(df[i])
-            temporal_feature = i
+            df[temporal_columns[0]] = pd.to_datetime(df[temporal_columns[0]])
+            temporal_feature = temporal_columns[0]
 
             st.success('Detected 1 temporal column named ' + temporal_feature
                        + '.')
