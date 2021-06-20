@@ -123,7 +123,12 @@ def two_features(data, feature_1, feature_2):
 def parallel_coordinates(data, list_of_features, target_feature):
 
     # TODO: Implement normalization before creating a chart
-    # See: https://github.com/AAnzel/DataVis_Supplementary_Material/
+    # Use https://altair-viz.github.io/gallery/normed_parallel_coordinates.html
+    selected_column_type = str(data[target_feature].dtype)
+    if selected_column_type == 'string':
+        color_type = 'nominal'
+    else:
+        color_type = 'quantitative'
 
     new_data = data[list_of_features].reset_index().melt(
         id_vars=['index', target_feature])
@@ -131,17 +136,10 @@ def parallel_coordinates(data, list_of_features, target_feature):
     chart = alt.Chart(new_data).mark_line().encode(
         alt.X('variable:N'),
         alt.Y('value:Q'),
-        alt.Color(target_feature, type='quantitative'),
+        alt.Color(target_feature, type=color_type),
         alt.Detail('index:N'),
         opacity=alt.value(0.4)
     )
-    '''
-    chart = px.parallel_coordinates(
-        data, color=range(0, len(data[target_feature])),
-        dimensions=list_of_features,
-        color_continuous_scale=px.colors.sequential.Inferno,
-        color_continuous_midpoint=2)
-    '''
 
     return chart.interactive()
 

@@ -1013,7 +1013,6 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                     feature_list,
                     index=len(feature_list))
 
-            feature_list.remove(target_feature)
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
 
