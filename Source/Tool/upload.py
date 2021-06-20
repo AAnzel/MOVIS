@@ -110,16 +110,16 @@ def upload_data_set(file_types, key_suffix):
     upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
 
     # TODO: Change the text for transcriptomics
-    upload_text_zip_genomics = '''Upload your archive here. Archive should
-                                  contain only FASTA (.fa) files named:
-                                  D[day_number].fa\nFor example: D01.fa'''
-    upload_text_zip_proteomics = '''Upload your archive here. Archive should
-                                    contain only FASTA (.faa) files named:
-                                    D[day_number].fa\nFor example: D01.faa'''
-    upload_text_zip_transcriptomics = '''Upload your archive here. Archive
-                                         should contain only FASTA (.fa) files
-                                         named: D[day_number].fa\nFor example:
-                                         D01.fa'''
+    upload_text_zip = {
+        'Genomics': '''Upload your archive here. Archive should
+                       contain only FASTA (.fa) files named:
+                       D[day_number].fa\tFor example: D01.fa''',
+        'Proteomics': '''Upload your archive here. Archive should
+                         contain only FASTA (.faa) files named:
+                         D[day_number].fa\tFor example: D01.faa''',
+        'Transcriptomics': '''Upload your archive here. Archive should
+                              contain only FASTA (.fa) files named:
+                              D[day_number].fa\tFor example: D01.fa'''}
 
     if file_types == type_list_csv:
         imported_file = st.file_uploader(upload_text_csv, type=file_types,
@@ -138,7 +138,7 @@ def upload_data_set(file_types, key_suffix):
                 imported_file.name)[1][1:].strip().lower()
 
             delimiter = st.selectbox(
-                'Select the delimiter in your data set',
+                'Select the delimiter for your data set',
                 list(delimiter_dict.keys()),
                 index=default_delimiter_dict[imported_file_extension],
                 key='Upload_delim_' + key_suffix)
@@ -147,11 +147,13 @@ def upload_data_set(file_types, key_suffix):
                 df = pd.read_csv(
                     imported_file,
                     delimiter=delimiter_dict[delimiter]).dropna()
+                df.reset_index(inplace=True, drop=True)
                 df = common.fix_dataframe_columns(df)
             except ValueError:
                 st.warning('Please choose the right delimiter')
 
             df = df.convert_dtypes()
+            st.success('Data set succesfully uploaded')
 
             return df
 
@@ -159,70 +161,50 @@ def upload_data_set(file_types, key_suffix):
             return None
 
     else:
-        if key_suffix == 'genomics':
-            imported_file = st.file_uploader(
-                upload_text_zip_genomics, type=file_types,
-                accept_multiple_files=False, key='Upload_file_' + key_suffix)
-        elif key_suffix == 'proteomics':
-            imported_file = st.file_uploader(
-                upload_text_zip_proteomics, type=file_types,
-                accept_multiple_files=False, key='Upload_file_' + key_suffix)
-        else:
-            imported_file = st.file_uploader(
-                upload_text_zip_transcriptomics, type=file_types,
-                accept_multiple_files=False, key='Upload_file_' + key_suffix)
+        imported_file = st.file_uploader(
+            upload_text_zip[key_suffix], type=file_types,
+            accept_multiple_files=False, key='Upload_file_' + key_suffix)
 
         if imported_file is not None:
+            st.success('Data set succesfully uploaded')
             return import_archive(imported_file, key_suffix)
 
         else:
             return None
 
 
-def upload_genomics():
-    st.header('Genomics')
+def upload_intro(type_list, key_suffix):
+    st.header(key_suffix)
     st.markdown('')
 
-    # TODO: Deal with other types of genomics data, like KEGG etc.
-    df = upload_data_set(type_list_zip, 'genomics')
+    df = upload_data_set(type_list, key_suffix)
 
     if df is None:
-        st.warning('Please upload your data set')
-        return []
+        st.warning('Upload your data set')
+        st.stop()
 
-    st.success('Data set succesfully uploaded')
+    return df
+
+
+def upload_genomics():
+
+    df = upload_intro(type_list_zip, 'Genomics')
     common.show_data_set(df)
 
     return []
 
 
 def upload_proteomics():
-    st.header('Proteomics')
-    st.markdown('')
 
-    df = upload_data_set(type_list_zip, 'proteomics')
-
-    if df is None:
-        st.warning('Upload your data set')
-        return []
-
-    st.success('Data set succesfully uploaded')
+    df = upload_intro(type_list_zip, 'Proteomics')
     common.show_data_set(df)
 
     return []
 
 
 def upload_metabolomics():
-    st.header('Metabolomics')
-    st.markdown('')
 
-    df = upload_data_set(type_list_csv, 'metabolomics')
-
-    if df is None:
-        st.warning('Upload your data set')
-        st.stop()
-
-    st.success('Data set succesfully uploaded')
+    df = upload_intro(type_list_csv, 'Metabolomics')
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
@@ -236,32 +218,16 @@ def upload_metabolomics():
 
 
 def upload_transcriptomics():
-    st.header('Transcriptomics')
-    st.markdown('')
 
-    df = upload_data_set(type_list_zip, 'transcriptomics')
-
-    if df is None:
-        st.warning('Upload your data set')
-        return []
-
-    st.success('Data set succesfully uploaded')
+    df = upload_intro(type_list_zip, 'Transcriptomics')
     common.show_data_set(df)
 
     return []
 
 
 def upload_phy_che():
-    st.header('Physico-chemical')
-    st.markdown('')
 
-    df = upload_data_set(type_list_csv, 'phy_che')
-
-    if df is None:
-        st.warning('Upload your data set')
-        st.stop()
-
-    st.success('Data set succesfully uploaded')
+    df = upload_intro(type_list_csv, 'Physico-chemical')
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)

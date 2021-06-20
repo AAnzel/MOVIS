@@ -861,12 +861,6 @@ def find_temporal_feature(df):
     datetime_strings = ['date', 'time']
     temporal_columns = []
 
-    # BUG: This might induce unexpected behavior, and should be checked
-    # IF THERE ARE TWO COLUMNS, THAT MEANS ONE IS FOR DATE AND THE OTHER FOR
-    # TIME, SO WE WILL COMBINE THEM INTO ONE
-    # I HAVE TO INFORM THE USER ABOUT THIS
-    # ALSO ADD FUNCTIONALITY THAT IS PRESENT IN PHY_CHE WHICH REMOVES COMMAS
-    # FOR DOTS IN FLOAT NUMBERS!!!
     try:
         for i in feature_list:
             # This means that i is datetime column
@@ -882,8 +876,8 @@ def find_temporal_feature(df):
             df[temporal_columns[0]] = pd.to_datetime(df[temporal_columns[0]])
             temporal_feature = temporal_columns[0]
 
-            st.success('Detected 1 temporal column named ' + temporal_feature
-                       + '.')
+            st.success('Detected 1 temporal column named **' + temporal_feature
+                       + '**.')
 
         # This means that we have 2 temporal columns, one for date and the
         # other one for time
@@ -903,7 +897,7 @@ def find_temporal_feature(df):
             df.drop(temporal_columns, axis=1, inplace=True)
 
             st.success('Detected 2 temporal columns. Successfully merged them\
-                        into one called "DateTime".')
+                        into one called **DateTime**.')
 
         # We are not providing any functionality if there are >=3 columns
         else:
