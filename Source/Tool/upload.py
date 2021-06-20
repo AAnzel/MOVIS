@@ -25,6 +25,7 @@ for i in shutil.get_unpack_formats():
     type_list_zip += i[1]
 
 
+@st.cache
 def import_archive(imported_file, key_suffix):
 
     # Creating the file from BytesIO stream
@@ -55,14 +56,15 @@ def import_archive(imported_file, key_suffix):
         os.remove(tmp_file_path)
 
 
-def modify_data_set(df, temporal_column, key_suffix):
+def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
     columns_to_remove = st.multiselect(
-        'Select columns to remove', df.columns.to_list(),
+        'Select columns to remove', feature_list,
         key='Col_remove_' + key_suffix)
 
     if len(columns_to_remove) != 0:
         df.drop(columns_to_remove, axis=1, inplace=True)
+        feature_list = [i for i in feature_list if i not in columns_to_remove]
 
     rows_to_remove_text = st.text_input(
         'Insert row numbers to remove, seperated by comma. See help (right)\
@@ -70,6 +72,12 @@ def modify_data_set(df, temporal_column, key_suffix):
         help='Example: 42 or 2, 3, 15, 55')
 
     if rows_to_remove_text != '':
+        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
+        # First we check if input is good or not
+        if any(not row.isnumeric() for row in rows_to_remove):
+            st.error('Wrong number input')
+            st.stop()
+
         rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
         df.drop(rows_to_remove, axis=0, inplace=True)
 
@@ -79,14 +87,22 @@ def modify_data_set(df, temporal_column, key_suffix):
         value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
         help='Example: 2011-03-21, 2012-05-03')
 
-    # TODO: Implement checks for every input here
     if time_to_remove_text != '':
-        time_to_remove = [dt.datetime.strptime(
-            i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
-        df = df[(df[temporal_column] >= time_to_remove[0]) &
-                (df[temporal_column] <= time_to_remove[1])]
+        try:
+            time_to_remove = [dt.datetime.strptime(
+                i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
+            df = df[(df[temporal_column] >= time_to_remove[0]) &
+                    (df[temporal_column] <= time_to_remove[1])]
+        except ValueError:
+            st.error('Wrong date input')
+            st.stop()
 
-    return df
+    df.reset_index(inplace=True, drop=True)
+    df[feature_list] = df[feature_list].apply(
+        pd.to_numeric, errors='ignore')
+    df = df.convert_dtypes()
+
+    return df, feature_list
 
 
 def upload_data_set(file_types, key_suffix):
@@ -203,7 +219,8 @@ def upload_metabolomics():
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
-    df = modify_data_set(df, temporal_feature, 'Metabolomics')
+    df, feature_list = modify_data_set(df, temporal_feature, feature_list,
+                                       'Metabolomics')
 
     chosen_charts = common.visualize_data_set(
         df, temporal_feature, feature_list, 'Metabolomics')
@@ -241,7 +258,8 @@ def upload_phy_che():
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
-    df = modify_data_set(df, temporal_feature, 'Phy_che')
+    df, feature_list = modify_data_set(df, temporal_feature, feature_list,
+                                       'Phy_che')
 
     chosen_charts = common.visualize_data_set(
         df, temporal_feature, feature_list, 'Phy_che')

@@ -882,6 +882,9 @@ def find_temporal_feature(df):
             df[i] = pd.to_datetime(df[i])
             temporal_feature = i
 
+            st.success('Detected 1 temporal column named ' + temporal_feature
+                       + '.')
+
         # This means that we have 2 temporal columns, one for date and the
         # other one for time
         elif len(temporal_columns) == 2:
@@ -899,12 +902,17 @@ def find_temporal_feature(df):
             temporal_feature = 'DateTime'
             df.drop(temporal_columns, axis=1, inplace=True)
 
+            st.success('Detected 2 temporal columns. Successfully merged them\
+                        into one called "DateTime".')
+
         # We are not providing any functionality if there are >=3 columns
         else:
             raise ValueError
 
         feature_list = df.columns.to_list()
         feature_list.remove(temporal_feature)
+        df[feature_list] = df[feature_list].apply(
+            pd.to_numeric, errors='ignore')
         df = df.convert_dtypes()
 
         return temporal_feature, feature_list
@@ -912,7 +920,6 @@ def find_temporal_feature(df):
     except ValueError:
         st.error('Datetime column not detected.')
         st.stop()
-        # TODO: Implement choosing time column and modifying dataframe
         return None, None
 
 
