@@ -6,7 +6,6 @@ import streamlit as st
 import pandas as pd
 import datetime as dt
 
-
 path_uploaded = 'uploaded'
 path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
 path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
@@ -25,7 +24,7 @@ for i in shutil.get_unpack_formats():
     type_list_zip += i[1]
 
 
-@st.cache
+@st.cache(suppress_st_warning=True)
 def import_archive(imported_file, key_suffix):
 
     # Creating the file from BytesIO stream
@@ -35,24 +34,35 @@ def import_archive(imported_file, key_suffix):
     tmp_file.flush()
     tmp_file.close()
 
+    index_of_dot = imported_file.name.index('.')
+    return_file_name_no_ext = imported_file.name[:index_of_dot]
+
     try:
-        if key_suffix == 'genomics':
+        if key_suffix == 'Genomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_genomics)
-        elif key_suffix == 'transcriptomics':
+            return os.path.join(
+                path_uploaded_genomics, return_file_name_no_ext)
+        elif key_suffix == 'Transcriptomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_transcriptomics)
-        elif key_suffix == 'proteomics':
+            return os.path.join(
+                path_uploaded_transcriptomics, return_file_name_no_ext)
+        elif key_suffix == 'Proteomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_proteomics)
+            return os.path.join(
+                path_uploaded_proteomics, return_file_name_no_ext)
         else:
-            pass
+            st.error('Bad key suffix for archive unpacking')
+            return None
 
     except ValueError:
         st.error('Error while unpacking the archive')
         return None
 
     finally:
+        st.success('Data set succesfully uploaded')
         os.remove(tmp_file_path)
 
 
@@ -166,7 +176,6 @@ def upload_data_set(file_types, key_suffix):
             accept_multiple_files=False, key='Upload_file_' + key_suffix)
 
         if imported_file is not None:
-            st.success('Data set succesfully uploaded')
             return import_archive(imported_file, key_suffix)
 
         else:
@@ -188,16 +197,24 @@ def upload_intro(type_list, key_suffix):
 
 def upload_genomics():
 
-    df = upload_intro(type_list_zip, 'Genomics')
-    common.show_data_set(df)
+    folder_path = upload_intro(type_list_zip, 'Genomics')
+    common.show_folder_structure(folder_path)
 
     return []
 
 
 def upload_proteomics():
 
-    df = upload_intro(type_list_zip, 'Proteomics')
-    common.show_data_set(df)
+    folder_path = upload_intro(type_list_zip, 'Proteomics')
+    common.show_folder_structure(folder_path)
+
+    return []
+
+
+def upload_transcriptomics():
+
+    folder_path = upload_intro(type_list_zip, 'Transcriptomics')
+    common.show_folder_structure(folder_path)
 
     return []
 
@@ -215,14 +232,6 @@ def upload_metabolomics():
         df, temporal_feature, feature_list, 'Metabolomics')
 
     return chosen_charts
-
-
-def upload_transcriptomics():
-
-    df = upload_intro(type_list_zip, 'Transcriptomics')
-    common.show_data_set(df)
-
-    return []
 
 
 def upload_phy_che():

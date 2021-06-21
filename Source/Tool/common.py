@@ -835,6 +835,29 @@ def show_data_set(df):
     return None
 
 
+def show_folder_structure(uploaded_folder_path):
+
+    space = '    '
+    tee = '├── '
+    max_lines = 7
+
+    uploaded_folder_name = os.path.basename(
+        os.path.normpath(uploaded_folder_path))
+
+    folder_structure_text = uploaded_folder_name + '\n' + space
+    files_list = os.listdir(uploaded_folder_path)
+    files_list.sort()
+
+    for i in range(0, min(len(files_list), max_lines)):
+        folder_structure_text += tee + files_list[i] + '\n' + space
+    folder_structure_text += '...'
+
+    with st.spinner('Showing folder structure'):
+        st.code(folder_structure_text)
+
+    return None
+
+
 # This functions will hold different fixes for uploaded data sets
 def fix_data_set(df):
 
