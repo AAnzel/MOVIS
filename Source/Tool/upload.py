@@ -122,14 +122,38 @@ def upload_data_set(file_types, key_suffix):
     # TODO: Change the text for transcriptomics
     upload_text_zip = {
         'Genomics': '''Upload your archive here. Archive should
-                       contain only FASTA (.fa) files named:
-                       D[day_number].fa\tFor example: D01.fa''',
+                       contain only FASTA (.fa) files. Possible file names are
+                       given as help, on the right.''',
         'Proteomics': '''Upload your archive here. Archive should
-                         contain only FASTA (.faa) files named:
-                         D[day_number].fa\tFor example: D01.faa''',
+                         contain only FASTA (.faa) files. Possible file names
+                         are given as help, on the right.''',
         'Transcriptomics': '''Upload your archive here. Archive should
-                              contain only FASTA (.fa) files named:
-                              D[day_number].fa\tFor example: D01.fa'''}
+                              contain only FASTA (.fa) files. Possible file
+                              names are given as help, on the right.'''}
+    upload_help_zip = {
+        'Genomics': '''File names can be given in two formats:
+                       1. D03.fa for FASTA file collected on the third day, or
+                       W03.fa for FASTA file collected the third week. You will
+                       be given an option to select the start date.
+                       2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
+                       You should use either the first or the second option,
+                       mixing name options is not allowed.''',
+        'Proteomics': '''File names can be given in two formats:
+                         1. D03.faa for FASTA file collected on the third day,
+                         or W03.faa for FASTA file collected the third week.
+                         You will be given an option to select the start date.
+                         2. 2019-03-15.faa for FASTA file collected on
+                         15.03.2019. You should use either the first or the
+                         second option, mixing name options is not allowed.''',
+        'Transcriptomics': '''File names can be given in two formats:
+                              1. D03.fa for FASTA file collected on the third
+                              day, or W03.fa for FASTA file collected the third
+                              week. You will be given an option to select the
+                              start date.
+                              2. 2019-03-15.fa for FASTA file collected on
+                              15.03.2019. You should use either the first or
+                              the second option, mixing name options is not
+                              allowed.'''}
 
     if file_types == type_list_csv:
         imported_file = st.file_uploader(upload_text_csv, type=file_types,
@@ -173,7 +197,8 @@ def upload_data_set(file_types, key_suffix):
     else:
         imported_file = st.file_uploader(
             upload_text_zip[key_suffix], type=file_types,
-            accept_multiple_files=False, key='Upload_file_' + key_suffix)
+            accept_multiple_files=False, help=upload_help_zip[key_suffix],
+            key='Upload_file_' + key_suffix)
 
         if imported_file is not None:
             return import_archive(imported_file, key_suffix)
@@ -195,10 +220,30 @@ def upload_intro(type_list, key_suffix):
     return df
 
 
+def create_zip_temporality(folder_path, file_name_type, key_suffix):
+
+    if file_name_type in ['D', 'W']:
+        start_date = st.date_input(
+            'Insert start date for your data set:',
+            dt.datetime.strptime("2011-03-21", "%Y-%m-%d"),
+            key='Date_input_' + key_suffix)
+
+        # This is only needed for example 1 data set
+        # common.example_1_fix_archive_file_names(start_date, folder_path)
+        common.fix_archive_file_names(start_date, folder_path)
+        # After this step, every file has a timestamp as a name
+
+    else:
+        pass
+
+    return None
+
+
 def upload_genomics():
 
     folder_path = upload_intro(type_list_zip, 'Genomics')
-    common.show_folder_structure(folder_path)
+    file_name_type = common.show_folder_structure(folder_path)
+    create_zip_temporality(folder_path, file_name_type, 'Genomics')
 
     return []
 
@@ -206,7 +251,8 @@ def upload_genomics():
 def upload_proteomics():
 
     folder_path = upload_intro(type_list_zip, 'Proteomics')
-    common.show_folder_structure(folder_path)
+    file_name_type = common.show_folder_structure(folder_path)
+    create_zip_temporality(folder_path, file_name_type, 'Genomics')
 
     return []
 
@@ -214,7 +260,8 @@ def upload_proteomics():
 def upload_transcriptomics():
 
     folder_path = upload_intro(type_list_zip, 'Transcriptomics')
-    common.show_folder_structure(folder_path)
+    file_name_type = common.show_folder_structure(folder_path)
+    create_zip_temporality(folder_path, file_name_type, 'Genomics')
 
     return []
 

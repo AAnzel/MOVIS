@@ -52,6 +52,7 @@ SEED = 42
 END = num_of_mags
 ALL_DAYS = 51
 MAX_ROWS = 15000
+MAX_RANGE = 100
 EPOCHS = 10
 NUM_OF_WORKERS = 8
 START_DATE = dt.datetime.strptime("2011-03-21", "%Y-%m-%d")
@@ -591,7 +592,7 @@ def fix_dataframe_columns(dataframe):
     return dataframe.rename(columns=new_columns_map)
 
 
-def create_temporal_column(list_of_days, start_date, end):
+def create_temporal_column(list_of_days, start_date, end, day_or_week):
 
     list_of_dates = []
     list_of_days.sort()
@@ -600,14 +601,20 @@ def create_temporal_column(list_of_days, start_date, end):
     # dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
     for i in list_of_days[:end]:
 
-        tmp_datetime = start_date + dt.timedelta(weeks=int(i[1:3]))
-
-        if tmp_datetime not in list_of_dates:
-            list_of_dates.append(tmp_datetime)
-
+        # Taking the number after D or W in D03.fa, without .fa so 03
+        tmp_number = int(i.split('.')[0][1:])
+        if day_or_week == 'W':
+            tmp_datetime = start_date + dt.timedelta(weeks=tmp_number)
         else:
-            tmp_datetime = tmp_datetime.replace(day=tmp_datetime.day + 1)
-            list_of_dates.append(tmp_datetime)
+            tmp_datetime = start_date + dt.timedelta(days=tmp_number)
+
+        while tmp_datetime in list_of_dates:
+            if day_or_week == 'W':
+                tmp_datetime = tmp_datetime + dt.timedelta(days=1)
+            else:
+                tmp_datetime = tmp_datetime + dt.timedelta(hours=1)
+
+        list_of_dates.append(tmp_datetime)
 
     return list_of_dates
 
@@ -615,6 +622,38 @@ def create_temporal_column(list_of_days, start_date, end):
 # ---
 # # GENOMIC ANALYSIS
 # ---
+# Important only if we have filename D01.fa as in example 1
+# This function fixes those types of file names
+def example_1_fix_archive_file_names(start_date, unpack_archive_path):
+
+    # I will first remove every FASTA file that doesn't start with 'D'
+    files_list_old = os.listdir(unpack_archive_path)
+    files_list_new = [i for i in files_list_old if i.startswith('D')]
+    files_list_remove = [i for i in files_list_old if i not in files_list_new]
+
+    for i in files_list_remove:
+        os.remove(os.path.join(unpack_archive_path, i))
+
+    # Sorting files and fixing the name. Originally they start with D but
+    # represent weeks, so I will replace D with W
+    files_list_new.sort()
+    files_list_pass = [i.replace('D', 'W') for i in files_list_new]
+    files_list_pass = [i.split('_')[0] + '.fa' for i in files_list_pass]
+
+    list_of_dates = create_temporal_column(
+        files_list_pass, start_date, len(files_list_pass),
+        files_list_pass[0][0])
+
+    list_of_new_names = [i.strftime('%Y-%m-%d') for i in list_of_dates]
+
+    for i in range(len(files_list_pass)):
+        os.rename(
+            os.path.join(unpack_archive_path, files_list_new[i]),
+            os.path.join(unpack_archive_path, list_of_new_names[i] + '.fa'))
+
+    return None
+
+
 def example_1_calc_genomics():
 
     kegg_matrix_df = import_kegg_and_create_df(
@@ -623,7 +662,7 @@ def example_1_calc_genomics():
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
                    (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_kegg_matrix_df = kegg_matrix_df.copy()
     temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
 
@@ -667,7 +706,7 @@ def example_1_calc_genomics():
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
                    (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_mags_df = mags_df.copy()
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
     cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
@@ -678,7 +717,7 @@ def example_1_calc_genomics():
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
                    (i.endswith("fa") and i.startswith("D"))]
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END)
+    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_annotated_mags_df = annotated_mags_df.copy()
     temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
     temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
@@ -777,7 +816,7 @@ def example_1_calc_proteomics():
     # I have to add temporality to this data set, according to file names
     fasta_files = [i for i in os.listdir(path_proteomics_78)
                    if (i.endswith("faa"))]
-    list_of_dates = create_temporal_column(fasta_files, START_DATE, END)
+    list_of_dates = create_temporal_column(fasta_files, START_DATE, END, 'W')
     proteomics_data.insert(0, 'DateTime', list_of_dates)
 
     # I will save this dataframe to show to the end-user
@@ -855,7 +894,7 @@ def show_folder_structure(uploaded_folder_path):
     with st.spinner('Showing folder structure'):
         st.code(folder_structure_text)
 
-    return None
+    return files_list[len(files_list)-1][0]
 
 
 # This functions will hold different fixes for uploaded data sets
@@ -876,6 +915,32 @@ def fix_data_set(df):
     # FIX 2:
 
     return df
+
+
+def fix_archive_file_names(start_date, unpack_archive_path):
+
+    # I will first remove every FASTA file that doesn't start with 'D'
+    files_list_old = os.listdir(unpack_archive_path)
+    files_list_new = [i for i in files_list_old if i.startswith('D')]
+    files_list_remove = [i for i in files_list_old if i not in files_list_new]
+
+    for i in files_list_remove:
+        os.remove(os.path.join(unpack_archive_path, i))
+
+    files_list_new.sort()
+
+    list_of_dates = create_temporal_column(
+        files_list_new, start_date, len(files_list_new),
+        files_list_new[0][0])
+
+    list_of_new_names = [i.strftime('%Y-%m-%d') for i in list_of_dates]
+
+    for i in range(len(files_list_new)):
+        os.rename(
+            os.path.join(unpack_archive_path, files_list_new[i]),
+            os.path.join(unpack_archive_path, list_of_new_names[i] + '.fa'))
+
+    return None
 
 
 def find_temporal_feature(df):
