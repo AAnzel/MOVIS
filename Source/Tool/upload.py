@@ -119,8 +119,8 @@ def upload_data_set(file_types, key_suffix):
 
     upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
 
-    # TODO: Change the text for transcriptomics
-    upload_text_zip = {
+    # TODO: Check text messages and change where neccessary
+    upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only FASTA (.fa) files. Possible file names are
                        given as help, on the right.''',
@@ -130,32 +130,73 @@ def upload_data_set(file_types, key_suffix):
         'Transcriptomics': '''Upload your archive here. Archive should
                               contain only FASTA (.fa) files. Possible file
                               names are given as help, on the right.'''}
-    upload_help_zip = {
+
+    upload_text_zip_kegg = {
+        'Genomics': '''Upload your archive here. Archive should
+                       contain only KO besthits (.besthits) files. Possible
+                       file names are given as help, on the right.''',
+        'Proteomics': '''Upload your archive here. Archive should
+                         contain only KO besthits (.besthits) files. Possible
+                         file names are given as help, on the right.''',
+        'Transcriptomics': '''Upload your archive here. Archive should
+                              contain only KO besthits (.besthits) files.
+                              Possible file names are given as help, on the
+                              right.'''}
+
+    upload_help_zip_fasta = {
         'Genomics': '''File names can be given in two formats:
                        1. D03.fa for FASTA file collected on the third day, or
-                       W03.fa for FASTA file collected the third week. You will
-                       be given an option to select the start date.
+                       W03.fa for FASTA file collected on the third week.
+                       You will be given an option to select the start date.
                        2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
                        You should use either the first or the second option,
                        mixing name options is not allowed.''',
         'Proteomics': '''File names can be given in two formats:
                          1. D03.faa for FASTA file collected on the third day,
-                         or W03.faa for FASTA file collected the third week.
+                         or W03.faa for FASTA file collected the on third week.
                          You will be given an option to select the start date.
                          2. 2019-03-15.faa for FASTA file collected on
                          15.03.2019. You should use either the first or the
                          second option, mixing name options is not allowed.''',
         'Transcriptomics': '''File names can be given in two formats:
                               1. D03.fa for FASTA file collected on the third
-                              day, or W03.fa for FASTA file collected the third
-                              week. You will be given an option to select the
-                              start date.
+                              day, or W03.fa for FASTA file collected on the
+                              third week. You will be given an option to select
+                              the start date.
+                              2. 2019-03-15.fa for FASTA file collected on
+                              15.03.2019. You should use either the first or
+                              the second option, mixing name options is not
+                              allowed.'''}
+
+    upload_help_zip_kegg = {
+        'Genomics': '''File names can be given in two formats:
+                       1. D03.KOs.besthits for FASTA file collected on the
+                       third day, or W03.KOs.besthits for FASTA file collected
+                       on the third week. You will be given an option to select
+                       the start date.
+                       2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
+                       You should use either the first or the second option,
+                       mixing name options is not allowed.''',
+        'Proteomics': '''File names can be given in two formats:
+                         1. D03.KOs.besthits for FASTA file collected on the
+                         third day, or W03.KOs.besthits for FASTA file
+                         collected on the third week. You will be given an
+                         option to select the start date.
+                         2. 2019-03-15.fa for FASTA file collected on
+                         15.03.2019. You should use either the first or the
+                         second option, mixing name options is not allowed.''',
+        'Transcriptomics': '''File names can be given in two formats:
+                              1. D03.KOs.besthits for FASTA file collected on
+                              the third day, or W03.KOs.besthits for FASTA file
+                              collected on the third week. You will be given an
+                              option to select the start date.
                               2. 2019-03-15.fa for FASTA file collected on
                               15.03.2019. You should use either the first or
                               the second option, mixing name options is not
                               allowed.'''}
 
     if file_types == type_list_csv:
+
         imported_file = st.file_uploader(upload_text_csv, type=file_types,
                                          accept_multiple_files=False,
                                          key='Upload_file_' + key_suffix)
@@ -195,10 +236,26 @@ def upload_data_set(file_types, key_suffix):
             return None
 
     else:
-        imported_file = st.file_uploader(
-            upload_text_zip[key_suffix], type=file_types,
-            accept_multiple_files=False, help=upload_help_zip[key_suffix],
-            key='Upload_file_' + key_suffix)
+        available_data_set_types = ['Raw FASTA files', 'KEGG annotation files']
+
+        selected_data_set_type = st.selectbox(
+            'What kind of data set do you want to upload?',
+            available_data_set_types
+        )
+        
+        if selected_data_set_type == available_data_set_types[0]:
+            imported_file = st.file_uploader(
+                upload_text_zip_fasta[key_suffix], type=file_types,
+                accept_multiple_files=False,
+                help=upload_help_zip_fasta[key_suffix],
+                key='Upload_file_' + key_suffix)
+
+        else:
+            imported_file = st.file_uploader(
+                upload_text_zip_kegg[key_suffix], type=file_types,
+                accept_multiple_files=False,
+                help=upload_help_zip_kegg[key_suffix],
+                key='Upload_file_' + key_suffix)
 
         if imported_file is not None:
             return import_archive(imported_file, key_suffix)
