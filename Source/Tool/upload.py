@@ -242,7 +242,7 @@ def upload_data_set(file_types, key_suffix):
             'What kind of data set do you want to upload?',
             available_data_set_types
         )
-        
+
         if selected_data_set_type == available_data_set_types[0]:
             imported_file = st.file_uploader(
                 upload_text_zip_fasta[key_suffix], type=file_types,
@@ -277,6 +277,8 @@ def upload_intro(type_list, key_suffix):
     return df
 
 
+# This function changes all file names of 'D' or 'W' type into timestamp type
+# This is done in place for the unpacked uploaded directory
 def create_zip_temporality(folder_path, file_name_type, key_suffix):
 
     if file_name_type in ['D', 'W']:
@@ -286,12 +288,22 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
             key='Date_input_' + key_suffix)
 
         # This is only needed for example 1 data set
-        # common.example_1_fix_archive_file_names(start_date, folder_path)
-        common.fix_archive_file_names(start_date, folder_path)
+        # TODO: Change this for production data sets
+        common.example_1_fix_archive_file_names(start_date, folder_path)
+        # common.fix_archive_file_names(start_date, folder_path)
         # After this step, every file has a timestamp as a name
 
     else:
-        pass
+        # Check if file name starts with a valid timestamp
+        tmp_file_name = os.listdir(folder_path)[0].split('.')[0]
+        try:
+            dt.datetime.strptime(tmp_file_name, '%Y-%m-%d')
+
+        except ValueError:
+            st.error(
+                '''File names are not valid. File names should start with "D"
+                   or "W", or be of timestamp type (\%Y-\%m-\%d)''')
+            st.stop()
 
     return None
 
