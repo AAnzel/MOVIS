@@ -253,12 +253,12 @@ def upload_data_set(file_types, key_suffix):
         # IMPORTANT: * operator is used here, introduced in >= Python 3.5
         selected_data_set_type = st.selectbox(
             'What kind of data set do you want to upload?',
-            *available_data_set_types[key_suffix]
+            list(available_data_set_types[key_suffix].keys())
         )
 
         if key_suffix == 'Genomics':
             if selected_data_set_type ==\
-               available_data_set_types[key_suffix][0]:
+               list(available_data_set_types[key_suffix].keys())[0]:
                 imported_file = st.file_uploader(
                     upload_text_zip_fasta[key_suffix], type=file_types,
                     accept_multiple_files=False,
@@ -274,7 +274,7 @@ def upload_data_set(file_types, key_suffix):
 
         elif key_suffix == 'Proteomics':
             if selected_data_set_type ==\
-               available_data_set_types[key_suffix][0]:
+               list(available_data_set_types[key_suffix].keys())[0]:
                 imported_file = st.file_uploader(
                     upload_text_zip_fasta[key_suffix], type=file_types,
                     accept_multiple_files=False,
@@ -347,20 +347,21 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
 def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
 
     # TODO: Allow user to change number of epochs for training
-    MODEL_NAME = 'w2v_model.bin'
-    MODEL_PATH = os.path.join(folder_path, MODEL_NAME)
+    MODEL_NAME = 'w2v_model.saved'
+    MODEL_PATH = os.path.join(os.path.split(folder_path)[0], MODEL_NAME)
     fasta_files = os.listdir(folder_path)
     num_of_fasta_files = len(fasta_files)
 
-    if not os.path.exists(MODEL_PATH):
+    if os.path.exists(MODEL_PATH):
+        w2v_model = Word2Vec.load(MODEL_PATH)
+
+    # If we already created a model, we won't do it again
+    else:
         w2v_model, fasta_files = common.import_mags_and_build_model(
             num_of_fasta_files, folder_path)
         w2v_model = common.train_model(
             w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
-        w2v_model.wv.save_word2vec_format(MODEL_PATH, binary=True)
-    # If we already created a model, we won't do it again
-    else:
-        w2v_model = Word2Vec.load_word2vec_format(MODEL_PATH, binary=True)
+        w2v_model.save(MODEL_PATH)
 
     list_of_vectors = common.vectorize_mags(
         w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
@@ -377,7 +378,8 @@ def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
     if data_set_type == 'FASTA':
         st.info('Vectorizing FASTA files using word2vec algorithm')
         with st.spinner('Vectorizing FASTA files using W2V in progress...'):
-            df = work_with_fasta
+            df = work_with_fasta(data_set_type, folder_path, file_name_type,
+                                 key_suffix)
         common.show_data_set(df)
 
     else:

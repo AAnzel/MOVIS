@@ -328,8 +328,8 @@ def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
                     print("Building w2v model")
                     # We build our model on the first MAG
                     w2v_model = Word2Vec(
-                        sentences=one_mag, size=100, workers=NUM_OF_WORKERS,
-                        seed=SEED)
+                        sentences=one_mag, vector_size=100,
+                        workers=NUM_OF_WORKERS, seed=SEED)
 
                 # Else we just expand its vocabulary
                 else:
@@ -695,9 +695,8 @@ def example_1_calc_genomics():
     # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
     final_model = train_model(final_model, epochs=EPOCHS, end=END)
 
-    final_model.wv.save_word2vec_format(
-        os.path.join(path_model_save_root, "genomics_model_78.bin"),
-        binary=True)
+    final_model.save(
+        os.path.join(path_model_save_root, "genomics_model_78.saved"))
 
     # Now I should vectorize documents with this model. For further use, I
     # could save this model's weights, and use it to vectorize all mags. That
