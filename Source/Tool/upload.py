@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 import streamlit as st
 import pandas as pd
 import datetime as dt
+from gensim.models import Word2Vec
 
 path_uploaded = 'uploaded'
 path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
@@ -174,9 +175,9 @@ def upload_data_set(file_types, key_suffix):
                        third day, or W03.KOs.besthits for FASTA file collected
                        on the third week. You will be given an option to select
                        the start date.
-                       2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
-                       You should use either the first or the second option,
-                       mixing name options is not allowed.''',
+                       2. 2019-03-15.KOs.besthits for FASTA file collected on
+                       15.03.2019. You should use either the first or the
+                       second option, mixing name options is not allowed.''',
         'Proteomics': '''File names can be given in two formats:
                          1. D03.KOs.besthits for FASTA file collected on the
                          third day, or W03.KOs.besthits for FASTA file
@@ -342,11 +343,55 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
     return None
 
 
+@st.cache
+def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
+
+    # TODO: Allow user to change number of epochs for training
+    MODEL_NAME = 'w2v_model.bin'
+    MODEL_PATH = os.path.join(folder_path, MODEL_NAME)
+    fasta_files = os.listdir(folder_path)
+    num_of_fasta_files = len(fasta_files)
+
+    if not os.path.exists(MODEL_PATH):
+        w2v_model, fasta_files = common.import_mags_and_build_model(
+            num_of_fasta_files, folder_path)
+        w2v_model = common.train_model(
+            w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
+        w2v_model.wv.save_word2vec_format(MODEL_PATH, binary=True)
+    # If we already created a model, we won't do it again
+    else:
+        w2v_model = Word2Vec.load_word2vec_format(MODEL_PATH, binary=True)
+
+    list_of_vectors = common.vectorize_mags(
+        w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
+    df = pd.DataFrame(list_of_vectors)
+    list_of_dates = common.create_temporal_column(
+        fasta_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
+def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
+
+    if data_set_type == 'FASTA':
+        st.info('Vectorizing FASTA files using word2vec algorithm')
+        with st.spinner('Vectorizing FASTA files using W2V in progress...'):
+            df = work_with_fasta
+        common.show_data_set(df)
+
+    else:
+        pass
+
+    return None
+
+
 def upload_genomics():
 
     data_set_type, folder_path = upload_intro(type_list_zip, 'Genomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Genomics')
+    work_with_data_set(data_set_type, folder_path, file_name_type, 'Genomics')
 
     return []
 
@@ -356,6 +401,8 @@ def upload_proteomics():
     data_set_type, folder_path = upload_intro(type_list_zip, 'Proteomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Proteomics')
+    work_with_data_set(data_set_type, folder_path, file_name_type,
+                       'Proteomics')
 
     return []
 
@@ -365,6 +412,8 @@ def upload_transcriptomics():
     data_set_type, folder_path = upload_intro(type_list_zip, 'Transcriptomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Transcriptomics')
+    work_with_data_set(data_set_type, folder_path, file_name_type,
+                       'Transcriptomics')
 
     return []
 

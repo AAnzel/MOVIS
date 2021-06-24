@@ -96,6 +96,7 @@ def import_proteomics(end=25, path_proteomics=path_proteomics_78):
     # file every protein sequence
 
     fasta_files = [i for i in os.listdir(path_proteomics) if i.endswith('faa')]
+    fasta_files.sort()
     tmp_all = []
 
     # This was done so that I could work with first 100 FASTA files only.
@@ -249,8 +250,7 @@ def vectorize_mags(w2v_model, path_fasta=path_genomics_78, end=25):
 
     print("Vectorizing MAGs")
 
-    fasta_files = [i for i in os.listdir(path_fasta) if
-                   (i.endswith("fa") and i.startswith("D"))]
+    fasta_files = os.listdir(path_fasta)
     list_of_mag_vectors = []
 
     # This was done so that I could work with first 'end' FASTA files only.
@@ -292,8 +292,8 @@ def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
     # There are 1364 MAGs enclosed in FASTA files of the first dataset I have
     # to traverse every FASTA file, and in each file every sequence
 
-    fasta_files = [i for i in os.listdir(path_fasta) if
-                   (i.endswith("fa") and i.startswith("D"))]
+    fasta_files = os.listdir(path_fasta)
+    fasta_files.sort()
     fasta_ids = []
 
     # This was done so that I could work with first 100 FASTA files only.
@@ -338,18 +338,17 @@ def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
 
     print("Finished building")
 
-    return w2v_model, fasta_files, fasta_ids
+    return w2v_model, fasta_files
 
 
-def train_model(w2v_model, epochs, path_fasta=path_genomics_78, end=25):
+def train_model(w2v_model, epochs=EPOCHS, path_fasta=path_genomics_78, end=25):
 
     print("Starting model training")
 
     # There are 1364 MAGs enclosed in FASTA files I have to traverse every
     # FASTA file, and in each file every sequence
-
-    fasta_files = [i for i in os.listdir(path_fasta) if
-                   (i.endswith("fa") and i.startswith("D"))]
+    fasta_files = os.listdir(path_fasta)
+    fasta_files.sort()
 
     # This was done so that I could work with first 100 FASTA files only.
     # Otherwise, I should just remove: i, and enumerate
@@ -381,8 +380,8 @@ def train_model(w2v_model, epochs, path_fasta=path_genomics_78, end=25):
     return w2v_model
 
 
-def import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
-                              path_all_keggs=path_genomics_kegg):
+def example_1_import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
+                                        path_all_keggs=path_genomics_kegg):
 
     print("Importing KEGG data")
 
@@ -392,9 +391,10 @@ def import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
 
     kegg_files = [i for i in os.listdir(path_all_keggs) if
                   (i.endswith("besthits") and i.startswith("D"))]
-
+    kegg_files.sort()
     rmags_78_names = [os.path.splitext(i)[0] for i in os.listdir(path_fasta) if
                       (i.endswith("fa") and i.startswith("D"))]
+    rmags_78_names.sort()
 
     kegg_data_list = []
 
@@ -426,10 +426,10 @@ def import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
             kegg_data_list.append(tmp_df)
 
     print("Finished importing")
-    return create_kegg_matrix(kegg_data_list, path_fasta)
+    return example_1_create_kegg_matrix(kegg_data_list, path_fasta)
 
 
-def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
+def example_1_create_kegg_matrix(list_data, path_fasta=path_genomics_78):
 
     print("Creating KEGG matrix")
 
@@ -438,6 +438,7 @@ def create_kegg_matrix(list_data, path_fasta=path_genomics_78):
         for i in os.listdir(path_fasta)
         if (i.endswith("fa") and i.startswith("D"))
     ]
+    rmags_78_names.sort()
 
     result_matrix_df = pd.DataFrame(columns=rmags_78_names)
 
@@ -507,12 +508,14 @@ def create_pairwise_jaccard(data):
     return pd.DataFrame(result, index=data.index, columns=data.index)
 
 
-def create_annotated_data_set():
+def example_1_create_annotated_data_set():
 
     rmags_names = [os.path.splitext(i)[0] for i in os.listdir(path_genomics_78)
                    if (i.endswith("fa") and i.startswith("D"))]
+    rmags_names.sort()
     relevant_files = [i for i in os.listdir(path_genomics_bins)
                       if i.startswith(tuple(rmags_names))]
+    relevant_files.sort()
 
     # Creating nested dictionary where each rmag has a dict of products and
     # their number of occurence for that rmag
@@ -594,29 +597,35 @@ def fix_dataframe_columns(dataframe):
 
 def create_temporal_column(list_of_days, start_date, end, day_or_week):
 
-    list_of_dates = []
-    list_of_days.sort()
+    # In this case we just have to extract file names
+    if day_or_week == 'TIMESTAMP':
+        return [dt.datetime.strptime(i.split('.')[0], "%Y-%m-%d")
+                for i in list_of_days]
 
-    # This is specific to the metaomics data set I am using Creating list of
-    # dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
-    for i in list_of_days[:end]:
+    else:
+        list_of_dates = []
+        list_of_days.sort()
 
-        # Taking the number after D or W in D03.fa, without .fa so 03
-        tmp_number = int(i.split('.')[0][1:])
-        if day_or_week == 'W':
-            tmp_datetime = start_date + dt.timedelta(weeks=tmp_number)
-        else:
-            tmp_datetime = start_date + dt.timedelta(days=tmp_number)
+        # This is specific to the metaomics data set I am using Creating list
+        # of dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
+        for i in list_of_days[:end]:
 
-        while tmp_datetime in list_of_dates:
+            # Taking the number after D or W in D03.fa, without .fa so 03
+            tmp_number = int(i.split('.')[0][1:])
             if day_or_week == 'W':
-                tmp_datetime = tmp_datetime + dt.timedelta(days=1)
+                tmp_datetime = start_date + dt.timedelta(weeks=tmp_number)
             else:
-                tmp_datetime = tmp_datetime + dt.timedelta(hours=1)
+                tmp_datetime = start_date + dt.timedelta(days=tmp_number)
 
-        list_of_dates.append(tmp_datetime)
+            while tmp_datetime in list_of_dates:
+                if day_or_week == 'W':
+                    tmp_datetime = tmp_datetime + dt.timedelta(days=1)
+                else:
+                    tmp_datetime = tmp_datetime + dt.timedelta(hours=1)
 
-    return list_of_dates
+            list_of_dates.append(tmp_datetime)
+
+        return list_of_dates
 
 
 # ---
@@ -656,12 +665,13 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
 
 def example_1_calc_genomics():
 
-    kegg_matrix_df = import_kegg_and_create_df(
+    kegg_matrix_df = example_1_import_kegg_and_create_df(
         end=ALL_DAYS, path_fasta=path_genomics_78,
         path_all_keggs=path_genomics_kegg)
 
     fasta_names = [i for i in os.listdir(path_genomics_78) if
                    (i.endswith("fa") and i.startswith("D"))]
+    fasta_names.sort()
     list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_kegg_matrix_df = kegg_matrix_df.copy()
     temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
@@ -678,8 +688,9 @@ def example_1_calc_genomics():
 
     #######
 
-    final_model, fasta_names, fasta_ids =\
-        import_mags_and_build_model(end=END, path_fasta=path_genomics_78)
+    final_model, fasta_names =\
+        import_mags_and_build_model(
+            end=END, path_fasta=path_genomics_78)
 
     # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
     final_model = train_model(final_model, epochs=EPOCHS, end=END)
@@ -704,8 +715,6 @@ def example_1_calc_genomics():
 
     mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
 
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
     list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_mags_df = mags_df.copy()
     temporal_mags_df.insert(0, 'DateTime', list_of_dates)
@@ -713,10 +722,8 @@ def example_1_calc_genomics():
 
     #################
     annotated_mags_df, top_10_annotated_mags_df =\
-        create_annotated_data_set()
+        example_1_create_annotated_data_set()
 
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
     list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
     temporal_annotated_mags_df = annotated_mags_df.copy()
     temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
@@ -816,6 +823,7 @@ def example_1_calc_proteomics():
     # I have to add temporality to this data set, according to file names
     fasta_files = [i for i in os.listdir(path_proteomics_78)
                    if (i.endswith("faa"))]
+    fasta_files.sort()
     list_of_dates = create_temporal_column(fasta_files, START_DATE, END, 'W')
     proteomics_data.insert(0, 'DateTime', list_of_dates)
 
