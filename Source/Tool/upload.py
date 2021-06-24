@@ -25,7 +25,7 @@ for i in shutil.get_unpack_formats():
 
 
 @st.cache(suppress_st_warning=True)
-def import_archive(imported_file, key_suffix):
+def import_archive(imported_file, data_set_type, key_suffix):
 
     # Creating the file from BytesIO stream
     tmp_file = NamedTemporaryFile(delete=False, suffix=imported_file.name)
@@ -41,18 +41,18 @@ def import_archive(imported_file, key_suffix):
         if key_suffix == 'Genomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_genomics)
-            return os.path.join(
-                path_uploaded_genomics, return_file_name_no_ext)
+            return (data_set_type, os.path.join(
+                path_uploaded_genomics, return_file_name_no_ext))
         elif key_suffix == 'Transcriptomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_transcriptomics)
-            return os.path.join(
-                path_uploaded_transcriptomics, return_file_name_no_ext)
+            return (data_set_type, os.path.join(
+                path_uploaded_transcriptomics, return_file_name_no_ext))
         elif key_suffix == 'Proteomics':
             shutil.unpack_archive(
                 tmp_file_path, extract_dir=path_uploaded_proteomics)
-            return os.path.join(
-                path_uploaded_proteomics, return_file_name_no_ext)
+            return (data_set_type, os.path.join(
+                path_uploaded_proteomics, return_file_name_no_ext))
         else:
             st.error('Bad key suffix for archive unpacking')
             return None
@@ -236,29 +236,63 @@ def upload_data_set(file_types, key_suffix):
             return None
 
     else:
-        available_data_set_types = ['Raw FASTA files', 'KEGG annotation files']
+        # TODO: Change for transcriptomics and add more type options
+        available_data_set_types = {
+            'Genomics': {
+                'Raw FASTA files': 'FASTA',
+                'KEGG annotation files': 'KEGG'},
+            'Proteomics': {
+                'Raw FASTA files': 'FASTA',
+                'Calculated data set': 'Calculated'},
+            'Transcriptomics': {
+                'Raw FASTA files': 'FASTA',
+                'KEGG annotation files': 'KEGG'}
+        }
 
+        # IMPORTANT: * operator is used here, introduced in >= Python 3.5
         selected_data_set_type = st.selectbox(
             'What kind of data set do you want to upload?',
-            available_data_set_types
+            *available_data_set_types[key_suffix]
         )
 
-        if selected_data_set_type == available_data_set_types[0]:
-            imported_file = st.file_uploader(
-                upload_text_zip_fasta[key_suffix], type=file_types,
-                accept_multiple_files=False,
-                help=upload_help_zip_fasta[key_suffix],
-                key='Upload_file_' + key_suffix)
+        if key_suffix == 'Genomics':
+            if selected_data_set_type ==\
+               available_data_set_types[key_suffix][0]:
+                imported_file = st.file_uploader(
+                    upload_text_zip_fasta[key_suffix], type=file_types,
+                    accept_multiple_files=False,
+                    help=upload_help_zip_fasta[key_suffix],
+                    key='Upload_file_' + key_suffix)
 
+            else:
+                imported_file = st.file_uploader(
+                    upload_text_zip_kegg[key_suffix], type=file_types,
+                    accept_multiple_files=False,
+                    help=upload_help_zip_kegg[key_suffix],
+                    key='Upload_file_' + key_suffix)
+
+        elif key_suffix == 'Proteomics':
+            if selected_data_set_type ==\
+               available_data_set_types[key_suffix][0]:
+                imported_file = st.file_uploader(
+                    upload_text_zip_fasta[key_suffix], type=file_types,
+                    accept_multiple_files=False,
+                    help=upload_help_zip_fasta[key_suffix],
+                    key='Upload_file_' + key_suffix)
+
+            # TODO: Deal with this
+            else:
+                imported_file = None
+
+        # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
         else:
-            imported_file = st.file_uploader(
-                upload_text_zip_kegg[key_suffix], type=file_types,
-                accept_multiple_files=False,
-                help=upload_help_zip_kegg[key_suffix],
-                key='Upload_file_' + key_suffix)
+            imported_file = None
 
         if imported_file is not None:
-            return import_archive(imported_file, key_suffix)
+            return import_archive(
+                imported_file,
+                available_data_set_types[key_suffix][selected_data_set_type],
+                key_suffix)
 
         else:
             return None
@@ -302,7 +336,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
         except ValueError:
             st.error(
                 '''File names are not valid. File names should start with "D"
-                   or "W", or be of timestamp type (\%Y-\%m-\%d)''')
+                   or "W", or be of a timestamp type (%Y-%m-%d.fa)''')
             st.stop()
 
     return None
@@ -310,7 +344,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
 
 def upload_genomics():
 
-    folder_path = upload_intro(type_list_zip, 'Genomics')
+    data_set_type, folder_path = upload_intro(type_list_zip, 'Genomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Genomics')
 
@@ -319,18 +353,18 @@ def upload_genomics():
 
 def upload_proteomics():
 
-    folder_path = upload_intro(type_list_zip, 'Proteomics')
+    data_set_type, folder_path = upload_intro(type_list_zip, 'Proteomics')
     file_name_type = common.show_folder_structure(folder_path)
-    create_zip_temporality(folder_path, file_name_type, 'Genomics')
+    create_zip_temporality(folder_path, file_name_type, 'Proteomics')
 
     return []
 
 
 def upload_transcriptomics():
 
-    folder_path = upload_intro(type_list_zip, 'Transcriptomics')
+    data_set_type, folder_path = upload_intro(type_list_zip, 'Transcriptomics')
     file_name_type = common.show_folder_structure(folder_path)
-    create_zip_temporality(folder_path, file_name_type, 'Genomics')
+    create_zip_temporality(folder_path, file_name_type, 'Transcriptomics')
 
     return []
 
