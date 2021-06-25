@@ -551,14 +551,17 @@ def example_1_create_annotated_data_set():
 
 
 def cache_dataframe(dataframe, num_of_example, name):
-    if num_of_example == 1:
+    if num_of_example == EX_1:
         dataframe.to_pickle(os.path.join(path_cached_save_root,
                                          "example_1", "data_frames", name +
                                          "_dataframe.pkl"))
-    else:
+    elif num_of_example == EX_2:
         dataframe.to_pickle(os.path.join(path_cached_save_root,
                                          "example_2", "data_frames", name +
                                          "_dataframe.pkl"))
+    else:
+        dataframe.to_pickle(name)
+
     return None
 
 
@@ -568,10 +571,12 @@ def get_cached_dataframe(num_of_example, name):
         return pd.read_pickle(os.path.join(path_cached_save_root,
                                            "example_1", "data_frames", name +
                                            "_dataframe.pkl")).convert_dtypes()
-    else:
+    elif num_of_example == EX_2:
         return pd.read_pickle(os.path.join(path_cached_save_root,
                                            "example_2", "data_frames", name +
                                            "_dataframe.pkl")).convert_dtypes()
+    else:
+        return pd.read_pickle(name).convert_dtypes()
 
 
 def fix_dataframe_columns(dataframe):

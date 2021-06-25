@@ -376,10 +376,19 @@ def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
 def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
 
     if data_set_type == 'FASTA':
-        st.info('Vectorizing FASTA files using word2vec algorithm')
-        with st.spinner('Vectorizing FASTA files using W2V in progress...'):
-            df = work_with_fasta(data_set_type, folder_path, file_name_type,
-                                 key_suffix)
+        VECTORIZED_DATA_SET_NAME = 'vectorized.pkl'
+        VECTORIZED_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], VECTORIZED_DATA_SET_NAME)
+
+        if os.path.exists(VECTORIZED_DATA_SET_PATH):
+            df = common.get_cached_dataframe(None, VECTORIZED_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Vectorizing FASTA files using W2V...'):
+                df = work_with_fasta(
+                    data_set_type, folder_path, file_name_type, key_suffix)
+                common.cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
+
         common.show_data_set(df)
 
     else:
