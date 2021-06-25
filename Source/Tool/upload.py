@@ -67,6 +67,48 @@ def import_archive(imported_file, data_set_type, key_suffix):
         os.remove(tmp_file_path)
 
 
+def import_csv(key_suffix):
+    upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
+
+    imported_file = st.file_uploader(
+        upload_text_csv, type=type_list_csv, accept_multiple_files=False,
+        key='Upload_file_' + key_suffix)
+
+    delimiter_dict = {
+        'Comma (,)': ',', 'Semicolon (;)': ';', 'Tab (\\t)': '\t'}
+
+    # TODO: Check what happens with semicolon
+    default_delimiter_dict = {'csv': 0, 'tsv': 2}
+
+    if imported_file is not None:
+        df = None
+        imported_file_extension = os.path.splitext(
+            imported_file.name)[1][1:].strip().lower()
+
+        delimiter = st.selectbox(
+            'Select the delimiter for your data set',
+            list(delimiter_dict.keys()),
+            index=default_delimiter_dict[imported_file_extension],
+            key='Upload_delim_' + key_suffix)
+        try:
+            # TODO: Implement data imputation, maybe
+            df = pd.read_csv(
+                imported_file,
+                delimiter=delimiter_dict[delimiter]).dropna()
+            df.reset_index(inplace=True, drop=True)
+            df = common.fix_dataframe_columns(df)
+        except ValueError:
+            st.warning('Please choose the right delimiter')
+
+        df = df.convert_dtypes()
+        st.success('Data set succesfully uploaded')
+
+        return df
+
+    else:
+        return None
+
+
 def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
     columns_to_remove = st.multiselect(
@@ -116,9 +158,7 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
     return df, feature_list
 
 
-def upload_data_set(file_types, key_suffix):
-
-    upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
+def upload_data_set(key_suffix):
 
     # TODO: Check text messages and change where neccessary
     upload_text_zip_fasta = {
@@ -196,45 +236,8 @@ def upload_data_set(file_types, key_suffix):
                               the second option, mixing name options is not
                               allowed.'''}
 
-    if file_types == type_list_csv:
-
-        imported_file = st.file_uploader(upload_text_csv, type=file_types,
-                                         accept_multiple_files=False,
-                                         key='Upload_file_' + key_suffix)
-
-        delimiter_dict = {
-            'Comma (,)': ',', 'Semicolon (;)': ';', 'Tab (\\t)': '\t'}
-
-        # TODO: Check what happens with semicolon
-        default_delimiter_dict = {'csv': 0, 'tsv': 2}
-
-        if imported_file is not None:
-            df = None
-            imported_file_extension = os.path.splitext(
-                imported_file.name)[1][1:].strip().lower()
-
-            delimiter = st.selectbox(
-                'Select the delimiter for your data set',
-                list(delimiter_dict.keys()),
-                index=default_delimiter_dict[imported_file_extension],
-                key='Upload_delim_' + key_suffix)
-            try:
-                # TODO: Implement data imputation, maybe
-                df = pd.read_csv(
-                    imported_file,
-                    delimiter=delimiter_dict[delimiter]).dropna()
-                df.reset_index(inplace=True, drop=True)
-                df = common.fix_dataframe_columns(df)
-            except ValueError:
-                st.warning('Please choose the right delimiter')
-
-            df = df.convert_dtypes()
-            st.success('Data set succesfully uploaded')
-
-            return df
-
-        else:
-            return None
+    if key_suffix in ['Metabolomics', 'Physico-chemical']:
+        return import_csv(key_suffix)
 
     else:
         # TODO: Change for transcriptomics and add more type options
@@ -260,14 +263,14 @@ def upload_data_set(file_types, key_suffix):
             if selected_data_set_type ==\
                list(available_data_set_types[key_suffix].keys())[0]:
                 imported_file = st.file_uploader(
-                    upload_text_zip_fasta[key_suffix], type=file_types,
+                    upload_text_zip_fasta[key_suffix], type=type_list_zip,
                     accept_multiple_files=False,
                     help=upload_help_zip_fasta[key_suffix],
                     key='Upload_file_' + key_suffix)
 
             else:
                 imported_file = st.file_uploader(
-                    upload_text_zip_kegg[key_suffix], type=file_types,
+                    upload_text_zip_kegg[key_suffix], type=type_list_zip,
                     accept_multiple_files=False,
                     help=upload_help_zip_kegg[key_suffix],
                     key='Upload_file_' + key_suffix)
@@ -276,14 +279,13 @@ def upload_data_set(file_types, key_suffix):
             if selected_data_set_type ==\
                list(available_data_set_types[key_suffix].keys())[0]:
                 imported_file = st.file_uploader(
-                    upload_text_zip_fasta[key_suffix], type=file_types,
+                    upload_text_zip_fasta[key_suffix], type=type_list_zip,
                     accept_multiple_files=False,
                     help=upload_help_zip_fasta[key_suffix],
                     key='Upload_file_' + key_suffix)
 
-            # TODO: Deal with this
             else:
-                imported_file = None
+                return import_csv(key_suffix)
 
         # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
         else:
@@ -299,11 +301,11 @@ def upload_data_set(file_types, key_suffix):
             return None
 
 
-def upload_intro(type_list, key_suffix):
+def upload_intro(key_suffix):
     st.header(key_suffix)
     st.markdown('')
 
-    df = upload_data_set(type_list, key_suffix)
+    df = upload_data_set(key_suffix)
 
     if df is None:
         st.warning('Upload your data set')
@@ -411,7 +413,7 @@ def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
 
 def upload_genomics():
 
-    data_set_type, folder_path = upload_intro(type_list_zip, 'Genomics')
+    data_set_type, folder_path = upload_intro('Genomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Genomics')
     chosen_charts = work_with_data_set(
@@ -422,7 +424,7 @@ def upload_genomics():
 
 def upload_proteomics():
 
-    data_set_type, folder_path = upload_intro(type_list_zip, 'Proteomics')
+    data_set_type, folder_path = upload_intro('Proteomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Proteomics')
     chosen_charts = work_with_data_set(
@@ -433,7 +435,7 @@ def upload_proteomics():
 
 def upload_transcriptomics():
 
-    data_set_type, folder_path = upload_intro(type_list_zip, 'Transcriptomics')
+    data_set_type, folder_path = upload_intro('Transcriptomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Transcriptomics')
     chosen_charts = work_with_data_set(
@@ -444,7 +446,7 @@ def upload_transcriptomics():
 
 def upload_metabolomics():
 
-    df = upload_intro(type_list_csv, 'Metabolomics')
+    df = upload_intro('Metabolomics')
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
@@ -459,15 +461,15 @@ def upload_metabolomics():
 
 def upload_phy_che():
 
-    df = upload_intro(type_list_csv, 'Physico-chemical')
+    df = upload_intro('Physico-chemical')
     common.show_data_set(df)
     df = common.fix_data_set(df)
     temporal_feature, feature_list = common.find_temporal_feature(df)
     df, feature_list = modify_data_set(df, temporal_feature, feature_list,
-                                       'Phy_che')
+                                       'Physico-chemical')
 
     chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Phy_che')
+        df, temporal_feature, feature_list, 'Physico-chemical')
 
     return chosen_charts
 

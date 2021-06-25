@@ -105,11 +105,17 @@ def parallel_coordinates(data, list_of_features, target_feature):
 def scatter_matrix(data, list_of_features, target_feature):
 
     list_of_features.remove(target_feature)
+    selected_column_type = str(data[target_feature].dtype)
+
+    if selected_column_type == 'string':
+        color_type = 'nominal'
+    else:
+        color_type = 'quantitative'
 
     chart = alt.Chart(data).mark_circle().encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
-        color=alt.Color(target_feature, type='quantitative')
+        color=alt.Color(target_feature, type=color_type)
     ).properties(
         width=150,
         height=150
