@@ -40,23 +40,19 @@ def import_archive(imported_file, data_set_type, key_suffix):
 
     try:
         if key_suffix == 'Genomics':
-            shutil.unpack_archive(
-                tmp_file_path, extract_dir=path_uploaded_genomics)
-            return (data_set_type, os.path.join(
-                path_uploaded_genomics, return_file_name_no_ext))
+            extract_path = path_uploaded_genomics
         elif key_suffix == 'Transcriptomics':
-            shutil.unpack_archive(
-                tmp_file_path, extract_dir=path_uploaded_transcriptomics)
-            return (data_set_type, os.path.join(
-                path_uploaded_transcriptomics, return_file_name_no_ext))
+            extract_path = path_uploaded_transcriptomics
         elif key_suffix == 'Proteomics':
-            shutil.unpack_archive(
-                tmp_file_path, extract_dir=path_uploaded_proteomics)
-            return (data_set_type, os.path.join(
-                path_uploaded_proteomics, return_file_name_no_ext))
+            extract_path = path_uploaded_proteomics
         else:
             st.error('Bad key suffix for archive unpacking')
             return None
+
+        shutil.unpack_archive(
+            tmp_file_path, extract_dir=extract_path)
+        return (os.path.join(
+            extract_path, return_file_name_no_ext), data_set_type)
 
     except ValueError:
         st.error('Error while unpacking the archive')
@@ -109,57 +105,7 @@ def import_csv(key_suffix):
         return None
 
 
-def modify_data_set(df, temporal_column, feature_list, key_suffix):
-
-    columns_to_remove = st.multiselect(
-        'Select columns to remove', feature_list,
-        key='Col_remove_' + key_suffix)
-
-    if len(columns_to_remove) != 0:
-        df.drop(columns_to_remove, axis=1, inplace=True)
-        feature_list = [i for i in feature_list if i not in columns_to_remove]
-
-    rows_to_remove_text = st.text_input(
-        'Insert row numbers to remove, seperated by comma. See help (right)\
-         for example.', value='', key='Row_remove_' + key_suffix,
-        help='Example: 42 or 2, 3, 15, 55')
-
-    if rows_to_remove_text != '':
-        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
-        # First we check if input is good or not
-        if any(not row.isnumeric() for row in rows_to_remove):
-            st.error('Wrong number input')
-            st.stop()
-
-        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
-        df.drop(rows_to_remove, axis=0, inplace=True)
-
-    time_to_remove_text = st.text_input(
-        'Insert the begining and the end of a time period to keep, seperated\
-         by comma. See help (right) for example.',
-        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
-        help='Example: 2011-03-21, 2012-05-03')
-
-    if time_to_remove_text != '':
-        try:
-            time_to_remove = [dt.datetime.strptime(
-                i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
-            df = df[(df[temporal_column] >= time_to_remove[0]) &
-                    (df[temporal_column] <= time_to_remove[1])]
-        except ValueError:
-            st.error('Wrong date input')
-            st.stop()
-
-    df.reset_index(inplace=True, drop=True)
-    df[feature_list] = df[feature_list].apply(
-        pd.to_numeric, errors='ignore')
-    df = df.convert_dtypes()
-
-    return df, feature_list
-
-
-def upload_data_set(key_suffix):
-
+def import_multiple(key_suffix):
     # TODO: Check text messages and change where neccessary
     upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
@@ -236,82 +182,116 @@ def upload_data_set(key_suffix):
                               the second option, mixing name options is not
                               allowed.'''}
 
-    if key_suffix in ['Metabolomics', 'Physico-chemical']:
-        return import_csv(key_suffix)
+    # TODO: Change for transcriptomics and add more type options
+    available_data_set_types = {
+        'Genomics': {
+            'Raw FASTA files': 'FASTA',
+            'KEGG annotation files': 'KEGG'},
+        'Proteomics': {
+            'Raw FASTA files': 'FASTA',
+            'Calculated data set': 'Calculated'},
+        'Transcriptomics': {
+            'Raw FASTA files': 'FASTA',
+            'KEGG annotation files': 'KEGG'}
+    }
+
+    # IMPORTANT: * operator is used here, introduced in >= Python 3.5
+    selected_data_set_type = st.selectbox(
+        'What kind of data set do you want to upload?',
+        list(available_data_set_types[key_suffix].keys())
+    )
+
+    if key_suffix == 'Genomics':
+        if selected_data_set_type ==\
+         list(available_data_set_types[key_suffix].keys())[0]:
+            imported_file = st.file_uploader(
+                upload_text_zip_fasta[key_suffix], type=type_list_zip,
+                accept_multiple_files=False,
+                help=upload_help_zip_fasta[key_suffix],
+                key='Upload_file_' + key_suffix)
+
+        else:
+            imported_file = st.file_uploader(
+                upload_text_zip_kegg[key_suffix], type=type_list_zip,
+                accept_multiple_files=False,
+                help=upload_help_zip_kegg[key_suffix],
+                key='Upload_file_' + key_suffix)
+
+    elif key_suffix == 'Proteomics':
+        if selected_data_set_type ==\
+         list(available_data_set_types[key_suffix].keys())[0]:
+            imported_file = st.file_uploader(
+                upload_text_zip_fasta[key_suffix], type=type_list_zip,
+                accept_multiple_files=False,
+                help=upload_help_zip_fasta[key_suffix],
+                key='Upload_file_' + key_suffix)
+
+        else:
+            return (import_csv(key_suffix),
+                    available_data_set_types[key_suffix]
+                    [selected_data_set_type])
+
+    # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
+    else:
+        imported_file = None
+
+    if imported_file is not None:
+        return import_archive(
+            imported_file,
+            available_data_set_types[key_suffix][selected_data_set_type],
+            key_suffix)
 
     else:
-        # TODO: Change for transcriptomics and add more type options
-        available_data_set_types = {
-            'Genomics': {
-                'Raw FASTA files': 'FASTA',
-                'KEGG annotation files': 'KEGG'},
-            'Proteomics': {
-                'Raw FASTA files': 'FASTA',
-                'Calculated data set': 'Calculated'},
-            'Transcriptomics': {
-                'Raw FASTA files': 'FASTA',
-                'KEGG annotation files': 'KEGG'}
-        }
-
-        # IMPORTANT: * operator is used here, introduced in >= Python 3.5
-        selected_data_set_type = st.selectbox(
-            'What kind of data set do you want to upload?',
-            list(available_data_set_types[key_suffix].keys())
-        )
-
-        if key_suffix == 'Genomics':
-            if selected_data_set_type ==\
-               list(available_data_set_types[key_suffix].keys())[0]:
-                imported_file = st.file_uploader(
-                    upload_text_zip_fasta[key_suffix], type=type_list_zip,
-                    accept_multiple_files=False,
-                    help=upload_help_zip_fasta[key_suffix],
-                    key='Upload_file_' + key_suffix)
-
-            else:
-                imported_file = st.file_uploader(
-                    upload_text_zip_kegg[key_suffix], type=type_list_zip,
-                    accept_multiple_files=False,
-                    help=upload_help_zip_kegg[key_suffix],
-                    key='Upload_file_' + key_suffix)
-
-        elif key_suffix == 'Proteomics':
-            if selected_data_set_type ==\
-               list(available_data_set_types[key_suffix].keys())[0]:
-                imported_file = st.file_uploader(
-                    upload_text_zip_fasta[key_suffix], type=type_list_zip,
-                    accept_multiple_files=False,
-                    help=upload_help_zip_fasta[key_suffix],
-                    key='Upload_file_' + key_suffix)
-
-            else:
-                return import_csv(key_suffix)
-
-        # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
-        else:
-            imported_file = None
-
-        if imported_file is not None:
-            return import_archive(
-                imported_file,
-                available_data_set_types[key_suffix][selected_data_set_type],
-                key_suffix)
-
-        else:
-            return None
+        return None, None
 
 
-def upload_intro(key_suffix):
-    st.header(key_suffix)
-    st.markdown('')
+def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
-    df = upload_data_set(key_suffix)
+    columns_to_remove = st.multiselect(
+        'Select columns to remove', feature_list,
+        key='Col_remove_' + key_suffix)
 
-    if df is None:
-        st.warning('Upload your data set')
-        st.stop()
+    if len(columns_to_remove) != 0:
+        df.drop(columns_to_remove, axis=1, inplace=True)
+        feature_list = [i for i in feature_list if i not in columns_to_remove]
 
-    return df
+    rows_to_remove_text = st.text_input(
+        'Insert row numbers to remove, seperated by comma. See help (right)\
+         for example.', value='', key='Row_remove_' + key_suffix,
+        help='Example: 42 or 2, 3, 15, 55')
+
+    if rows_to_remove_text != '':
+        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
+        # First we check if input is good or not
+        if any(not row.isnumeric() for row in rows_to_remove):
+            st.error('Wrong number input')
+            st.stop()
+
+        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
+        df.drop(rows_to_remove, axis=0, inplace=True)
+
+    time_to_remove_text = st.text_input(
+        'Insert the begining and the end of a time period to keep, seperated\
+         by comma. See help (right) for example.',
+        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
+        help='Example: 2011-03-21, 2012-05-03')
+
+    if time_to_remove_text != '':
+        try:
+            time_to_remove = [dt.datetime.strptime(
+                i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
+            df = df[(df[temporal_column] >= time_to_remove[0]) &
+                    (df[temporal_column] <= time_to_remove[1])]
+        except ValueError:
+            st.error('Wrong date input')
+            st.stop()
+
+    df.reset_index(inplace=True, drop=True)
+    df[feature_list] = df[feature_list].apply(
+        pd.to_numeric, errors='ignore')
+    df = df.convert_dtypes()
+
+    return df, feature_list
 
 
 # This function changes all file names of 'D' or 'W' type into timestamp type
@@ -346,7 +326,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
 
 
 @st.cache
-def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
+def work_with_fasta(data_set_type, folder_path, key_suffix):
 
     # TODO: Allow user to change number of epochs for training
     MODEL_NAME = 'w2v_model.saved'
@@ -375,7 +355,7 @@ def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
     return df
 
 
-def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
+def work_with_data_set(df, data_set_type, folder_path, key_suffix):
 
     chosen_charts = []
 
@@ -390,7 +370,7 @@ def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
         else:
             with st.spinner('Vectorizing FASTA files using W2V...'):
                 df = work_with_fasta(
-                    data_set_type, folder_path, file_name_type, key_suffix)
+                    data_set_type, folder_path, key_suffix)
                 common.cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
 
         common.show_calculated_data_set(df, 'Embedded FASTA files')
@@ -405,71 +385,127 @@ def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
                     df, temporal_feature, feature_list,
                     'Cluster_' + key_suffix + '_' + i[0])
 
+    elif data_set_type == 'Calculated':
+        df = common.fix_data_set(df)
+        temporal_feature, feature_list = common.find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+        chosen_charts = common.visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
     else:
         pass
 
     return chosen_charts
 
 
+def upload_intro(key_suffix):
+    st.header(key_suffix)
+    st.markdown('')
+
+    df = None
+
+    if key_suffix in ['Metabolomics', 'Physico-chemical']:
+        df = import_csv(key_suffix)
+
+        if df is None:
+            st.warning('Upload your data set')
+            st.stop()
+
+        return df
+
+    else:
+        df, data_set_type = import_multiple(key_suffix)
+
+        if df is None:
+            st.warning('Upload your data set')
+            st.stop()
+
+        return df, data_set_type
+
+
 def upload_genomics():
 
-    data_set_type, folder_path = upload_intro('Genomics')
-    file_name_type = common.show_folder_structure(folder_path)
-    create_zip_temporality(folder_path, file_name_type, 'Genomics')
-    chosen_charts = work_with_data_set(
-        data_set_type, folder_path, file_name_type, 'Genomics')
+    key_suffix = 'Genomics'
+
+    folder_path_or_df, data_set_type = upload_intro(key_suffix)
+
+    if data_set_type == 'FASTA':
+        file_name_type = common.show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        chosen_charts = work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    else:
+        common.show_data_set(folder_path_or_df)
+        chosen_charts = work_with_data_set(
+            folder_path_or_df, data_set_type, folder_path_or_df, key_suffix)
 
     return chosen_charts
 
 
 def upload_proteomics():
 
-    data_set_type, folder_path = upload_intro('Proteomics')
-    file_name_type = common.show_folder_structure(folder_path)
-    create_zip_temporality(folder_path, file_name_type, 'Proteomics')
-    chosen_charts = work_with_data_set(
-        data_set_type, folder_path, file_name_type, 'Proteomics')
+    key_suffix = 'Proteomics'
+
+    folder_path_or_df, data_set_type = upload_intro(key_suffix)
+
+    if data_set_type == 'FASTA':
+        file_name_type = common.show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        chosen_charts = work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    else:
+        common.show_data_set(folder_path_or_df)
+        chosen_charts = work_with_data_set(
+            folder_path_or_df, data_set_type, folder_path_or_df, key_suffix)
 
     return chosen_charts
 
 
 def upload_transcriptomics():
 
-    data_set_type, folder_path = upload_intro('Transcriptomics')
-    file_name_type = common.show_folder_structure(folder_path)
-    create_zip_temporality(folder_path, file_name_type, 'Transcriptomics')
-    chosen_charts = work_with_data_set(
-        data_set_type, folder_path, file_name_type, 'Transcriptomics')
+    key_suffix = 'Transcriptomics'
+
+    folder_path_or_df, data_set_type = upload_intro(key_suffix)
+
+    if data_set_type == 'FASTA':
+        file_name_type = common.show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        chosen_charts = work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    else:
+        common.show_data_set(folder_path_or_df)
+        chosen_charts = work_with_data_set(
+            folder_path_or_df, data_set_type, folder_path_or_df, key_suffix)
 
     return chosen_charts
 
 
 def upload_metabolomics():
 
-    df = upload_intro('Metabolomics')
-    common.show_data_set(df)
-    df = common.fix_data_set(df)
-    temporal_feature, feature_list = common.find_temporal_feature(df)
-    df, feature_list = modify_data_set(df, temporal_feature, feature_list,
-                                       'Metabolomics')
+    key_suffix = 'Metabolomics'
 
-    chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Metabolomics')
+    df = upload_intro(key_suffix)
+    common.show_data_set(df)
+    chosen_charts = work_with_data_set(df, 'Calculated', None, key_suffix)
 
     return chosen_charts
 
 
 def upload_phy_che():
 
-    df = upload_intro('Physico-chemical')
-    common.show_data_set(df)
-    df = common.fix_data_set(df)
-    temporal_feature, feature_list = common.find_temporal_feature(df)
-    df, feature_list = modify_data_set(df, temporal_feature, feature_list,
-                                       'Physico-chemical')
+    key_suffix = 'Physico-chemical'
 
-    chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Physico-chemical')
+    df = upload_intro(key_suffix)
+    common.show_data_set(df)
+    chosen_charts = work_with_data_set(df, 'Calculated', None, key_suffix)
 
     return chosen_charts
 

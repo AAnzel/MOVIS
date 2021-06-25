@@ -95,7 +95,7 @@ def import_proteomics(end=25, path_proteomics=path_proteomics_78):
     # There are 78 FASTA files I have to traverse every FASTA file, and in each
     # file every protein sequence
 
-    fasta_files = [i for i in os.listdir(path_proteomics) if i.endswith('faa')]
+    fasta_files = os.listdir(path_proteomics)
     fasta_files.sort()
     tmp_all = []
 
