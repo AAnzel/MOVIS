@@ -1,63 +1,21 @@
-import os
 import random
 import numpy as np
 import pandas as pd
 import altair as alt
-import datetime as dt
 from sklearn.decomposition import PCA
 from sklearn.manifold import MDS
 from sklearn import preprocessing
-# import plotly.express as px
 
-
-# Defining paths for each and every omic
-
-path_root_data = os.path.join(
-    "..", "..", "Data", "Extracted", "First source", "Databases"
-)
-
-path_all_fasta = os.path.join(path_root_data, "fasta_files", "AllBins")
-path_genomics_78 = os.path.join(path_root_data, "fasta_files",
-                                "rmags_filtered")
-path_genomics_kegg = os.path.join(path_root_data, "Annotations", "KEGG")
-path_normalised_metabolomics = os.path.join(
-    path_root_data, "Metabolomics", "Normalised_Tables"
-)
-path_proteomics_78 = os.path.join(path_root_data, "Proteomics", "set_of_78")
-path_physico_chemical = os.path.join(path_root_data, "PhysicoChemical")
-path_second_source = os.path.join("..", "..", "Data", "Extracted",
-                                  "Second source")
-
-path_model_save_root = os.path.join("..", "Saved_models")
-path_figures_save_root = os.path.join("..", "Output_figures")
-
-num_of_mags = len([i for i in os.listdir(path_genomics_78) if
-                   i.endswith("fa")])
-num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if
-                         i.endswith("faa")])
 
 SEED = 42
-END = num_of_mags
-ALL_DAYS = 51
 MAX_ROWS = 15000
 EPOCHS = 10
 NUM_OF_WORKERS = 8
-START_DATE = dt.datetime.strptime("2011-03-21", "%Y-%m-%d")
 random.seed(SEED)
 np.random.seed(SEED)
 alt.data_transformers.enable(
     "default", max_rows=MAX_ROWS
 )  # Important if you want to visualize datasets with >5000 samples
-
-
-# Functions below are shared among different omics Function that saves charts
-# from list_of_charts with names from list_of_names
-def save_charts(list_of_chart, list_of_names):
-
-    for chart, name in zip(list_of_chart, list_of_names):
-        print(chart, name)
-        # altair_saver.save(chart, os.path.join (path_figures_save_root, name))
-        chart.save(os.path.join(path_figures_save_root, name))
 
 
 # This function creates new dataframe with column that represent season

@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-
 import common
-import visualize
 
 
 def get_data_set(omic_name):
@@ -26,79 +24,6 @@ def get_data_set(omic_name):
     df = common.fix_dataframe_columns(df)
 
     return df
-
-
-# This function is used when working with proteomics data i.e. FASTA files
-# It is used to show calculated features of those FASTA files
-def show_calculated_data_set(df, text_info):
-    with st.spinner('Calculating features and showing the data set'):
-        if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
-            st.markdown('First 50 entries and first 8 features (columns). '
-                        + '**' + text_info + '**')
-            st.dataframe(df.iloc[:50, :8])
-            # st.dataframe(df.describe())
-        else:
-            st.markdown('First 100 entries ' + '**' + text_info + '**')
-            st.dataframe(df.head(100))
-            st.dataframe(df.describe())
-
-    return None
-
-
-def show_clustering_info(df, key_suffix):
-
-    clustering_methods = st.multiselect(
-        'Choose clustering method:', ['K-Means', 'OPTICS'],
-        key='choose_clus' + key_suffix
-        )
-
-    elbow_vis_col, num_input_col = st.beta_columns([3, 1])
-
-    tmp_df = common.get_number_of_clusters(df)
-    elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
-                               use_container_width=True)
-
-    help_text = '''Choose the number according to the elbow rule. The number of
-                   clusters should be the number on the x-axis of the Elbow
-                   chart where is the "elbow".'''
-
-    if all(i in clustering_methods for i in ['K-Means', 'OPTICS']):
-        cluster_number = num_input_col.slider(
-            'Select a number of clusters for K-Means using the elbow rule:',
-            min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
-        cluster_samples = num_input_col.slider(
-            'Select a minimum number of samples for OPTICS to be considered as\
-            a core point:', min_value=1, max_value=15, value=1, step=1,
-            format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text)
-
-    elif 'K-Means' in clustering_methods:
-        cluster_number = num_input_col.slider(
-            'Select a number of clusters for K-Means using the elbow rule:',
-            min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
-        cluster_samples = 0
-
-    elif 'OPTICS' in clustering_methods:
-        cluster_number = 0
-        cluster_samples = num_input_col.slider(
-            'Select a minimum number of samples for OPTICS to be considered as\
-            a core point:', min_value=1, max_value=15, value=1, step=1,
-            format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text)
-
-    else:
-        pass
-
-    # We create new columns that hold labels for each chosen method
-    # it holds pairs (name of method, labels)
-    labels_list = []
-    for i in clustering_methods:
-        labels_list.append((i, common.cluster_data(
-            df, cluster_number, cluster_samples, i)))
-
-    return labels_list
 
 
 def create_main_example_1_genomics():
@@ -129,8 +54,8 @@ def create_main_example_1_genomics():
     for i in choose_data_set:
         if i == 'W2V embedded MAGs':
             df_1 = get_data_set('genomics_mags_temporal')
-            show_calculated_data_set(df_1, 'Embedded MAGs')
-            labels_list = show_clustering_info(df_1, 'Genomics_1')
+            common.show_calculated_data_set(df_1, 'Embedded MAGs')
+            labels_list = common.show_clustering_info(df_1, 'Genomics_1')
 
             # Traversing pairs in list
             for i in labels_list:
@@ -140,12 +65,12 @@ def create_main_example_1_genomics():
                 df_1[i[0]] = i[1]
                 chosen_charts += common.visualize_data_set(
                         df_1, temporal_feature, feature_list,
-                        'Genomics_1_' + i[0])
+                        'Cluster_Genomics_' + i[0])
 
         elif i == 'KEGG matrix':
             df_2 = get_data_set('genomics_kegg_temporal')
-            show_calculated_data_set(df_2, 'KO matrix')
-            labels_list = show_clustering_info(df_2, 'Genomics_2')
+            common.show_calculated_data_set(df_2, 'KO matrix')
+            labels_list = common.show_clustering_info(df_2, 'Genomics_2')
 
             # Traversing pairs in list
             for i in labels_list:
@@ -155,12 +80,12 @@ def create_main_example_1_genomics():
                 df_2[i[0]] = i[1]
                 chosen_charts += common.visualize_data_set(
                         df_2, temporal_feature, feature_list,
-                        'Genomics_2_' + i[0])
+                        'Cluster_Genomics_' + i[0])
 
         else:
             tmp_df_3 = get_data_set('genomics_mags_annotated_temporal')
             df_3 = get_data_set('genomics_mags_top_10_annotated_temporal')
-            show_calculated_data_set(tmp_df_3, 'Product annotations')
+            common.show_calculated_data_set(tmp_df_3, 'Product annotations')
 
             temporal_feature, feature_list = common.find_temporal_feature(df_3)
             chosen_charts += common.visualize_data_set(
@@ -214,7 +139,7 @@ def create_main_example_1_proteomics():
 
     # Here I show the head() of the data set and some summary() and info()
     df = get_data_set('proteomics')
-    show_calculated_data_set(df, 'Protein properties')
+    common.show_calculated_data_set(df, 'Protein properties')
 
     temporal_feature, feature_list = common.find_temporal_feature(df)
 

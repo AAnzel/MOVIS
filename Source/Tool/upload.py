@@ -375,6 +375,8 @@ def work_with_fasta(data_set_type, folder_path, file_name_type, key_suffix):
 
 def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
 
+    chosen_charts = []
+
     if data_set_type == 'FASTA':
         VECTORIZED_DATA_SET_NAME = 'vectorized.pkl'
         VECTORIZED_DATA_SET_PATH = os.path.join(
@@ -389,12 +391,22 @@ def work_with_data_set(data_set_type, folder_path, file_name_type, key_suffix):
                     data_set_type, folder_path, file_name_type, key_suffix)
                 common.cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
 
-        common.show_data_set(df)
+        common.show_calculated_data_set(df, 'Embedded FASTA files')
+        labels_list = common.show_clustering_info(df, key_suffix)
+
+        # Traversing pairs in list
+        for i in labels_list:
+            temporal_feature, feature_list = common.find_temporal_feature(df)
+            feature_list = i[0]
+            df[i[0]] = i[1]
+            chosen_charts += common.visualize_data_set(
+                    df, temporal_feature, feature_list,
+                    'Cluster_' + key_suffix + '_' + i[0])
 
     else:
         pass
 
-    return None
+    return chosen_charts
 
 
 def upload_genomics():
@@ -402,9 +414,10 @@ def upload_genomics():
     data_set_type, folder_path = upload_intro(type_list_zip, 'Genomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Genomics')
-    work_with_data_set(data_set_type, folder_path, file_name_type, 'Genomics')
+    chosen_charts = work_with_data_set(
+        data_set_type, folder_path, file_name_type, 'Genomics')
 
-    return []
+    return chosen_charts
 
 
 def upload_proteomics():
@@ -412,10 +425,10 @@ def upload_proteomics():
     data_set_type, folder_path = upload_intro(type_list_zip, 'Proteomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Proteomics')
-    work_with_data_set(data_set_type, folder_path, file_name_type,
-                       'Proteomics')
+    chosen_charts = work_with_data_set(
+        data_set_type, folder_path, file_name_type, 'Proteomics')
 
-    return []
+    return chosen_charts
 
 
 def upload_transcriptomics():
@@ -423,10 +436,10 @@ def upload_transcriptomics():
     data_set_type, folder_path = upload_intro(type_list_zip, 'Transcriptomics')
     file_name_type = common.show_folder_structure(folder_path)
     create_zip_temporality(folder_path, file_name_type, 'Transcriptomics')
-    work_with_data_set(data_set_type, folder_path, file_name_type,
-                       'Transcriptomics')
+    chosen_charts = work_with_data_set(
+        data_set_type, folder_path, file_name_type, 'Transcriptomics')
 
-    return []
+    return chosen_charts
 
 
 def upload_metabolomics():
