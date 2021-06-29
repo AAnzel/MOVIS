@@ -88,7 +88,8 @@ def import_csv(key_suffix):
             # TODO: Implement data imputation, maybe
             df = pd.read_csv(
                 imported_file,
-                delimiter=delimiter_dict[delimiter]).dropna()
+                delimiter=delimiter_dict[delimiter],
+                low_memory=False).dropna()
             df.reset_index(inplace=True, drop=True)
             df = common.fix_dataframe_columns(df)
         except ValueError:
@@ -275,8 +276,10 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
         try:
             time_to_remove = [dt.datetime.strptime(
                 i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
-            df = df[(df[temporal_column] >= time_to_remove[0]) &
-                    (df[temporal_column] <= time_to_remove[1])]
+
+            df.drop(df[(df[temporal_column] >= time_to_remove[0]) 
+                    & (df[temporal_column] <= time_to_remove[1])].index,
+                    inplace=True)
         except ValueError:
             st.error('Wrong date input')
             st.stop()
