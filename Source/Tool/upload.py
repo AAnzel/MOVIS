@@ -276,17 +276,17 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
         try:
             time_to_remove = [dt.datetime.strptime(
                 i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
-
-            df.drop(df[(df[temporal_column] >= time_to_remove[0]) 
-                    & (df[temporal_column] <= time_to_remove[1])].index,
+            df.drop(df[(df[temporal_column] < time_to_remove[0]) |
+                       (df[temporal_column] > time_to_remove[1])].index,
                     inplace=True)
         except ValueError:
             st.error('Wrong date input')
             st.stop()
 
+    df.dropna(inplace=True)
     df.reset_index(inplace=True, drop=True)
     df[feature_list] = df[feature_list].apply(
-        pd.to_numeric, errors='ignore')
+        pd.to_numeric)
     df = df.convert_dtypes()
 
     return df, feature_list
