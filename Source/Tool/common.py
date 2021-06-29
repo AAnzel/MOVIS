@@ -912,29 +912,27 @@ def show_clustering_info(df, key_suffix):
         key='choose_clus' + key_suffix
         )
 
-    elbow_vis_col, num_input_col = st.beta_columns([3, 1])
-
     tmp_df = get_number_of_clusters(df)
-    elbow_vis_col.altair_chart(visualize.elbow_rule(tmp_df),
-                               use_container_width=True)
+    st.altair_chart(visualize.elbow_rule(tmp_df),
+                    use_container_width=True)
 
     help_text = '''Choose the number according to the elbow rule. The number of
                    clusters should be the number on the x-axis of the Elbow
-                   chart where is the "elbow".'''
+                   chart where the "elbow" exists.'''
 
     if all(i in clustering_methods for i in ['K-Means', 'OPTICS']):
-        cluster_number = num_input_col.slider(
+        cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=1, max_value=15, value=1, step=1, format='%d',
             key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
-        cluster_samples = num_input_col.slider(
+        cluster_samples = st.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=1, max_value=15, value=1, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
             help=help_text)
 
     elif 'K-Means' in clustering_methods:
-        cluster_number = num_input_col.slider(
+        cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=1, max_value=15, value=1, step=1, format='%d',
             key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
@@ -942,7 +940,7 @@ def show_clustering_info(df, key_suffix):
 
     elif 'OPTICS' in clustering_methods:
         cluster_number = 0
-        cluster_samples = num_input_col.slider(
+        cluster_samples = st.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=1, max_value=15, value=1, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
