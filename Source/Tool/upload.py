@@ -26,7 +26,7 @@ for i in shutil.get_unpack_formats():
 
 
 @st.cache(suppress_st_warning=True)
-def import_archive(imported_file, data_set_type, key_suffix):
+def import_archive(imported_file, key_suffix):
 
     # Creating the file from BytesIO stream
     tmp_file = NamedTemporaryFile(delete=False, suffix=imported_file.name)
@@ -49,10 +49,8 @@ def import_archive(imported_file, data_set_type, key_suffix):
             st.error('Bad key suffix for archive unpacking')
             return None
 
-        shutil.unpack_archive(
-            tmp_file_path, extract_dir=extract_path)
-        return (os.path.join(
-            extract_path, return_file_name_no_ext), data_set_type)
+        shutil.unpack_archive(tmp_file_path, extract_dir=extract_path)
+        return os.path.join(extract_path, return_file_name_no_ext)
 
     except ValueError:
         st.error('Error while unpacking the archive')
@@ -195,7 +193,6 @@ def import_multiple(key_suffix):
             'KEGG annotation files': 'KEGG'}
     }
 
-    # IMPORTANT: * operator is used here, introduced in >= Python 3.5
     selected_data_set_type = st.selectbox(
         'What kind of data set do you want to upload?',
         list(available_data_set_types[key_suffix].keys())
@@ -236,10 +233,8 @@ def import_multiple(key_suffix):
         imported_file = None
 
     if imported_file is not None:
-        return import_archive(
-            imported_file,
-            available_data_set_types[key_suffix][selected_data_set_type],
-            key_suffix)
+        return (import_archive(imported_file, key_suffix),
+                available_data_set_types[key_suffix][selected_data_set_type])
 
     else:
         return None, None
