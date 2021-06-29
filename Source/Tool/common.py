@@ -881,7 +881,9 @@ def show_data_set(df):
     with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
         st.dataframe(df.head(100))
-        st.dataframe(df.describe())
+        tmp_df = df.describe()
+        if len(tmp_df.columns.to_list()) > 1:
+            st.dataframe(df.describe())
 
     return None
 
