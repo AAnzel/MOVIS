@@ -511,9 +511,10 @@ def upload_intro(folder_path, key_suffix):
         return df, data_set_type
 
 
+# TODO: Find out if there is a possibility to calculate physico-chemical
+# properties for genes as it is done with proteins
+# TODO: Create annotated data properties data set selection
 def upload_genomics():
-    # TODO: Find out if there is a possibility to calculate physico-chemical
-    # properties for genes as it is done with proteins
     key_suffix = 'Genomics'
 
     folder_path_or_df, data_set_type = upload_intro(
@@ -526,6 +527,7 @@ def upload_genomics():
         chosen_charts = work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
+    # IMPORTANT: Do not run. It takes too much RAM
     elif data_set_type == 'KEGG':
         file_name_type = common.show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
@@ -549,8 +551,6 @@ def upload_proteomics():
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_proteomics, key_suffix)
 
-    # TODO: If we have proteomics FASTA files, we can calculate different
-    # physico-chemical properties and show them as well
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
