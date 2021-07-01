@@ -163,7 +163,8 @@ def import_multiple(key_suffix):
                        the start date.
                        2. 2019-03-15.KOs.besthits for FASTA file collected on
                        15.03.2019. You should use either the first or the
-                       second option, mixing name options is not allowed.''',
+                       second option, mixing name options is not allowed.
+                       Delimiter in this file should be tab ("\\t").''',
         'Proteomics': '''File names can be given in two formats:
                          1. D03.KOs.besthits for FASTA file collected on the
                          third day, or W03.KOs.besthits for FASTA file
@@ -171,7 +172,8 @@ def import_multiple(key_suffix):
                          option to select the start date.
                          2. 2019-03-15.fa for FASTA file collected on
                          15.03.2019. You should use either the first or the
-                         second option, mixing name options is not allowed.''',
+                         second option, mixing name options is not allowed.
+                         Delimiter in this file should be tab ("\t").''',
         'Transcriptomics': '''File names can be given in two formats:
                               1. D03.KOs.besthits for FASTA file collected on
                               the third day, or W03.KOs.besthits for FASTA file
@@ -180,7 +182,8 @@ def import_multiple(key_suffix):
                               2. 2019-03-15.fa for FASTA file collected on
                               15.03.2019. You should use either the first or
                               the second option, mixing name options is not
-                              allowed.'''}
+                              allowed. Delimiter in this file should be tab
+                              ("\t").'''}
 
     # TODO: Change for transcriptomics and add more type options
     available_data_set_types = {
@@ -398,8 +401,37 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df[i[0]] = i[1]
             chosen_charts += common.visualize_data_set(
                     df, temporal_feature, feature_list,
-                    'Cluster_' + key_suffix + '_' + i[0])
+                    'Cluster_FASTA_' + key_suffix + '_' + i[0])
 
+    elif data_set_type == 'KEGG':
+        KEGG_DATA_SET_NAME = 'kegg.pkl'
+        KEGG_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], KEGG_DATA_SET_NAME)
+
+        if os.path.exists(KEGG_DATA_SET_PATH):
+            df = common.get_cached_dataframe(None, KEGG_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Creating KO matrix...'):
+                besthits_files = os.listdir(folder_path)
+                num_of_besthits_files = len(besthits_files)
+                df = common.import_kegg_and_create_df(
+                    end=num_of_besthits_files, path_all_keggs=folder_path)
+                common.cache_dataframe(df, None, KEGG_DATA_SET_PATH)
+
+        common.show_calculated_data_set(df, 'Calculated KO matrix')
+        labels_list = common.show_clustering_info(df, key_suffix)
+
+        # Traversing pairs in list
+        for i in labels_list:
+            temporal_feature, feature_list = common.find_temporal_feature(df)
+            feature_list = i[0]
+            df[i[0]] = i[1]
+            chosen_charts += common.visualize_data_set(
+                    df, temporal_feature, feature_list,
+                    'Cluster_KEGG_' + key_suffix + '_' + i[0])
+
+    # TODO: This elif was never used and has to be checked ASAP
     elif data_set_type == 'Calculated':
         CALCULATED_DATA_SET_NAME = 'calculated.pkl'
         CALCULATED_DATA_SET_PATH = os.path.join(
@@ -480,13 +512,21 @@ def upload_intro(folder_path, key_suffix):
 
 
 def upload_genomics():
-
+    # TODO: Find out if there is a possibility to calculate physico-chemical
+    # properties for genes as it is done with proteins
     key_suffix = 'Genomics'
 
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_genomics, key_suffix)
 
     if data_set_type == 'FASTA':
+        file_name_type = common.show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        chosen_charts = work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    elif data_set_type == 'KEGG':
         file_name_type = common.show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
 

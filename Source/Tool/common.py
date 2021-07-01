@@ -410,9 +410,9 @@ def example_1_import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
             # DataFrames
             tmp_df = pd.read_csv(os.path.join(path_genomics_kegg,
                                               kegg_file_name), delimiter="\t")
-            tmp_filter = (tmp_df["Gene"].apply(lambda x: str(x).split("_")[0]
-                                               + "_" + str(x).split("_")[1])
-                                        .isin(rmags_78_names))
+            tmp_filter = (
+                tmp_df["Gene"].apply(
+                    lambda x: str(x).split("_PROKKA")[0]).isin(rmags_78_names))
 
             tmp_df = tmp_df[tmp_filter]
 
@@ -642,7 +642,8 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
 
     # I will first remove every FASTA file that doesn't start with 'D'
     files_list_old = os.listdir(unpack_archive_path)
-    files_list_new = [i for i in files_list_old if i.startswith('D')]
+    files_list_new = [i for i in files_list_old if i.startswith('D')
+                      or i.startswith('W')]
     files_list_remove = [i for i in files_list_old if i not in files_list_new]
 
     for i in files_list_remove:
@@ -650,9 +651,12 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
 
     # Sorting files and fixing the name. Originally they start with D but
     # represent weeks, so I will replace D with W
+    imported_file_extension = os.path.splitext(
+        files_list_new[0])[1][1:].strip().lower()
     files_list_new.sort()
     files_list_pass = [i.replace('D', 'W') for i in files_list_new]
-    files_list_pass = [i.split('_')[0] + '.fa' for i in files_list_pass]
+    files_list_pass = [i.split('_')[0] + '.' + imported_file_extension
+                       for i in files_list_pass]
 
     list_of_dates = create_temporal_column(
         files_list_pass, start_date, len(files_list_pass),
@@ -663,7 +667,8 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
     for i in range(len(files_list_pass)):
         os.rename(
             os.path.join(unpack_archive_path, files_list_new[i]),
-            os.path.join(unpack_archive_path, list_of_new_names[i] + '.fa'))
+            os.path.join(unpack_archive_path,
+                         list_of_new_names[i] + '.' + imported_file_extension))
 
     return None
 
@@ -959,6 +964,62 @@ def show_clustering_info(df, key_suffix):
     return labels_list
 
 
+def create_kegg_matrix(list_data, path_keggs):
+
+    print("Creating KEGG matrix")
+
+    gene_names = [os.path.splitext(i)[0] for i in os.listdir(path_keggs)]
+    gene_names.sort()
+
+    result_matrix_df = pd.DataFrame(columns=gene_names)
+
+    for i in list_data:
+        tmp_df = i.value_counts().reset_index()
+
+        for i, row in tmp_df.iterrows():
+            result_matrix_df.at[row["ID"], row["Gene"]] = row[0]
+
+    result_matrix_df.fillna(0, inplace=True)
+    result_matrix_df = result_matrix_df.transpose()
+
+    print("Finished creating")
+    return result_matrix_df.sort_index()
+
+
+def import_kegg_and_create_df(end=51, path_all_keggs=path_genomics_kegg):
+
+    print("Importing KEGG data")
+
+    kegg_files = os.listdir(path_all_keggs)
+    kegg_files.sort()
+
+    kegg_data_list = []
+
+    # This was done so that I could work with first 100 files only. Otherwise,
+    # I should just remove: i, and enumerate
+    for i, kegg_file_name in enumerate(kegg_files):
+
+        if i == end:
+            break
+
+        else:
+            # Now I create a DataFrame out of it and save it in the list of
+            # DataFrames
+            tmp_df = pd.read_csv(
+                os.path.join(path_all_keggs, kegg_file_name),
+                delimiter="\t")
+            tmp_df["Gene"] = tmp_df["Gene"].apply(
+                lambda x: str(x).split("_PROKKA")[0])
+            tmp_df["ID"] = tmp_df["ID"].apply(lambda x: str(x).split(":")[1])
+            tmp_df.drop(["maxScore", "hitNumber"], axis=1, inplace=True)
+            tmp_df.reset_index(drop=True, inplace=True)
+
+            kegg_data_list.append(tmp_df)
+
+    print("Finished importing")
+    return create_kegg_matrix(kegg_data_list, path_all_keggs)
+
+
 def show_folder_structure(uploaded_folder_path):
 
     space = '    '
@@ -1006,7 +1067,8 @@ def fix_archive_file_names(start_date, unpack_archive_path):
 
     # I will first remove every FASTA file that doesn't start with 'D'
     files_list_old = os.listdir(unpack_archive_path)
-    files_list_new = [i for i in files_list_old if i.startswith('D')]
+    files_list_new = [i for i in files_list_old if i.startswith('D')
+                      or i.startswith('W')]
     files_list_remove = [i for i in files_list_old if i not in files_list_new]
 
     for i in files_list_remove:
@@ -1019,11 +1081,14 @@ def fix_archive_file_names(start_date, unpack_archive_path):
         files_list_new[0][0])
 
     list_of_new_names = [i.strftime('%Y-%m-%d') for i in list_of_dates]
+    imported_file_extension = os.path.splitext(
+        files_list_new[0])[1][1:].strip().lower()
 
     for i in range(len(files_list_new)):
         os.rename(
             os.path.join(unpack_archive_path, files_list_new[i]),
-            os.path.join(unpack_archive_path, list_of_new_names[i] + '.fa'))
+            os.path.join(unpack_archive_path,
+                         list_of_new_names[i] + '.' + imported_file_extension))
 
     return None
 
