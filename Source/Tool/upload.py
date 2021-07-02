@@ -121,9 +121,6 @@ def import_multiple(key_suffix):
         'Genomics': '''Upload your archive here. Archive should
                        contain only KO besthits (.besthits) files. Possible
                        file names are given as help, on the right.''',
-        'Proteomics': '''Upload your archive here. Archive should
-                         contain only KO besthits (.besthits) files. Possible
-                         file names are given as help, on the right.''',
         'Transcriptomics': '''Upload your archive here. Archive should
                               contain only KO besthits (.besthits) files.
                               Possible file names are given as help, on the
@@ -165,15 +162,6 @@ def import_multiple(key_suffix):
                        15.03.2019. You should use either the first or the
                        second option, mixing name options is not allowed.
                        Delimiter in this file should be tab ("\\t").''',
-        'Proteomics': '''File names can be given in two formats:
-                         1. D03.KOs.besthits for FASTA file collected on the
-                         third day, or W03.KOs.besthits for FASTA file
-                         collected on the third week. You will be given an
-                         option to select the start date.
-                         2. 2019-03-15.fa for FASTA file collected on
-                         15.03.2019. You should use either the first or the
-                         second option, mixing name options is not allowed.
-                         Delimiter in this file should be tab ("\t").''',
         'Transcriptomics': '''File names can be given in two formats:
                               1. D03.KOs.besthits for FASTA file collected on
                               the third day, or W03.KOs.besthits for FASTA file
@@ -185,11 +173,29 @@ def import_multiple(key_suffix):
                               allowed. Delimiter in this file should be tab
                               ("\t").'''}
 
+    upload_text_zip_bins = {
+        'Genomics': '''Upload your archive here. Archive should
+                       contain only annotation (.gff) files. Possible file
+                       names are given as help, on the right.'''
+    }
+
+    upload_help_zip_bins = {
+        'Genomics': '''File names can be given in two formats:
+                       1. D03.gff for samples collected on the
+                       third day, or W03.gff for samples collected
+                       on the third week. You will be given an option to select
+                       the start date.
+                       2. 2019-03-15.gff for samples collected on 15.03.2019.
+                       You should use either the first or the second option,
+                       mixing name options is not allowed.'''
+    }
+
     # TODO: Change for transcriptomics and add more type options
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
-            'KEGG annotation files': 'KEGG'},
+            'KEGG annotation files': 'KEGG',
+            'BINS annotation files': 'BINS'},
         'Proteomics': {
             'Raw FASTA files': 'FASTA',
             'Calculated data set': 'Calculated'},
@@ -204,20 +210,25 @@ def import_multiple(key_suffix):
     )
 
     if key_suffix == 'Genomics':
-        if selected_data_set_type ==\
-         list(available_data_set_types[key_suffix].keys())[0]:
-            imported_file = st.file_uploader(
-                upload_text_zip_fasta[key_suffix], type=type_list_zip,
-                accept_multiple_files=False,
-                help=upload_help_zip_fasta[key_suffix],
-                key='Upload_file_' + key_suffix)
+        if selected_data_set_type == list(
+                available_data_set_types[key_suffix].keys())[0]:
+
+            label_text = upload_text_zip_fasta[key_suffix]
+            help_text = upload_help_zip_fasta[key_suffix]
+
+        elif selected_data_set_type == list(
+                available_data_set_types[key_suffix].keys())[1]:
+
+            label_text = upload_text_zip_kegg[key_suffix]
+            help_text = upload_help_zip_kegg[key_suffix]
 
         else:
-            imported_file = st.file_uploader(
-                upload_text_zip_kegg[key_suffix], type=type_list_zip,
-                accept_multiple_files=False,
-                help=upload_help_zip_kegg[key_suffix],
-                key='Upload_file_' + key_suffix)
+            label_text = upload_text_zip_bins[key_suffix]
+            help_text = upload_help_zip_bins[key_suffix]
+
+        imported_file = st.file_uploader(
+            label_text, type=type_list_zip, accept_multiple_files=False,
+            help=help_text, key='Upload_file_' + key_suffix)
 
     elif key_suffix == 'Proteomics':
         if selected_data_set_type ==\
@@ -359,33 +370,46 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
 
 
 @st.cache
+def work_with_kegg(data_set_type, folder_path, key_suffix):
+
+    besthits_files = os.listdir(folder_path)
+    num_of_besthits_files = len(besthits_files)
+    df = common.import_kegg_and_create_df(
+        end=num_of_besthits_files, path_all_keggs=folder_path)
+
+    return df
+
+
+@st.cache
+def work_with_bins(data_set_type, folder_path, key_suffix):
+
+    gff_files = os.listdir(folder_path)
+    num_of_gff_files = len(gff_files)
+
+    df = common.create_annotated_data_set(
+        end=num_of_gff_files, path_bins=folder_path)
+
+    list_of_dates = common.create_temporal_column(
+        gff_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
+@st.cache
 def work_calculate_proteomics(data_set_type, folder_path, key_suffix):
 
     fasta_files = os.listdir(folder_path)
     num_of_fasta_files = len(fasta_files)
 
-    tmp_df = common.import_proteomics(
+    df = common.import_proteomics(
         path_proteomics=folder_path, end=num_of_fasta_files)
 
     list_of_dates = common.create_temporal_column(
         fasta_files, None, None, 'TIMESTAMP')
-    tmp_df.insert(0, 'DateTime', list_of_dates)
+    df.insert(0, 'DateTime', list_of_dates)
 
-    return tmp_df
-
-
-def show_fasta_example():
-
-
-
-    return None
-
-
-def show_kegg_example():
-
-
-
-    return None
+    return df
 
 
 def work_with_data_set(df, data_set_type, folder_path, key_suffix):
@@ -428,10 +452,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
 
         else:
             with st.spinner('Creating KO matrix...'):
-                besthits_files = os.listdir(folder_path)
-                num_of_besthits_files = len(besthits_files)
-                df = common.import_kegg_and_create_df(
-                    end=num_of_besthits_files, path_all_keggs=folder_path)
+                df = work_with_kegg(data_set_type, folder_path, key_suffix)
                 common.cache_dataframe(df, None, KEGG_DATA_SET_PATH)
 
         common.show_calculated_data_set(df, 'Calculated KO matrix')
@@ -445,6 +466,27 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             chosen_charts += common.visualize_data_set(
                     df, temporal_feature, feature_list,
                     'Cluster_KEGG_' + key_suffix + '_' + i[0])
+
+    elif data_set_type == 'BINS':
+        BINS_DATA_SET_NAME = 'bins.pkl'
+        BINS_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], BINS_DATA_SET_NAME)
+
+        if os.path.exists(BINS_DATA_SET_PATH):
+            df = common.get_cached_dataframe(None, BINS_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Creating KO matrix...'):
+                df = work_with_bins(data_set_type, folder_path, key_suffix)
+                common.cache_dataframe(df, None, BINS_DATA_SET_PATH)
+
+        common.show_calculated_data_set(df, 'Imported bins')
+        df = common.fix_data_set(df)
+        temporal_feature, feature_list = common.find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+        chosen_charts = common.visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
 
     # TODO: This elif was never used and has to be checked ASAP
     elif data_set_type == 'Calculated':
@@ -537,7 +579,7 @@ def upload_genomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_genomics, key_suffix)
-    
+
     if folder_path_or_df is None:
         return []
 
@@ -550,6 +592,13 @@ def upload_genomics():
 
     # IMPORTANT: Do not run. It takes too much RAM
     elif data_set_type == 'KEGG':
+        file_name_type = common.show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        chosen_charts = work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    elif data_set_type == 'BINS':
         file_name_type = common.show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
 

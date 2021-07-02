@@ -1020,6 +1020,52 @@ def import_kegg_and_create_df(end=51, path_all_keggs=path_genomics_kegg):
     return create_kegg_matrix(kegg_data_list, path_all_keggs)
 
 
+def create_annotated_data_set(end=51, path_bins=path_genomics_bins):
+
+    print("Importing BIN annotated data set")
+
+    bin_files = os.listdir(path_bins)
+    bin_files.sort()
+
+    # Creating nested dictionary where each rmag has a dict of products and
+    # their number of occurence for that rmag
+    final_dict = {}
+    for i in bin_files:
+        final_dict[os.path.splitext(i)[0]] = {}
+
+    # Traversing every annotation file, line by line, and saving only 'product'
+    # column TODO: This can be extended with more columns
+    for annotation_file in bin_files:
+        with open(os.path.join(path_bins, annotation_file), 'r') as input_file:
+
+            gene_name = str(os.path.splitext(annotation_file)[0])
+            for line in input_file:
+                product = line.split('product=')[-1].split(';')[0].rstrip()
+
+                if product not in final_dict[gene_name]:
+                    final_dict[gene_name][product] = 0
+                else:
+                    final_dict[gene_name][product] += 1
+
+    result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
+
+    # I also save only first 10 products in regard to the number of occurence
+    # This is done for easier visualization
+    # Returning only top 10, TODO: Try with the whole data set (possible crash)
+    sorted_columns = result_df.sum(axis=0).sort_values(ascending=False)
+    sorted_columns = sorted_columns.index.tolist()
+    result_df = result_df[sorted_columns]
+
+    other_series = result_df.iloc[:, 10:].sum(axis=1)
+
+    result_df.drop(sorted_columns[10:], axis=1, inplace=True)
+    result_df['Other'] = other_series
+
+    print("Finished importing")
+
+    return result_df
+
+
 def show_folder_structure(uploaded_folder_path):
 
     space = '    '
