@@ -308,6 +308,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
 
         # This is only needed for example 1 data set
         # TODO: Change this for production data sets
+        # BUG: Change this for production data sets
         common.example_1_fix_archive_file_names(start_date, folder_path)
         # common.fix_archive_file_names(start_date, folder_path)
         # After this step, every file has a timestamp as a name
@@ -371,6 +372,20 @@ def work_calculate_proteomics(data_set_type, folder_path, key_suffix):
     tmp_df.insert(0, 'DateTime', list_of_dates)
 
     return tmp_df
+
+
+def show_fasta_example():
+
+
+
+    return None
+
+
+def show_kegg_example():
+
+
+
+    return None
 
 
 def work_with_data_set(df, data_set_type, folder_path, key_suffix):
@@ -459,10 +474,15 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
 
         else:
             with st.spinner('Calculating additional properties...'):
-                df = work_calculate_proteomics(
-                    data_set_type, folder_path, key_suffix)
-                common.cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
+                if key_suffix == 'Proteomics':
+                    df = work_calculate_proteomics(
+                        data_set_type, folder_path, key_suffix)
+                # TODO: Check what happens for other omics
+                # This is related to creating add. properties for genomics
+                else:
+                    pass
 
+                common.cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
                 common.show_calculated_data_set(df, 'Additional properties')
 
         df = common.fix_data_set(df)
@@ -497,7 +517,6 @@ def upload_intro(folder_path, key_suffix):
 
         if df is None:
             st.warning('Upload your data set')
-            st.stop()
 
         return df
 
@@ -506,7 +525,6 @@ def upload_intro(folder_path, key_suffix):
 
         if df is None:
             st.warning('Upload your data set')
-            st.stop()
 
         return df, data_set_type
 
@@ -519,6 +537,9 @@ def upload_genomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_genomics, key_suffix)
+    
+    if folder_path_or_df is None:
+        return []
 
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
@@ -550,6 +571,9 @@ def upload_proteomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_proteomics, key_suffix)
+
+    if folder_path_or_df is None:
+        return []
 
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
@@ -584,6 +608,9 @@ def upload_transcriptomics():
     folder_path_or_df, data_set_type = upload_intro(
         path_uploaded_transcriptomics, key_suffix)
 
+    if folder_path_or_df is None:
+        return []
+
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
@@ -605,6 +632,10 @@ def upload_metabolomics():
     key_suffix = 'Metabolomics'
 
     df = upload_intro(path_uploaded_metabolomics, key_suffix)
+
+    if df is None:
+        return []
+
     common.show_data_set(df)
     chosen_charts = work_with_data_set(
         df, 'Calculated', path_uploaded_metabolomics, key_suffix)
@@ -617,6 +648,10 @@ def upload_phy_che():
     key_suffix = 'Physico-chemical'
 
     df = upload_intro(path_uploaded_phy_che, key_suffix)
+
+    if df is None:
+        return []
+
     common.show_data_set(df)
     chosen_charts = work_with_data_set(
         df, 'Calculated', path_uploaded_phy_che, key_suffix)
