@@ -26,7 +26,7 @@ def get_data_set(omic_name):
     return df
 
 
-def create_main_example_1_genomics():
+def example_1_genomics():
     st.header('Genomics')
     with st.spinner('Showing folder structure'):
         st.code('''rmags_filtered/
@@ -98,7 +98,7 @@ def create_main_example_1_genomics():
     return chosen_charts
 
 
-def create_main_example_1_metabolomics():
+def example_1_metabolomics():
     st.header('Metabolomics')
 
     # Here I show the head() of the data set and some summary() and info()
@@ -116,7 +116,7 @@ def create_main_example_1_metabolomics():
     return chosen_charts
 
 
-def create_main_example_1_proteomics():
+def example_1_proteomics():
     st.header('Proteomics')
 
     # TODO: Implement the same data set creation as with the genomics data
@@ -152,7 +152,7 @@ def create_main_example_1_proteomics():
     return chosen_charts
 
 
-def create_main_example_1_phy_che():
+def example_1_phy_che():
     st.header('Physico-chemical')
 
     # Here I show the head() of the data set and some summary() and info()
@@ -170,7 +170,7 @@ def create_main_example_1_phy_che():
     return chosen_charts
 
 
-def create_main_example_1():
+def example_1():
 
     col_1, col_2 = st.beta_columns(2)
 
@@ -213,30 +213,30 @@ def create_main_example_1():
                 if i == 'Genomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        charts += create_main_example_1_genomics()
+                        charts += example_1_genomics()
                 elif i == 'Metabolomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        charts += create_main_example_1_metabolomics()
+                        charts += example_1_metabolomics()
                 elif i == 'Proteomics':
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        charts += create_main_example_1_proteomics()
+                        charts += example_1_proteomics()
                 else:
                     with column_list[curr_pos]:
                         curr_pos += 1
-                        charts += create_main_example_1_phy_che()
+                        charts += example_1_phy_che()
 
         else:
             for i in choose_omics:
                 if i == 'Genomics':
-                    charts += create_main_example_1_genomics()
+                    charts += example_1_genomics()
                 elif i == 'Metabolomics':
-                    charts += create_main_example_1_metabolomics()
+                    charts += example_1_metabolomics()
                 elif i == 'Proteomics':
-                    charts += create_main_example_1_proteomics()
+                    charts += example_1_proteomics()
                 else:
-                    charts += create_main_example_1_phy_che()
+                    charts += example_1_phy_che()
 
     with st.beta_expander('Show/hide visualizations', expanded=True):
         for i in charts:

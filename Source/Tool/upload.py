@@ -1,19 +1,9 @@
 import os
 import shutil
 import common
-from tempfile import NamedTemporaryFile
 import streamlit as st
 import pandas as pd
-import datetime as dt
-from gensim.models import Word2Vec
 
-path_uploaded = 'uploaded'
-path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
-path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
-path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')
-path_uploaded_metabolomics = os.path.join(path_uploaded, 'metabolomics')
-path_uploaded_phy_che = os.path.join(path_uploaded, 'phy_che')
-path_ramdisk = os.path.join('dev', 'shm')
 
 # TODO: Implement removing previously extracted archives and files
 # it should be done at the end of tool in main
@@ -24,41 +14,21 @@ type_list_zip = []
 for i in shutil.get_unpack_formats():
     type_list_zip += i[1]
 
+path_uploaded = 'uploaded'
+path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
+path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
+path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')
+path_uploaded_metabolomics = os.path.join(path_uploaded, 'metabolomics')
+path_uploaded_phy_che = os.path.join(path_uploaded, 'phy_che')
+path_ramdisk = os.path.join('dev', 'shm')
 
-@st.cache(suppress_st_warning=True)
-def import_archive(imported_file, key_suffix):
-
-    # Creating the file from BytesIO stream
-    tmp_file = NamedTemporaryFile(delete=False, suffix=imported_file.name)
-    tmp_file_path = tmp_file.name
-    tmp_file.write(imported_file.getvalue())
-    tmp_file.flush()
-    tmp_file.close()
-
-    index_of_dot = imported_file.name.index('.')
-    return_file_name_no_ext = imported_file.name[:index_of_dot]
-
-    try:
-        if key_suffix == 'Genomics':
-            extract_path = path_uploaded_genomics
-        elif key_suffix == 'Transcriptomics':
-            extract_path = path_uploaded_transcriptomics
-        elif key_suffix == 'Proteomics':
-            extract_path = path_uploaded_proteomics
-        else:
-            st.error('Bad key suffix for archive unpacking')
-            return None
-
-        shutil.unpack_archive(tmp_file_path, extract_dir=extract_path)
-        return os.path.join(extract_path, return_file_name_no_ext)
-
-    except ValueError:
-        st.error('Error while unpacking the archive')
-        return None
-
-    finally:
-        st.success('Data set succesfully uploaded')
-        os.remove(tmp_file_path)
+path_uploaded_dict = {
+    'Genomics': path_uploaded_genomics,
+    'Proteomics': path_uploaded_proteomics,
+    'Transcriptomics': path_uploaded_transcriptomics,
+    'Metabolomics': path_uploaded_metabolomics,
+    'Physico-chemical': path_uploaded_phy_che
+}
 
 
 def import_csv(key_suffix):
@@ -249,295 +219,12 @@ def import_multiple(key_suffix):
         imported_file = None
 
     if imported_file is not None:
-        return (import_archive(imported_file, key_suffix),
+        return (common.import_archive(imported_file,
+                                      path_uploaded_dict[key_suffix]),
                 available_data_set_types[key_suffix][selected_data_set_type])
 
     else:
         return None, None
-
-
-def modify_data_set(df, temporal_column, feature_list, key_suffix):
-
-    columns_to_remove = st.multiselect(
-        'Select columns to remove', feature_list,
-        key='Col_remove_' + key_suffix)
-
-    if len(columns_to_remove) != 0:
-        df.drop(columns_to_remove, axis=1, inplace=True)
-        feature_list = [i for i in feature_list if i not in columns_to_remove]
-
-    rows_to_remove_text = st.text_input(
-        'Insert row numbers to remove, seperated by comma. See help (right)\
-         for example.', value='', key='Row_remove_' + key_suffix,
-        help='Example: 42 or 2, 3, 15, 55')
-
-    if rows_to_remove_text != '':
-        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
-        # First we check if input is good or not
-        if any(not row.isnumeric() for row in rows_to_remove):
-            st.error('Wrong number input')
-            st.stop()
-
-        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
-        df.drop(rows_to_remove, axis=0, inplace=True)
-
-    time_to_remove_text = st.text_input(
-        'Insert the begining and the end of a time period to keep, seperated\
-         by comma. See help (right) for example.',
-        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
-        help='Example: 2011-03-21, 2012-05-03')
-
-    if time_to_remove_text != '':
-        try:
-            time_to_remove = [dt.datetime.strptime(
-                i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
-            df.drop(df[(df[temporal_column] < time_to_remove[0]) |
-                       (df[temporal_column] > time_to_remove[1])].index,
-                    inplace=True)
-        except ValueError:
-            st.error('Wrong date input')
-            st.stop()
-
-    df.dropna(inplace=True)
-    df.reset_index(inplace=True, drop=True)
-    df[feature_list] = df[feature_list].apply(
-        pd.to_numeric)
-    df = df.convert_dtypes()
-
-    return df, feature_list
-
-
-# This function changes all file names of 'D' or 'W' type into timestamp type
-# This is done in place for the unpacked uploaded directory
-def create_zip_temporality(folder_path, file_name_type, key_suffix):
-
-    if file_name_type in ['D', 'W']:
-        start_date = st.date_input(
-            'Insert start date for your data set:',
-            dt.datetime.strptime("2011-03-21", "%Y-%m-%d"),
-            key='Date_input_' + key_suffix)
-
-        # This is only needed for example 1 data set
-        # TODO: Change this for production data sets
-        # BUG: Change this for production data sets
-        common.example_1_fix_archive_file_names(start_date, folder_path)
-        # common.fix_archive_file_names(start_date, folder_path)
-        # After this step, every file has a timestamp as a name
-
-    else:
-        # Check if file name starts with a valid timestamp
-        tmp_file_name = os.listdir(folder_path)[0].split('.')[0]
-        try:
-            dt.datetime.strptime(tmp_file_name, '%Y-%m-%d')
-
-        except ValueError:
-            st.error(
-                '''File names are not valid. File names should start with "D"
-                   or "W", or be of a timestamp type (%Y-%m-%d.fa[a])''')
-            st.stop()
-
-    return None
-
-
-@st.cache
-def work_with_fasta(data_set_type, folder_path, key_suffix):
-
-    # TODO: Allow user to change number of epochs for training
-    MODEL_NAME = 'w2v_model.saved'
-    MODEL_PATH = os.path.join(os.path.split(folder_path)[0], MODEL_NAME)
-    fasta_files = os.listdir(folder_path)
-    num_of_fasta_files = len(fasta_files)
-
-    if os.path.exists(MODEL_PATH):
-        w2v_model = Word2Vec.load(MODEL_PATH)
-
-    # If we already created a model, we won't do it again
-    else:
-        w2v_model, fasta_files = common.import_mags_and_build_model(
-            num_of_fasta_files, folder_path)
-        w2v_model = common.train_model(
-            w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
-        w2v_model.save(MODEL_PATH)
-
-    list_of_vectors = common.vectorize_mags(
-        w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
-    df = pd.DataFrame(list_of_vectors)
-    list_of_dates = common.create_temporal_column(
-        fasta_files, None, None, 'TIMESTAMP')
-    df.insert(0, 'DateTime', list_of_dates)
-
-    return df
-
-
-@st.cache
-def work_with_kegg(data_set_type, folder_path, key_suffix):
-
-    besthits_files = os.listdir(folder_path)
-    num_of_besthits_files = len(besthits_files)
-    df = common.import_kegg_and_create_df(
-        end=num_of_besthits_files, path_all_keggs=folder_path)
-
-    return df
-
-
-@st.cache
-def work_with_bins(data_set_type, folder_path, key_suffix):
-
-    gff_files = os.listdir(folder_path)
-    num_of_gff_files = len(gff_files)
-
-    df = common.create_annotated_data_set(
-        end=num_of_gff_files, path_bins=folder_path)
-
-    list_of_dates = common.create_temporal_column(
-        gff_files, None, None, 'TIMESTAMP')
-    df.insert(0, 'DateTime', list_of_dates)
-
-    return df
-
-
-@st.cache
-def work_calculate_proteomics(data_set_type, folder_path, key_suffix):
-
-    fasta_files = os.listdir(folder_path)
-    num_of_fasta_files = len(fasta_files)
-
-    df = common.import_proteomics(
-        path_proteomics=folder_path, end=num_of_fasta_files)
-
-    list_of_dates = common.create_temporal_column(
-        fasta_files, None, None, 'TIMESTAMP')
-    df.insert(0, 'DateTime', list_of_dates)
-
-    return df
-
-
-def work_with_data_set(df, data_set_type, folder_path, key_suffix):
-
-    chosen_charts = []
-
-    if data_set_type == 'FASTA':
-        VECTORIZED_DATA_SET_NAME = 'vectorized.pkl'
-        VECTORIZED_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], VECTORIZED_DATA_SET_NAME)
-
-        if os.path.exists(VECTORIZED_DATA_SET_PATH):
-            df = common.get_cached_dataframe(None, VECTORIZED_DATA_SET_PATH)
-
-        else:
-            with st.spinner('Vectorizing FASTA files using W2V...'):
-                df = work_with_fasta(
-                    data_set_type, folder_path, key_suffix)
-                common.cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
-
-        common.show_calculated_data_set(df, 'Embedded FASTA files')
-        labels_list = common.show_clustering_info(df, key_suffix)
-
-        # Traversing pairs in list
-        for i in labels_list:
-            temporal_feature, feature_list = common.find_temporal_feature(df)
-            feature_list = i[0]
-            df[i[0]] = i[1]
-            chosen_charts += common.visualize_data_set(
-                    df, temporal_feature, feature_list,
-                    'Cluster_FASTA_' + key_suffix + '_' + i[0])
-
-    elif data_set_type == 'KEGG':
-        KEGG_DATA_SET_NAME = 'kegg.pkl'
-        KEGG_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], KEGG_DATA_SET_NAME)
-
-        if os.path.exists(KEGG_DATA_SET_PATH):
-            df = common.get_cached_dataframe(None, KEGG_DATA_SET_PATH)
-
-        else:
-            with st.spinner('Creating KO matrix...'):
-                df = work_with_kegg(data_set_type, folder_path, key_suffix)
-                common.cache_dataframe(df, None, KEGG_DATA_SET_PATH)
-
-        common.show_calculated_data_set(df, 'Calculated KO matrix')
-        labels_list = common.show_clustering_info(df, key_suffix)
-
-        # Traversing pairs in list
-        for i in labels_list:
-            temporal_feature, feature_list = common.find_temporal_feature(df)
-            feature_list = i[0]
-            df[i[0]] = i[1]
-            chosen_charts += common.visualize_data_set(
-                    df, temporal_feature, feature_list,
-                    'Cluster_KEGG_' + key_suffix + '_' + i[0])
-
-    elif data_set_type == 'BINS':
-        BINS_DATA_SET_NAME = 'bins.pkl'
-        BINS_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], BINS_DATA_SET_NAME)
-
-        if os.path.exists(BINS_DATA_SET_PATH):
-            df = common.get_cached_dataframe(None, BINS_DATA_SET_PATH)
-
-        else:
-            with st.spinner('Creating KO matrix...'):
-                df = work_with_bins(data_set_type, folder_path, key_suffix)
-                common.cache_dataframe(df, None, BINS_DATA_SET_PATH)
-
-        common.show_calculated_data_set(df, 'Imported bins')
-        df = common.fix_data_set(df)
-        temporal_feature, feature_list = common.find_temporal_feature(df)
-        df, feature_list = modify_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-        chosen_charts = common.visualize_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-
-    # TODO: This elif was never used and has to be checked ASAP
-    elif data_set_type == 'Calculated':
-        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-        CALCULATED_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], CALCULATED_DATA_SET_NAME)
-
-        df = common.fix_data_set(df)
-        temporal_feature, feature_list = common.find_temporal_feature(df)
-        df, feature_list = modify_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-
-        if not os.path.exists(CALCULATED_DATA_SET_PATH):
-            common.cache_dataframe(df, None, CALCULATED_DATA_SET_PATH)
-
-        chosen_charts = common.visualize_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-
-    elif data_set_type == 'Calculate_now':
-        CALCULATED_NOW_DATA_SET_NAME = 'calculated_now.pkl'
-        CALCULATED_NOW_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], CALCULATED_NOW_DATA_SET_NAME)
-
-        if os.path.exists(CALCULATED_NOW_DATA_SET_PATH):
-            df = common.get_cached_dataframe(
-                None, CALCULATED_NOW_DATA_SET_PATH)
-
-        else:
-            with st.spinner('Calculating additional properties...'):
-                if key_suffix == 'Proteomics':
-                    df = work_calculate_proteomics(
-                        data_set_type, folder_path, key_suffix)
-                # TODO: Check what happens for other omics
-                # This is related to creating add. properties for genomics
-                else:
-                    pass
-
-                common.cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
-                common.show_calculated_data_set(df, 'Additional properties')
-
-        df = common.fix_data_set(df)
-        temporal_feature, feature_list = common.find_temporal_feature(df)
-        df, feature_list = modify_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-        chosen_charts = common.visualize_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-
-    else:
-        pass
-
-    return chosen_charts
 
 
 def upload_intro(folder_path, key_suffix):
@@ -573,43 +260,47 @@ def upload_intro(folder_path, key_suffix):
 
 # TODO: Find out if there is a possibility to calculate physico-chemical
 # properties for genes as it is done with proteins
-# TODO: Create annotated data properties data set selection
+# TODO: Refactor next three omics into one function in common and use it for
+# example 1 as well. MAX PRIORITY
 def upload_genomics():
     key_suffix = 'Genomics'
+    upload_folder_path = path_uploaded_genomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        path_uploaded_genomics, key_suffix)
+        upload_folder_path, key_suffix)
 
     if folder_path_or_df is None:
         return []
 
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        common.create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
-        chosen_charts = work_with_data_set(
+        chosen_charts = common.work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
     # IMPORTANT: Do not run. It takes too much RAM
     elif data_set_type == 'KEGG':
         file_name_type = common.show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        common.create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
-        chosen_charts = work_with_data_set(
+        chosen_charts = common.work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
     elif data_set_type == 'BINS':
         file_name_type = common.show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        common.create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
-        chosen_charts = work_with_data_set(
+        chosen_charts = common.work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
     else:
         common.show_data_set(folder_path_or_df)
-        chosen_charts = work_with_data_set(
-            folder_path_or_df, 'Calculated', path_uploaded_genomics,
-            key_suffix)
+        chosen_charts = common.work_with_data_set(
+            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
 
     return chosen_charts
 
@@ -617,16 +308,18 @@ def upload_genomics():
 def upload_proteomics():
 
     key_suffix = 'Proteomics'
+    upload_folder_path = path_uploaded_proteomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        path_uploaded_proteomics, key_suffix)
+        upload_folder_path, key_suffix)
 
     if folder_path_or_df is None:
         return []
 
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        common.create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
         # Calculating additional physico-chemical properties
         chosen_charts = []
@@ -635,17 +328,16 @@ def upload_proteomics():
             value=False, key='Additional_check_' + key_suffix)
 
         if additional_check:
-            chosen_charts = work_with_data_set(
+            chosen_charts = common.work_with_data_set(
                 None, 'Calculate_now', folder_path_or_df, key_suffix)
 
-        chosen_charts += work_with_data_set(
+        chosen_charts += common.work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
     else:
         common.show_data_set(folder_path_or_df)
-        chosen_charts = work_with_data_set(
-            folder_path_or_df, 'Calculated', path_uploaded_proteomics,
-            key_suffix)
+        chosen_charts = common.work_with_data_set(
+            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
 
     return chosen_charts
 
@@ -653,25 +345,26 @@ def upload_proteomics():
 def upload_transcriptomics():
 
     key_suffix = 'Transcriptomics'
+    upload_folder_path = path_uploaded_transcriptomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        path_uploaded_transcriptomics, key_suffix)
+        upload_folder_path, key_suffix)
 
     if folder_path_or_df is None:
         return []
 
     if data_set_type == 'FASTA':
         file_name_type = common.show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        common.create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
-        chosen_charts = work_with_data_set(
+        chosen_charts = common.work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
 
     else:
         common.show_data_set(folder_path_or_df)
-        chosen_charts = work_with_data_set(
-            folder_path_or_df, 'Calculated', path_uploaded_transcriptomics,
-            key_suffix)
+        chosen_charts = common.work_with_data_set(
+            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
 
     return chosen_charts
 
@@ -682,14 +375,7 @@ def upload_metabolomics():
 
     df = upload_intro(path_uploaded_metabolomics, key_suffix)
 
-    if df is None:
-        return []
-
-    common.show_data_set(df)
-    chosen_charts = work_with_data_set(
-        df, 'Calculated', path_uploaded_metabolomics, key_suffix)
-
-    return chosen_charts
+    return common.work_with_csv(df, path_uploaded_metabolomics, key_suffix)
 
 
 def upload_phy_che():
@@ -698,25 +384,18 @@ def upload_phy_che():
 
     df = upload_intro(path_uploaded_phy_che, key_suffix)
 
-    if df is None:
-        return []
-
-    common.show_data_set(df)
-    chosen_charts = work_with_data_set(
-        df, 'Calculated', path_uploaded_phy_che, key_suffix)
-
-    return chosen_charts
+    return common.work_with_csv(df, path_uploaded_phy_che, key_suffix)
 
 
 def create_main_upload():
 
     st.header('Dataset')
 
-    upload_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
-                         'Physico-chemical', 'Transcriptomics']
+    omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
+                  'Physico-chemical', 'Transcriptomics']
 
     choose_omics = st.multiselect('Which omic data do you want to upload:',
-                                  upload_omics_list)
+                                  omics_list)
 
     num_of_columns = len(choose_omics)
     charts = []  # An empty list to hold all pairs (visualizations, key)

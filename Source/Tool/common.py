@@ -1,18 +1,20 @@
 import os
 import math
 import random
+import shutil
 import visualize
 import pandas as pd
 import numpy as np
 import altair as alt
 import datetime as dt
 import streamlit as st
+from tempfile import NamedTemporaryFile
+from gensim.models import Word2Vec
 from sklearn.cluster import KMeans, OPTICS
 from sklearn import preprocessing
 from sklearn import metrics
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from gensim.models import Word2Vec
 from scipy.spatial.distance import jaccard, pdist, squareform
 
 
@@ -380,81 +382,6 @@ def train_model(w2v_model, epochs=EPOCHS, path_fasta=path_genomics_78, end=25):
     return w2v_model
 
 
-def example_1_import_kegg_and_create_df(end=51, path_fasta=path_genomics_78,
-                                        path_all_keggs=path_genomics_kegg):
-
-    print("Importing KEGG data")
-
-    # There are 51 files for each day, in which there are KEGG IDs for each
-    # genome collected that day I have to traverse every KEGG file, and create
-    # DataFrame for each and every one
-
-    kegg_files = [i for i in os.listdir(path_all_keggs) if
-                  (i.endswith("besthits") and i.startswith("D"))]
-    kegg_files.sort()
-    rmags_78_names = [os.path.splitext(i)[0] for i in os.listdir(path_fasta) if
-                      (i.endswith("fa") and i.startswith("D"))]
-    rmags_78_names.sort()
-
-    kegg_data_list = []
-
-    # This was done so that I could work with first 100 files only. Otherwise,
-    # I should just remove: i, and enumerate
-    for i, kegg_file_name in enumerate(kegg_files):
-
-        if i == end:
-            break
-
-        else:
-            # Now I create a DataFrame out of it and save it in the list of
-            # DataFrames
-            tmp_df = pd.read_csv(os.path.join(path_genomics_kegg,
-                                              kegg_file_name), delimiter="\t")
-            tmp_filter = (
-                tmp_df["Gene"].apply(
-                    lambda x: str(x).split("_PROKKA")[0]).isin(rmags_78_names))
-
-            tmp_df = tmp_df[tmp_filter]
-
-            tmp_df["Gene"] = tmp_df["Gene"].apply(
-                lambda x: str(x).split("_")[0] + "_" + str(x).split("_")[1]
-            )
-            tmp_df["ID"] = tmp_df["ID"].apply(lambda x: str(x).split(":")[1])
-            tmp_df.drop(["maxScore", "hitNumber"], axis=1, inplace=True)
-            tmp_df.reset_index(drop=True, inplace=True)
-
-            kegg_data_list.append(tmp_df)
-
-    print("Finished importing")
-    return example_1_create_kegg_matrix(kegg_data_list, path_fasta)
-
-
-def example_1_create_kegg_matrix(list_data, path_fasta=path_genomics_78):
-
-    print("Creating KEGG matrix")
-
-    rmags_78_names = [
-        os.path.splitext(i)[0]
-        for i in os.listdir(path_fasta)
-        if (i.endswith("fa") and i.startswith("D"))
-    ]
-    rmags_78_names.sort()
-
-    result_matrix_df = pd.DataFrame(columns=rmags_78_names)
-
-    for i in list_data:
-        tmp_df = i.value_counts().reset_index()
-
-        for i, row in tmp_df.iterrows():
-            result_matrix_df.at[row["ID"], row["Gene"]] = row[0]
-
-    result_matrix_df.fillna(0, inplace=True)
-    result_matrix_df = result_matrix_df.transpose()
-
-    print("Finished creating")
-    return result_matrix_df.sort_index()
-
-
 def get_number_of_clusters(data):
 
     if 'DateTime' in data.columns.to_list():
@@ -506,48 +433,6 @@ def create_pairwise_jaccard(data):
     result = squareform(pdist(tmp_data.astype(bool), jaccard))
 
     return pd.DataFrame(result, index=data.index, columns=data.index)
-
-
-def example_1_create_annotated_data_set():
-
-    rmags_names = [os.path.splitext(i)[0] for i in os.listdir(path_genomics_78)
-                   if (i.endswith("fa") and i.startswith("D"))]
-    rmags_names.sort()
-    relevant_files = [i for i in os.listdir(path_genomics_bins)
-                      if i.startswith(tuple(rmags_names))]
-    relevant_files.sort()
-
-    # Creating nested dictionary where each rmag has a dict of products and
-    # their number of occurence for that rmag
-    final_dict = {}
-    rmags_names.sort()
-    for i in rmags_names:
-        final_dict[i] = {}
-    # Traversing every annotation file, line by line, and saving only 'product'
-    # column
-    for annotation_file in relevant_files:
-        with open(os.path.join(path_genomics_bins, annotation_file), 'r')\
-                as input_file:
-
-            rmag_name = os.path.splitext(annotation_file)[0]
-            for line in input_file:
-                product = line.split('product=')[-1].rstrip()
-                if product not in final_dict[rmag_name]:
-                    final_dict[rmag_name][product] = 0
-                else:
-                    final_dict[rmag_name][product] += 1
-
-    result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
-
-    # I also save only first 10 products in regard to the number of occurence
-    # This is done for easier visualization
-    sorted_columns = result_df.sum(axis=0).sort_values(ascending=False)
-    sorted_columns = sorted_columns.index.tolist()
-    result_df = result_df[sorted_columns]
-    top_10_result_df = result_df.iloc[:, :10]
-    top_10_result_df['Other'] = result_df.iloc[:, 10:].sum(axis=1)
-
-    return result_df, top_10_result_df
 
 
 def cache_dataframe(dataframe, num_of_example, name):
@@ -669,214 +554,6 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
             os.path.join(unpack_archive_path, files_list_new[i]),
             os.path.join(unpack_archive_path,
                          list_of_new_names[i] + '.' + imported_file_extension))
-
-    return None
-
-
-def example_1_calc_genomics():
-
-    kegg_matrix_df = example_1_import_kegg_and_create_df(
-        end=ALL_DAYS, path_fasta=path_genomics_78,
-        path_all_keggs=path_genomics_kegg)
-
-    fasta_names = [i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))]
-    fasta_names.sort()
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
-    temporal_kegg_matrix_df = kegg_matrix_df.copy()
-    temporal_kegg_matrix_df.insert(0, 'DateTime', list_of_dates)
-
-    cache_dataframe(temporal_kegg_matrix_df, EX_1, 'genomics_kegg_temporal')
-
-    ##########
-
-    # KEGG examination but with pairwise Jaccard distance matrix(as
-    #   seen in paper)
-    # kegg_pairwise = create_pairwise_jaccard(kegg_matrix_df)
-    # kegg_mds_chart = visualize.visualize_with_mds(
-    #    kegg_pairwise, START_DATE, END, path_genomics_78)
-
-    #######
-
-    final_model, fasta_names =\
-        import_mags_and_build_model(
-            end=END, path_fasta=path_genomics_78)
-
-    # Train model. It tooks ~10 minutes for END = 25 amount of MAGs
-    final_model = train_model(final_model, epochs=EPOCHS, end=END)
-
-    final_model.save(
-        os.path.join(path_model_save_root, "genomics_model_78.saved"))
-
-    # Now I should vectorize documents with this model. For further use, I
-    # could save this model's weights, and use it to vectorize all mags. That
-    # would take a lot, but every MAG will have its vector representation
-    # > This could be done by importing one MAG at a time, then tokenizing
-    # > it(like before), then getting vector representations of that MAG's
-    # > sentences(genomes) and then finding the vector representation of the
-    # > whole MAG(document). If I do that for one MAG at a time, There is no
-    # > need to worry about memory
-    #################
-    list_of_mag_vectors = vectorize_mags(
-        final_model, path_fasta=path_genomics_78, end=END)
-    mags_df = pd.DataFrame(list_of_mag_vectors)
-    cache_dataframe(mags_df, EX_1, 'genomics_mags')
-
-    mags_df = get_cached_dataframe(EX_1, 'genomics_mags')
-
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
-    temporal_mags_df = mags_df.copy()
-    temporal_mags_df.insert(0, 'DateTime', list_of_dates)
-    cache_dataframe(temporal_mags_df, EX_1, 'genomics_mags_temporal')
-
-    #################
-    annotated_mags_df, top_10_annotated_mags_df =\
-        example_1_create_annotated_data_set()
-
-    list_of_dates = create_temporal_column(fasta_names, START_DATE, END, 'W')
-    temporal_annotated_mags_df = annotated_mags_df.copy()
-    temporal_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
-    temporal_top_10_annotated_mags_df = top_10_annotated_mags_df.copy()
-    temporal_top_10_annotated_mags_df.insert(0, 'DateTime', list_of_dates)
-
-    cache_dataframe(temporal_annotated_mags_df, EX_1,
-                    'genomics_mags_annotated_temporal')
-    cache_dataframe(temporal_top_10_annotated_mags_df, EX_1,
-                    'genomics_mags_top_10_annotated_temporal')
-
-    return None
-
-
-def example_1_cluster_elbow():
-    # There is already a function cluster_data
-    # This should only be a wraper
-
-    return None
-
-
-# ---
-# # METABOLOMIC ANALYSIS
-# ---
-def example_1_calc_metabolomics():
-    # ## Importing Metabolomic data
-    metabolomics_file_name = os.path.join(
-        path_normalised_metabolomics,
-        os.listdir(path_normalised_metabolomics)[0])
-    metabolomics_df = pd.read_csv(metabolomics_file_name, delimiter="\t")
-
-    # ## Data preprocessing
-
-    metabolomics_df["date"] = pd.to_datetime(metabolomics_df["date"])
-    metabolomics_df.insert(0, "date", metabolomics_df.pop("date"))
-    metabolomics_df.sort_values("date", inplace=True, ignore_index=True)
-
-    cache_dataframe(metabolomics_df, EX_1, "metabolomics")
-
-    # Changing metabolite name if it is unknown
-    metabolomics_df.loc[
-        metabolomics_df["known_type"].eq("unknown"), "Metabolite"
-    ] = np.nan
-
-    print("Dataset uniqueness:")
-    print("\t1. Timestamps:", len(metabolomics_df["date"].unique()))
-    print("\t2. Metabolites:", len(metabolomics_df["Metabolite"].unique()))
-    print("\t3. Types:", len(metabolomics_df["type"].unique()))
-    print("\t4. Known types:", len(metabolomics_df["known_type"].unique()))
-    print("\t5. Ns:", len(metabolomics_df["N"].unique()))
-    print("\t6. Type 2s:", len(metabolomics_df["type2"].unique()))
-    print("\t7. Measurements:", len(metabolomics_df["measurement"].unique()))
-
-    # Saving the name column and removing unnecessairy columns metabolite_names
-    # = metabolomics_df['Metabolite'] metabolomics_df.drop(labels =
-    # ['Metabolite', 'tp', 'KEGG.Compound.ID', 'Chebi.Name',
-    # 'Chebi.Name_combined'], axis = 1, inplace = True)
-    metabolomics_df.drop(
-        labels=["tp", "KEGG.Compound.ID", "Chebi.Name", "Chebi.Name_combined"],
-        axis=1,
-        inplace=True,
-    )
-
-    # Dummy eencoding categorical data
-    scaled_metabolomics_df = pd.get_dummies(metabolomics_df,
-                                            columns=["type", "known_type", "N",
-                                                     "type2", "measurement"])
-
-    # Standardizing data
-    metabolomics_scaler = preprocessing.StandardScaler()
-    scaled_metabolomics_df[
-        ["means", "medians", "sds", "se", "ci"]
-    ] = metabolomics_scaler.fit_transform(
-        metabolomics_df[["means", "medians", "sds", "se", "ci"]]
-    )
-
-    metabolomics_df.dropna(inplace=True)
-    metabolomics_df.reset_index(drop=True, inplace=True)
-
-    return None
-
-
-# ---
-# # PROTEOMIC ANALYSIS
-# ---
-def example_1_calc_proteomics():
-    # ## Importing Proteomic data
-
-    # I could create something similar to Fig. 5 of the original paper, where I
-    # would calculate mean of different proteomic feature values for each rMAG
-    # calculated by days So I would have a table: date | feature 1 | feature 2
-    # | ... Where each feature is mean of all values for one day of each MAG in
-    # that rMAG
-
-    proteomics_data = import_proteomics(end=num_of_proteomics)
-
-    # I have to add temporality to this data set, according to file names
-    fasta_files = [i for i in os.listdir(path_proteomics_78)
-                   if (i.endswith("faa"))]
-    fasta_files.sort()
-    list_of_dates = create_temporal_column(fasta_files, START_DATE, END, 'W')
-    proteomics_data.insert(0, 'DateTime', list_of_dates)
-
-    # I will save this dataframe to show to the end-user
-    cache_dataframe(proteomics_data, EX_1, "proteomics")
-
-    return None
-
-
-# ---
-# # PHYSICO-CHEMICAL ANALYSIS
-# ---
-def example_1_calc_phy_che():
-    # ## Importing Physico-chemical data
-    phy_che_file_name = os.path.join(
-        path_physico_chemical,
-        [
-            i
-            for i in os.listdir(path_physico_chemical)
-            if (i.endswith((".tsv", ".csv")))
-        ][1],
-    )
-    phy_che_df = pd.read_csv(phy_che_file_name, decimal=",")
-
-    # ## Data preprocessing
-    phy_che_df.drop(index=0, axis=1, inplace=True)
-    phy_che_df["Date"] = pd.to_datetime(phy_che_df["Date"])
-    phy_che_df["Time"] = pd.to_timedelta(phy_che_df["Time"], unit="h")
-
-    filtered_phy_che_df = phy_che_df[
-                                     (phy_che_df["Date"] >= "2011-03-21") &
-                                     (phy_che_df["Date"] <= "2012-05-03")]
-    tmp_column = pd.Series(filtered_phy_che_df["Date"] +
-                           filtered_phy_che_df["Time"])
-
-    filtered_phy_che_df.drop(["Date", "Time"], axis=1, inplace=True)
-    filtered_phy_che_df.reset_index(inplace=True, drop=True)
-    filtered_phy_che_df = filtered_phy_che_df.apply(
-        lambda x: pd.to_numeric(x.astype(str).str.replace(",", "."))
-    )  # , errors='coerce'))
-    filtered_phy_che_df.insert(0, "DateTime", tmp_column.values)
-
-    # I will save this dataframe to show to the end-user
-    cache_dataframe(filtered_phy_che_df, EX_1, "phy_che")
 
     return None
 
@@ -1139,6 +816,64 @@ def fix_archive_file_names(start_date, unpack_archive_path):
     return None
 
 
+@st.cache(suppress_st_warning=True)
+def import_archive(imported_file, extract_folder_path):
+
+    # Creating the file from BytesIO stream
+    tmp_file = NamedTemporaryFile(delete=False, suffix=imported_file.name)
+    tmp_file_path = tmp_file.name
+    tmp_file.write(imported_file.getvalue())
+    tmp_file.flush()
+    tmp_file.close()
+
+    index_of_dot = imported_file.name.index('.')
+    return_file_name_no_ext = imported_file.name[:index_of_dot]
+
+    try:
+        shutil.unpack_archive(tmp_file_path, extract_dir=extract_folder_path)
+        return os.path.join(extract_folder_path, return_file_name_no_ext)
+
+    except ValueError:
+        st.error('Error while unpacking the archive')
+        return None
+
+    finally:
+        st.success('Data set succesfully uploaded')
+        os.remove(tmp_file_path)
+
+
+# This function changes all file names of 'D' or 'W' type into timestamp type
+# This is done in place for the unpacked uploaded directory
+def create_zip_temporality(folder_path, file_name_type, key_suffix):
+
+    if file_name_type in ['D', 'W']:
+        start_date = st.date_input(
+            'Insert start date for your data set:',
+            dt.datetime.strptime("2011-03-21", "%Y-%m-%d"),
+            key='Date_input_' + key_suffix)
+
+        # This is only needed for example 1 data set
+        # TODO: Change this for production data sets
+        # BUG: Change this for production data sets
+        example_1_fix_archive_file_names(start_date, folder_path)
+        # fix_archive_file_names(start_date, folder_path)
+        # After this step, every file has a timestamp as a name
+
+    else:
+        # Check if file name starts with a valid timestamp
+        tmp_file_name = os.listdir(folder_path)[0].split('.')[0]
+        try:
+            dt.datetime.strptime(tmp_file_name, '%Y-%m-%d')
+
+        except ValueError:
+            st.error(
+                '''File names are not valid. File names should start with "D"
+                   or "W", or be of a timestamp type (%Y-%m-%d.fa[a])''')
+            st.stop()
+
+    return None
+
+
 def find_temporal_feature(df):
     feature_list = df.columns.astype(str).to_list()
     temporal_feature = None
@@ -1199,6 +934,270 @@ def find_temporal_feature(df):
         st.error('Datetime column not detected.')
         st.stop()
         return None, None
+
+
+def modify_data_set(df, temporal_column, feature_list, key_suffix):
+
+    columns_to_remove = st.multiselect(
+        'Select columns to remove', feature_list,
+        key='Col_remove_' + key_suffix)
+
+    if len(columns_to_remove) != 0:
+        df.drop(columns_to_remove, axis=1, inplace=True)
+        feature_list = [i for i in feature_list if i not in columns_to_remove]
+
+    rows_to_remove_text = st.text_input(
+        'Insert row numbers to remove, seperated by comma. See help (right)\
+         for example.', value='', key='Row_remove_' + key_suffix,
+        help='Example: 42 or 2, 3, 15, 55')
+
+    if rows_to_remove_text != '':
+        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
+        # First we check if input is good or not
+        if any(not row.isnumeric() for row in rows_to_remove):
+            st.error('Wrong number input')
+            st.stop()
+
+        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
+        df.drop(rows_to_remove, axis=0, inplace=True)
+
+    time_to_remove_text = st.text_input(
+        'Insert the begining and the end of a time period to keep, seperated\
+         by comma. See help (right) for example.',
+        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
+        help='Example: 2011-03-21, 2012-05-03')
+
+    if time_to_remove_text != '':
+        try:
+            time_to_remove = [dt.datetime.strptime(
+                i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
+            df.drop(df[(df[temporal_column] < time_to_remove[0]) |
+                       (df[temporal_column] > time_to_remove[1])].index,
+                    inplace=True)
+        except ValueError:
+            st.error('Wrong date input')
+            st.stop()
+
+    df.dropna(inplace=True)
+    df.reset_index(inplace=True, drop=True)
+    df[feature_list] = df[feature_list].apply(
+        pd.to_numeric)
+    df = df.convert_dtypes()
+
+    return df, feature_list
+
+
+@st.cache
+def work_with_fasta(data_set_type, folder_path, key_suffix):
+
+    # TODO: Allow user to change number of epochs for training
+    MODEL_NAME = 'w2v_model.saved'
+    MODEL_PATH = os.path.join(os.path.split(folder_path)[0], MODEL_NAME)
+    fasta_files = os.listdir(folder_path)
+    num_of_fasta_files = len(fasta_files)
+
+    if os.path.exists(MODEL_PATH):
+        w2v_model = Word2Vec.load(MODEL_PATH)
+
+    # If we already created a model, we won't do it again
+    else:
+        w2v_model, fasta_files = import_mags_and_build_model(
+            num_of_fasta_files, folder_path)
+        w2v_model = train_model(
+            w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
+        w2v_model.save(MODEL_PATH)
+
+    list_of_vectors = vectorize_mags(
+        w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
+    df = pd.DataFrame(list_of_vectors)
+    list_of_dates = create_temporal_column(
+        fasta_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
+@st.cache
+def work_with_kegg(data_set_type, folder_path, key_suffix):
+
+    besthits_files = os.listdir(folder_path)
+    num_of_besthits_files = len(besthits_files)
+    df = import_kegg_and_create_df(
+        end=num_of_besthits_files, path_all_keggs=folder_path)
+
+    return df
+
+
+@st.cache
+def work_with_bins(data_set_type, folder_path, key_suffix):
+
+    gff_files = os.listdir(folder_path)
+    num_of_gff_files = len(gff_files)
+
+    df = create_annotated_data_set(
+        end=num_of_gff_files, path_bins=folder_path)
+
+    list_of_dates = create_temporal_column(
+        gff_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
+@st.cache
+def work_calculate_proteomics(data_set_type, folder_path, key_suffix):
+
+    fasta_files = os.listdir(folder_path)
+    num_of_fasta_files = len(fasta_files)
+
+    df = import_proteomics(
+        path_proteomics=folder_path, end=num_of_fasta_files)
+
+    list_of_dates = create_temporal_column(
+        fasta_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
+def work_with_csv(df, folder_path, key_suffix):
+
+    if df is None:
+        return []
+
+    show_data_set(df)
+    chosen_charts = work_with_data_set(
+        df, 'Calculated', folder_path, key_suffix)
+
+    return chosen_charts
+
+
+def work_with_data_set(df, data_set_type, folder_path, key_suffix):
+
+    chosen_charts = []
+
+    if data_set_type == 'FASTA':
+        VECTORIZED_DATA_SET_NAME = 'vectorized.pkl'
+        VECTORIZED_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], VECTORIZED_DATA_SET_NAME)
+
+        if os.path.exists(VECTORIZED_DATA_SET_PATH):
+            df = get_cached_dataframe(None, VECTORIZED_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Vectorizing FASTA files using W2V...'):
+                df = work_with_fasta(
+                    data_set_type, folder_path, key_suffix)
+                cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
+
+        show_calculated_data_set(df, 'Embedded FASTA files')
+        labels_list = show_clustering_info(df, key_suffix)
+
+        # Traversing pairs in list
+        for i in labels_list:
+            temporal_feature, feature_list = find_temporal_feature(df)
+            feature_list = i[0]
+            df[i[0]] = i[1]
+            chosen_charts += visualize_data_set(
+                    df, temporal_feature, feature_list,
+                    'Cluster_FASTA_' + key_suffix + '_' + i[0])
+
+    elif data_set_type == 'KEGG':
+        KEGG_DATA_SET_NAME = 'kegg.pkl'
+        KEGG_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], KEGG_DATA_SET_NAME)
+
+        if os.path.exists(KEGG_DATA_SET_PATH):
+            df = get_cached_dataframe(None, KEGG_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Creating KO matrix...'):
+                df = work_with_kegg(data_set_type, folder_path, key_suffix)
+                cache_dataframe(df, None, KEGG_DATA_SET_PATH)
+
+        show_calculated_data_set(df, 'Calculated KO matrix')
+        labels_list = show_clustering_info(df, key_suffix)
+
+        # Traversing pairs in list
+        for i in labels_list:
+            temporal_feature, feature_list = find_temporal_feature(df)
+            feature_list = i[0]
+            df[i[0]] = i[1]
+            chosen_charts += visualize_data_set(
+                    df, temporal_feature, feature_list,
+                    'Cluster_KEGG_' + key_suffix + '_' + i[0])
+
+    elif data_set_type == 'BINS':
+        BINS_DATA_SET_NAME = 'bins.pkl'
+        BINS_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], BINS_DATA_SET_NAME)
+
+        if os.path.exists(BINS_DATA_SET_PATH):
+            df = get_cached_dataframe(None, BINS_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Creating KO matrix...'):
+                df = work_with_bins(data_set_type, folder_path, key_suffix)
+                cache_dataframe(df, None, BINS_DATA_SET_PATH)
+
+        show_calculated_data_set(df, 'Imported bins')
+        df = fix_data_set(df)
+        temporal_feature, feature_list = find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+        chosen_charts = visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+    # TODO: This elif was never used and has to be checked ASAP
+    elif data_set_type == 'Calculated':
+        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+        CALCULATED_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], CALCULATED_DATA_SET_NAME)
+
+        df = fix_data_set(df)
+        temporal_feature, feature_list = find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+        if not os.path.exists(CALCULATED_DATA_SET_PATH):
+            cache_dataframe(df, None, CALCULATED_DATA_SET_PATH)
+
+        chosen_charts = visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+    elif data_set_type == 'Calculate_now':
+        CALCULATED_NOW_DATA_SET_NAME = 'calculated_now.pkl'
+        CALCULATED_NOW_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], CALCULATED_NOW_DATA_SET_NAME)
+
+        if os.path.exists(CALCULATED_NOW_DATA_SET_PATH):
+            df = get_cached_dataframe(
+                None, CALCULATED_NOW_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Calculating additional properties...'):
+                if key_suffix == 'Proteomics':
+                    df = work_calculate_proteomics(
+                        data_set_type, folder_path, key_suffix)
+                # TODO: Check what happens for other omics
+                # This is related to creating add. properties for genomics
+                else:
+                    pass
+
+                cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
+                show_calculated_data_set(df, 'Additional properties')
+
+        df = fix_data_set(df)
+        temporal_feature, feature_list = find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+        chosen_charts = visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+    else:
+        pass
+
+    return chosen_charts
 
 
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
