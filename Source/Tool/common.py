@@ -924,7 +924,7 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
     df.dropna(inplace=True)
     df.reset_index(inplace=True, drop=True)
     df[feature_list] = df[feature_list].apply(
-        pd.to_numeric)
+        pd.to_numeric, args=('ignore',))
     df = df.convert_dtypes()
 
     return df, feature_list
@@ -1219,7 +1219,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             if str(df[selected_feature].dtype) not in ['string']:  # ,'Int64']:
                 selected_color = st.color_picker(
-                    'Select line color', value='#000000')
+                    'Select line color', value='#000000',
+                    key=i + '_' + key_suffix)
 
             chosen_charts.append(
                 (visualize.time_feature(df, selected_feature, temporal_feature,
@@ -1236,12 +1237,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             feature_2 = st.selectbox('Select 2. feature', feature_list)
 
-            if feature_1 is None or feature_2 is None:
-                st.stop()
-
-            chosen_charts.append(
-                (visualize.two_features(df, feature_1, feature_2),
-                 i + '_' + key_suffix))
+            if feature_1 is not None and feature_2 is not None:
+                chosen_charts.append(
+                    (visualize.two_features(df, feature_1, feature_2),
+                     i + '_' + key_suffix))
 
         elif i == 'Scatter-plot matrix':
             target_feature = st.selectbox(
@@ -1250,15 +1249,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
 
-            if len(list_of_features) < 2:
-                st.stop()
-
-            list_of_features.append(target_feature)
-
-            chosen_charts.append(
-                    (visualize.scatter_matrix(df, list_of_features,
-                                              target_feature),
-                     i + '_' + key_suffix))
+            if len(list_of_features) >= 2:
+                list_of_features.append(target_feature)
+                chosen_charts.append(
+                        (visualize.scatter_matrix(df, list_of_features,
+                                                  target_feature),
+                         i + '_' + key_suffix))
 
         elif i == 'Multiple features parallel chart':
             if temporal_feature is not None:
@@ -1275,15 +1271,13 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             list_of_features = st.multiselect('Choose at least 2 features',
                                               feature_list)
 
-            if len(list_of_features) < 2:
-                st.stop()
+            if len(list_of_features) >= 2:
+                list_of_features.append(target_feature)
+                chosen_charts.append(
+                        (visualize.parallel_coordinates(df, list_of_features,
+                                                        target_feature),
+                            i + '_' + key_suffix))
 
-            list_of_features.append(target_feature)
-
-            chosen_charts.append(
-                    (visualize.parallel_coordinates(df, list_of_features,
-                                                    target_feature),
-                     i + '_' + key_suffix))
             # st.altair_chart(
             #    visualize.parallel_coordinates(df, list_of_features,
             #                                target_feature),

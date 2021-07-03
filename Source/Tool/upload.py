@@ -6,8 +6,9 @@ import pandas as pd
 
 
 # TODO: Implement removing previously extracted archives and files
-# it should be done at the end of tool in main
-# Take care of everything
+# it should be done at the end of a session. The session feature was
+# introduced to streamlit in 84.0 version, and should be used for this.
+# Info: https://blog.streamlit.io/session-state-for-streamlit/
 
 type_list_csv = ['csv', 'tsv']
 type_list_zip = []
@@ -20,7 +21,6 @@ path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
 path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')
 path_uploaded_metabolomics = os.path.join(path_uploaded, 'metabolomics')
 path_uploaded_phy_che = os.path.join(path_uploaded, 'phy_che')
-path_ramdisk = os.path.join('dev', 'shm')
 
 path_uploaded_dict = {
     'Genomics': path_uploaded_genomics,
@@ -31,7 +31,7 @@ path_uploaded_dict = {
 }
 
 
-def import_csv(key_suffix):
+def upload_csv(key_suffix):
     upload_text_csv = '''Upload your data set here. Maximum size is 200MB'''
 
     imported_file = st.file_uploader(
@@ -74,7 +74,7 @@ def import_csv(key_suffix):
         return None
 
 
-def import_multiple(key_suffix):
+def upload_multiple(key_suffix):
     # TODO: Check text messages and change where neccessary
     upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
@@ -210,7 +210,7 @@ def import_multiple(key_suffix):
                 key='Upload_file_' + key_suffix)
 
         else:
-            return (import_csv(key_suffix),
+            return (upload_csv(key_suffix),
                     available_data_set_types[key_suffix]
                     [selected_data_set_type])
 
@@ -240,9 +240,10 @@ def upload_intro(folder_path, key_suffix):
             folder_path, CALCULATED_DATA_SET_NAME)
 
         if os.path.exists(CALCULATED_DATA_SET_PATH):
-            df = common.cache_dataframe(None, CALCULATED_DATA_SET_PATH)
+            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
         else:
-            df = import_csv(key_suffix)
+            df = upload_csv(key_suffix)
+            common.cache_dataframe(df, CALCULATED_DATA_SET_PATH)
 
         if df is None:
             st.warning('Upload your data set')
@@ -250,7 +251,7 @@ def upload_intro(folder_path, key_suffix):
         return df
 
     else:
-        df, data_set_type = import_multiple(key_suffix)
+        df, data_set_type = upload_multiple(key_suffix)
 
         if df is None:
             st.warning('Upload your data set')

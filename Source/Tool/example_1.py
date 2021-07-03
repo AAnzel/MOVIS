@@ -17,194 +17,122 @@ path_example_1_phy_che = os.path.join(
 path_example_1_genomics_fasta = os.path.join(
     path_example_1_genomics, 'rmags_filtered')
 path_example_1_genomics_kegg = os.path.join(path_example_1_genomics, 'KEGG')
-path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'BINS')
-
-path_example_1_metabolomics = os.path.join(
-    path_example_1_root_data, "Metabolomics", "Normalised_Tables"
-)
-path_example_1_proteomics = os.path.join(
-    path_example_1_root_data, "Proteomics", "set_of_78")
-
-path_example_1_phy_che = os.path.join(
-    path_example_1_root_data, "PhysicoChemical")
-
-path_example_1_dict = {
-    'Genomics': path_example_1_genomics,
-    'Proteomics': path_example_1_proteomics,
-    'Transcriptomics': path_example_1_transcriptomics,
-    'Metabolomics': path_example_1_metabolomics,
-    'Physico-chemical': path_example_1_phy_che
-}
+path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'Bins')
+path_example_1_proteomics_fasta = os.path.join(
+    path_example_1_proteomics, 'set_of_78')
 
 
-def get_data_set(omic_name):
+def upload_multiple(key_suffix):
+    # TODO: Change for transcriptomics and add more type options
+    available_data_set_types = {
+        'Genomics': {
+            'Raw FASTA files': 'FASTA',
+            'KEGG annotation files': 'KEGG',
+            'BINS annotation files': 'BINS'},
+        'Proteomics': {
+            'Raw FASTA files': 'FASTA'}
+    }
 
-    spinner_text_map =\
-        {'genomics_mags': 'Embedding MAGs into vectors...',
-         'genomics_mags_temporal': 'Embedding MAGs into vectors...',
-         'genomics_mags_temporal_PCA': 'Embedding MAGs into vectors...',
-         'genomics_kegg_temporal': 'Creating KO dataset...',
-         'genomics_mags_annotated_temporal': 'Creating annotation dataset...',
-         'genomics_mags_top_10_annotated_temporal': 'Creating annotation\
-                                                     dataset...',
-         'proteomics': 'Creating additional data set...',
-         'metabolomics': 'Creating additional data set...',
-         'phy_che': 'Creating additional data set...'}
+    selected_data_set_type = st.selectbox(
+        'What kind of data set do you want to upload?',
+        list(available_data_set_types[key_suffix].keys())
+    )
 
-    with st.spinner(spinner_text_map[omic_name]):
-        df = common.get_cached_dataframe(common.EX_1, omic_name)
+    if key_suffix == 'Genomics':
+        if selected_data_set_type == list(
+                available_data_set_types[key_suffix].keys())[0]:
 
-    # Fixing dataframe columns
-    df = common.fix_dataframe_columns(df)
+            return_path = path_example_1_genomics_fasta
 
-    return df
+        elif selected_data_set_type == list(
+                available_data_set_types[key_suffix].keys())[1]:
+
+            return_path = path_example_1_genomics_kegg
+
+        else:
+            return_path = path_example_1_genomics_bins
+
+    elif key_suffix == 'Proteomics':
+        return_path = path_example_1_proteomics_fasta
+
+    # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
+    else:
+        pass
+
+    return (return_path,
+            available_data_set_types[key_suffix][selected_data_set_type])
+
+
+def upload_intro(folder_path, key_suffix):
+    st.header(key_suffix)
+    st.markdown('')
+
+    df = None
+
+    if key_suffix in ['Metabolomics', 'Physico-chemical']:
+
+        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+        CALCULATED_DATA_SET_PATH = os.path.join(
+            folder_path, CALCULATED_DATA_SET_NAME)
+
+        if os.path.exists(CALCULATED_DATA_SET_PATH):
+            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
+        else:
+            st.error('Wrong cache path')
+            st.stop()
+
+        return df
+
+    else:
+        df, data_set_type = upload_multiple(key_suffix)
+
+        if df is None:
+            st.warning('Upload your data set')
+
+        return df, data_set_type
 
 
 def example_1_genomics():
-    st.header('Genomics')
-    with st.spinner('Showing folder structure'):
-        st.code('''rmags_filtered/
-            ├── D03_O1.31.2.fa
-            ├── D04_G2.13.fa
-            ├── D04_G2.5.fa
-            ├── D04_L6.fa
-            ├── D04_O2.19.fa
-            ├── D05_G3.14.1.fa
-            ├── D05_G3.4.fa
-            ├── D05_L3.17.fa
-            ├── D08_G1.16.fa
-            ├── D08_O6.fa
-            ...
-                ''')
+    key_suffix = 'Genomics'
+    cache_folder_path = path_example_1_genomics
 
-    # Here I should implement multiple select where I provide user with
-    # different choices for what kind of chart/computation the user wants
-    data_set_list = ['W2V embedded MAGs', 'KEGG matrix',
-                     'Product-annotated MAGs']
-    choose_data_set = st.multiselect('Which data set do you want to see:',
-                                     data_set_list)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    chosen_charts = []
-    for i in choose_data_set:
-        if i == 'W2V embedded MAGs':
-            df_1 = get_data_set('genomics_mags_temporal')
-            common.show_calculated_data_set(df_1, 'Embedded MAGs')
-            labels_list = common.show_clustering_info(df_1, 'Genomics_1')
-
-            # Traversing pairs in list
-            for i in labels_list:
-                temporal_feature, feature_list = common.find_temporal_feature(
-                    df_1)
-                feature_list = i[0]
-                df_1[i[0]] = i[1]
-                chosen_charts += common.visualize_data_set(
-                        df_1, temporal_feature, feature_list,
-                        'Cluster_Genomics_' + i[0])
-
-        elif i == 'KEGG matrix':
-            df_2 = get_data_set('genomics_kegg_temporal')
-            common.show_calculated_data_set(df_2, 'KO matrix')
-            labels_list = common.show_clustering_info(df_2, 'Genomics_2')
-
-            # Traversing pairs in list
-            for i in labels_list:
-                temporal_feature, feature_list = common.find_temporal_feature(
-                    df_2)
-                feature_list = i[0]
-                df_2[i[0]] = i[1]
-                chosen_charts += common.visualize_data_set(
-                        df_2, temporal_feature, feature_list,
-                        'Cluster_Genomics_' + i[0])
-
-        else:
-            tmp_df_3 = get_data_set('genomics_mags_annotated_temporal')
-            df_3 = get_data_set('genomics_mags_top_10_annotated_temporal')
-            common.show_calculated_data_set(tmp_df_3, 'Product annotations')
-
-            temporal_feature, feature_list = common.find_temporal_feature(df_3)
-            chosen_charts += common.visualize_data_set(
-                df_3, temporal_feature, feature_list, 'Genomics_3')
-
-    # I should put cluster charts here, however I have to run it first
-    # because I have rendered images and not altair charts
-    # st.altair_chart()
-
-    return chosen_charts
-
-
-def example_1_metabolomics():
-    st.header('Metabolomics')
-
-    # Here I show the head() of the data set and some summary() and info()
-    df = get_data_set('metabolomics')
-    common.show_data_set(df)
-
-    temporal_feature, feature_list = common.find_temporal_feature(df)
-
-    chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Metabolomics')
-
-    # Here I should implement multiple select where I provide user with
-    # different choices for what kind of chart/computation the user wants
-
-    return chosen_charts
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def example_1_proteomics():
-    st.header('Proteomics')
+    key_suffix = 'Proteomics'
+    cache_folder_path = path_example_1_proteomics
 
-    # TODO: Implement the same data set creation as with the genomics data
-    # Create a data set with w2v and then implement all data set visulizations
-    # as with the genomics data
-    with st.spinner('Showing folder structure'):
-        st.code('''set_of_78/
-            ├── D03_O1.31.2.faa
-            ├── D04_G2.13.faa
-            ├── D04_G2.5.faa
-            ├── D04_L6.faa
-            ├── D04_O2.19.faa
-            ├── D05_G3.14.1.faa
-            ├── D05_G3.4.faa
-            ├── D05_L3.17.faa
-            ├── D08_G1.16.faa
-            ├── D08_O6.faa
-            ...
-                ''')
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    # Here I show the head() of the data set and some summary() and info()
-    df = get_data_set('proteomics')
-    common.show_calculated_data_set(df, 'Protein properties')
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
-    temporal_feature, feature_list = common.find_temporal_feature(df)
 
-    chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Proteomics')
+def example_1_metabolomics():
+    key_suffix = 'Metabolomics'
+    cache_folder_path = path_example_1_metabolomics
 
-    # Here I should implement multiple select where I provide user with
-    # different choices for what kind of chart/computation the user wants
+    df = upload_intro(cache_folder_path, key_suffix)
 
-    return chosen_charts
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
 def example_1_phy_che():
-    st.header('Physico-chemical')
+    key_suffix = 'Physico-chemical'
+    cache_folder_path = path_example_1_phy_che
 
-    # Here I show the head() of the data set and some summary() and info()
-    df = get_data_set('phy_che')
-    common.show_data_set(df)
+    df = upload_intro(cache_folder_path, key_suffix)
 
-    temporal_feature, feature_list = common.find_temporal_feature(df)
-
-    chosen_charts = common.visualize_data_set(
-        df, temporal_feature, feature_list, 'Physico-Chemical')
-
-    # Here I should implement multiple select where I provide user with
-    # different choices for what kind of chart/computation the user wants
-
-    return chosen_charts
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
-def example_1():
+def create_main_example_1():
 
     col_1, col_2 = st.beta_columns(2)
 
