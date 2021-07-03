@@ -17,64 +17,26 @@ from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from scipy.spatial.distance import jaccard, pdist, squareform
 
-
-# Defining paths for each and every omic
-
-path_root_data = os.path.join(
-    "..", "..", "Data", "Extracted", "First source", "Databases"
-)
-
-path_cached_save_root = 'cached'
-
-path_all_fasta = os.path.join(path_root_data, "fasta_files", "AllBins")
-path_genomics_78 = os.path.join(path_root_data, "fasta_files",
-                                "rmags_filtered")
-path_genomics_kegg = os.path.join(path_root_data, "Annotations", "KEGG")
-path_genomics_bins = os.path.join(path_root_data, "Annotations", "Bins")
-
-path_normalised_metabolomics = os.path.join(
-    path_root_data, "Metabolomics", "Normalised_Tables"
-)
-path_proteomics_78 = os.path.join(path_root_data, "Proteomics", "set_of_78")
-
-path_physico_chemical = os.path.join(path_root_data, "PhysicoChemical")
-
-path_second_source = os.path.join("..", "..", "Data", "Extracted",
-                                  "Second source")
-
-path_model_save_root = os.path.join("..", "Saved_models")
-path_figures_save_root = os.path.join("..", "Output_figures")
-
-num_of_mags = len([i for i in os.listdir(path_genomics_78) if
-                   (i.endswith("fa") and i.startswith("D"))])
-num_of_proteomics = len([i for i in os.listdir(path_proteomics_78) if
-                         (i.endswith("faa") and i.startswith("D"))])
-
 SEED = 42
-END = num_of_mags
-ALL_DAYS = 51
 MAX_ROWS = 15000
-MAX_RANGE = 100
 EPOCHS = 10
 NUM_OF_WORKERS = 8
-START_DATE = dt.datetime.strptime("2011-03-21", "%Y-%m-%d")
 EX_1 = 1
 EX_2 = 2
 random.seed(SEED)
 np.random.seed(SEED)
-alt.data_transformers.enable(
-    "default", max_rows=MAX_ROWS
-)  # Important if you want to visualize datasets with >5000 samples
+
+# Important if you want to visualize datasets with >5000 samples
+alt.data_transformers.enable("default", max_rows=MAX_ROWS)
 
 
 # Functions below are shared among different omics Function that saves charts
 # from list_of_charts with names from list_of_names
-def save_charts(list_of_chart, list_of_names):
+def save_charts(list_of_chart, list_of_names, folder_path):
 
     for chart, name in zip(list_of_chart, list_of_names):
-        print(chart, name)
-        # altair_saver.save(chart, os.path.join (path_figures_save_root, name))
-        chart.save(os.path.join(path_figures_save_root, name))
+        # altair_saver.save(chart, os.path.join (folder_path, name))
+        chart.save(os.path.join(folder_path, name))
 
 
 # This function creates new dataframe with column that represent season
@@ -90,7 +52,7 @@ def season_data(data, temporal_column):
 
 
 # Everything below is used for proteomics data set exclusively
-def import_proteomics(end=25, path_proteomics=path_proteomics_78):
+def import_proteomics(end, path_proteomics):
 
     print("Importing proteomics data")
 
@@ -248,7 +210,7 @@ def vectorize_one_mag(one_mag, w2v_model):
 # Function that vectorizes a MAG (document) with a pretrained word2vec model.
 # It returns vector representation of a given MAG Vectorization is done by
 # averaging word (k-mer) vectors for the whole document (MAG)
-def vectorize_mags(w2v_model, path_fasta=path_genomics_78, end=25):
+def vectorize_mags(w2v_model, path_fasta, end):
 
     print("Vectorizing MAGs")
 
@@ -287,7 +249,7 @@ def vectorize_mags(w2v_model, path_fasta=path_genomics_78, end=25):
 
 # If one wants to import MAGs to train word2vec model, one should use only end
 # argument, so that first 'end' MAGs are used for training
-def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
+def import_mags_and_build_model(end, path_fasta):
 
     print("Importing MAGs and building model")
 
@@ -343,7 +305,7 @@ def import_mags_and_build_model(end=25, path_fasta=path_genomics_78):
     return w2v_model, fasta_files
 
 
-def train_model(w2v_model, epochs=EPOCHS, path_fasta=path_genomics_78, end=25):
+def train_model(w2v_model, path_fasta, end, epochs=EPOCHS):
 
     print("Starting model training")
 
@@ -435,33 +397,14 @@ def create_pairwise_jaccard(data):
     return pd.DataFrame(result, index=data.index, columns=data.index)
 
 
-def cache_dataframe(dataframe, num_of_example, name):
-    if num_of_example == EX_1:
-        dataframe.to_pickle(os.path.join(path_cached_save_root,
-                                         "example_1", "data_frames", name +
-                                         "_dataframe.pkl"))
-    elif num_of_example == EX_2:
-        dataframe.to_pickle(os.path.join(path_cached_save_root,
-                                         "example_2", "data_frames", name +
-                                         "_dataframe.pkl"))
-    else:
-        dataframe.to_pickle(name)
-
+def cache_dataframe(dataframe, folder_path):
+    dataframe.to_pickle(folder_path)
     return None
 
 
 @st.cache(allow_output_mutation=True)
-def get_cached_dataframe(num_of_example, name):
-    if num_of_example == EX_1:
-        return pd.read_pickle(os.path.join(path_cached_save_root,
-                                           "example_1", "data_frames", name +
-                                           "_dataframe.pkl")).convert_dtypes()
-    elif num_of_example == EX_2:
-        return pd.read_pickle(os.path.join(path_cached_save_root,
-                                           "example_2", "data_frames", name +
-                                           "_dataframe.pkl")).convert_dtypes()
-    else:
-        return pd.read_pickle(name).convert_dtypes()
+def get_cached_dataframe(folder_path):
+    return pd.read_pickle(folder_path).convert_dtypes()
 
 
 def fix_dataframe_columns(dataframe):
@@ -469,7 +412,7 @@ def fix_dataframe_columns(dataframe):
     old_columns = dataframe.columns.to_list()
     old_columns = [str(i) for i in old_columns]
     new_columns_map = {}
-    bad_symbols = ['[', ']', '.']
+    bad_symbols = ['[', ']', '.', ',', '{', '}']
 
     for column in old_columns:
         if any(char in column for char in bad_symbols):
@@ -663,7 +606,7 @@ def create_kegg_matrix(list_data, path_keggs):
     return result_matrix_df.sort_index()
 
 
-def import_kegg_and_create_df(end=51, path_all_keggs=path_genomics_kegg):
+def import_kegg_and_create_df(end, path_all_keggs):
 
     print("Importing KEGG data")
 
@@ -697,7 +640,7 @@ def import_kegg_and_create_df(end=51, path_all_keggs=path_genomics_kegg):
     return create_kegg_matrix(kegg_data_list, path_all_keggs)
 
 
-def create_annotated_data_set(end=51, path_bins=path_genomics_bins):
+def create_annotated_data_set(end, path_bins):
 
     print("Importing BIN annotated data set")
 
@@ -743,17 +686,17 @@ def create_annotated_data_set(end=51, path_bins=path_genomics_bins):
     return result_df
 
 
-def show_folder_structure(uploaded_folder_path):
+def show_folder_structure(folder_path):
 
     space = '    '
     tee = '├── '
     max_lines = 7
 
     uploaded_folder_name = os.path.basename(
-        os.path.normpath(uploaded_folder_path))
+        os.path.normpath(folder_path))
 
     folder_structure_text = uploaded_folder_name + '\n' + space
-    files_list = os.listdir(uploaded_folder_path)
+    files_list = os.listdir(folder_path)
     files_list.sort()
 
     for i in range(0, min(len(files_list), max_lines)):
@@ -1072,7 +1015,7 @@ def work_with_csv(df, folder_path, key_suffix):
     return chosen_charts
 
 
-def work_with_zip(folder_path_or_df, data_set_type, upload_folder_path,
+def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
                   key_suffix):
 
     chosen_charts = []
@@ -1102,7 +1045,7 @@ def work_with_zip(folder_path_or_df, data_set_type, upload_folder_path,
     else:
         show_data_set(folder_path_or_df)
         chosen_charts += work_with_data_set(
-            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
+            folder_path_or_df, 'Calculated', cache_folder_path, key_suffix)
 
     return chosen_charts
 
@@ -1117,13 +1060,13 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             os.path.split(folder_path)[0], VECTORIZED_DATA_SET_NAME)
 
         if os.path.exists(VECTORIZED_DATA_SET_PATH):
-            df = get_cached_dataframe(None, VECTORIZED_DATA_SET_PATH)
+            df = get_cached_dataframe(VECTORIZED_DATA_SET_PATH)
 
         else:
             with st.spinner('Vectorizing FASTA files using W2V...'):
                 df = work_with_fasta(
                     data_set_type, folder_path, key_suffix)
-                cache_dataframe(df, None, VECTORIZED_DATA_SET_PATH)
+                cache_dataframe(df, VECTORIZED_DATA_SET_PATH)
 
         show_calculated_data_set(df, 'Embedded FASTA files')
         labels_list = show_clustering_info(df, key_suffix)
@@ -1143,12 +1086,12 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             os.path.split(folder_path)[0], KEGG_DATA_SET_NAME)
 
         if os.path.exists(KEGG_DATA_SET_PATH):
-            df = get_cached_dataframe(None, KEGG_DATA_SET_PATH)
+            df = get_cached_dataframe(KEGG_DATA_SET_PATH)
 
         else:
             with st.spinner('Creating KO matrix...'):
                 df = work_with_kegg(data_set_type, folder_path, key_suffix)
-                cache_dataframe(df, None, KEGG_DATA_SET_PATH)
+                cache_dataframe(df, KEGG_DATA_SET_PATH)
 
         show_calculated_data_set(df, 'Calculated KO matrix')
         labels_list = show_clustering_info(df, key_suffix)
@@ -1168,12 +1111,12 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             os.path.split(folder_path)[0], BINS_DATA_SET_NAME)
 
         if os.path.exists(BINS_DATA_SET_PATH):
-            df = get_cached_dataframe(None, BINS_DATA_SET_PATH)
+            df = get_cached_dataframe(BINS_DATA_SET_PATH)
 
         else:
             with st.spinner('Creating KO matrix...'):
                 df = work_with_bins(data_set_type, folder_path, key_suffix)
-                cache_dataframe(df, None, BINS_DATA_SET_PATH)
+                cache_dataframe(df, BINS_DATA_SET_PATH)
 
         show_calculated_data_set(df, 'Imported bins')
         df = fix_data_set(df)
@@ -1195,7 +1138,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df, temporal_feature, feature_list, key_suffix)
 
         if not os.path.exists(CALCULATED_DATA_SET_PATH):
-            cache_dataframe(df, None, CALCULATED_DATA_SET_PATH)
+            cache_dataframe(df, CALCULATED_DATA_SET_PATH)
 
         chosen_charts = visualize_data_set(
             df, temporal_feature, feature_list, key_suffix)
@@ -1206,8 +1149,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             os.path.split(folder_path)[0], CALCULATED_NOW_DATA_SET_NAME)
 
         if os.path.exists(CALCULATED_NOW_DATA_SET_PATH):
-            df = get_cached_dataframe(
-                None, CALCULATED_NOW_DATA_SET_PATH)
+            df = get_cached_dataframe(CALCULATED_NOW_DATA_SET_PATH)
 
         else:
             with st.spinner('Calculating additional properties...'):
@@ -1219,7 +1161,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
                 else:
                     pass
 
-                cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
+                cache_dataframe(df, CALCULATED_NOW_DATA_SET_PATH)
 
         show_calculated_data_set(df, 'Additional properties')
         df = fix_data_set(df)

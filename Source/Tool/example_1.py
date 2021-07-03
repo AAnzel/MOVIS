@@ -1,6 +1,40 @@
+import os
 import streamlit as st
 import pandas as pd
 import common
+
+path_example_1_root_data = os.path.join('cached', 'example_1')
+path_example_1_genomics = os.path.join(path_example_1_root_data, 'genomics')
+path_example_1_proteomics = os.path.join(
+    path_example_1_root_data, 'proteomics')
+path_example_1_transcriptomics = os.path.join(
+    path_example_1_root_data, 'transcriptomics')
+path_example_1_metabolomics = os.path.join(
+    path_example_1_root_data, 'metabolomics')
+path_example_1_phy_che = os.path.join(
+    path_example_1_root_data, 'phy_che')
+
+path_example_1_genomics_fasta = os.path.join(
+    path_example_1_genomics, 'rmags_filtered')
+path_example_1_genomics_kegg = os.path.join(path_example_1_genomics, 'KEGG')
+path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'BINS')
+
+path_example_1_metabolomics = os.path.join(
+    path_example_1_root_data, "Metabolomics", "Normalised_Tables"
+)
+path_example_1_proteomics = os.path.join(
+    path_example_1_root_data, "Proteomics", "set_of_78")
+
+path_example_1_phy_che = os.path.join(
+    path_example_1_root_data, "PhysicoChemical")
+
+path_example_1_dict = {
+    'Genomics': path_example_1_genomics,
+    'Proteomics': path_example_1_proteomics,
+    'Transcriptomics': path_example_1_transcriptomics,
+    'Metabolomics': path_example_1_metabolomics,
+    'Physico-chemical': path_example_1_phy_che
+}
 
 
 def get_data_set(omic_name):

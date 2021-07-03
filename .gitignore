@@ -7,3 +7,4 @@ New_project*
 __pycache__/
 *.backup
 Source/Tool/uploaded/
+Source/Tool/cached/

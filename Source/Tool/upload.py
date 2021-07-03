@@ -264,57 +264,57 @@ def upload_intro(folder_path, key_suffix):
 # example 1 as well. MAX PRIORITY
 def upload_genomics():
     key_suffix = 'Genomics'
-    upload_folder_path = path_uploaded_genomics
+    cache_folder_path = path_uploaded_genomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        upload_folder_path, key_suffix)
+        cache_folder_path, key_suffix)
 
     return common.work_with_zip(
-        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_proteomics():
 
     key_suffix = 'Proteomics'
-    upload_folder_path = path_uploaded_proteomics
+    cache_folder_path = path_uploaded_proteomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        upload_folder_path, key_suffix)
+        cache_folder_path, key_suffix)
 
     return common.work_with_zip(
-        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_transcriptomics():
 
     key_suffix = 'Transcriptomics'
-    upload_folder_path = path_uploaded_transcriptomics
+    cache_folder_path = path_uploaded_transcriptomics
 
     folder_path_or_df, data_set_type = upload_intro(
-        upload_folder_path, key_suffix)
+        cache_folder_path, key_suffix)
 
     return common.work_with_zip(
-        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_metabolomics():
 
     key_suffix = 'Metabolomics'
-    upload_folder_path = path_uploaded_metabolomics
+    cache_folder_path = path_uploaded_metabolomics
 
-    df = upload_intro(upload_folder_path, key_suffix)
+    df = upload_intro(cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, upload_folder_path, key_suffix)
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
 def upload_phy_che():
 
     key_suffix = 'Physico-chemical'
-    upload_folder_path = path_uploaded_phy_che
+    cache_folder_path = path_uploaded_phy_che
 
-    df = upload_intro(upload_folder_path, key_suffix)
+    df = upload_intro(cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, upload_folder_path, key_suffix)
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
 def create_main_upload():
