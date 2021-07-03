@@ -201,8 +201,8 @@ def import_multiple(key_suffix):
             help=help_text, key='Upload_file_' + key_suffix)
 
     elif key_suffix == 'Proteomics':
-        if selected_data_set_type ==\
-         list(available_data_set_types[key_suffix].keys())[0]:
+        if selected_data_set_type == list(
+                available_data_set_types[key_suffix].keys())[0]:
             imported_file = st.file_uploader(
                 upload_text_zip_fasta[key_suffix], type=type_list_zip,
                 accept_multiple_files=False,
@@ -269,40 +269,8 @@ def upload_genomics():
     folder_path_or_df, data_set_type = upload_intro(
         upload_folder_path, key_suffix)
 
-    if folder_path_or_df is None:
-        return []
-
-    if data_set_type == 'FASTA':
-        file_name_type = common.show_folder_structure(folder_path_or_df)
-        common.create_zip_temporality(
-            folder_path_or_df, file_name_type, key_suffix)
-
-        chosen_charts = common.work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
-
-    # IMPORTANT: Do not run. It takes too much RAM
-    elif data_set_type == 'KEGG':
-        file_name_type = common.show_folder_structure(folder_path_or_df)
-        common.create_zip_temporality(
-            folder_path_or_df, file_name_type, key_suffix)
-
-        chosen_charts = common.work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
-
-    elif data_set_type == 'BINS':
-        file_name_type = common.show_folder_structure(folder_path_or_df)
-        common.create_zip_temporality(
-            folder_path_or_df, file_name_type, key_suffix)
-
-        chosen_charts = common.work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
-
-    else:
-        common.show_data_set(folder_path_or_df)
-        chosen_charts = common.work_with_data_set(
-            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
-
-    return chosen_charts
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
 
 
 def upload_proteomics():
@@ -313,33 +281,8 @@ def upload_proteomics():
     folder_path_or_df, data_set_type = upload_intro(
         upload_folder_path, key_suffix)
 
-    if folder_path_or_df is None:
-        return []
-
-    if data_set_type == 'FASTA':
-        file_name_type = common.show_folder_structure(folder_path_or_df)
-        common.create_zip_temporality(
-            folder_path_or_df, file_name_type, key_suffix)
-
-        # Calculating additional physico-chemical properties
-        chosen_charts = []
-        additional_check = st.checkbox(
-            'Calculate additional physico-chemical properties?',
-            value=False, key='Additional_check_' + key_suffix)
-
-        if additional_check:
-            chosen_charts = common.work_with_data_set(
-                None, 'Calculate_now', folder_path_or_df, key_suffix)
-
-        chosen_charts += common.work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
-
-    else:
-        common.show_data_set(folder_path_or_df)
-        chosen_charts = common.work_with_data_set(
-            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
-
-    return chosen_charts
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
 
 
 def upload_transcriptomics():
@@ -350,41 +293,28 @@ def upload_transcriptomics():
     folder_path_or_df, data_set_type = upload_intro(
         upload_folder_path, key_suffix)
 
-    if folder_path_or_df is None:
-        return []
-
-    if data_set_type == 'FASTA':
-        file_name_type = common.show_folder_structure(folder_path_or_df)
-        common.create_zip_temporality(
-            folder_path_or_df, file_name_type, key_suffix)
-
-        chosen_charts = common.work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
-
-    else:
-        common.show_data_set(folder_path_or_df)
-        chosen_charts = common.work_with_data_set(
-            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
-
-    return chosen_charts
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, upload_folder_path, key_suffix)
 
 
 def upload_metabolomics():
 
     key_suffix = 'Metabolomics'
+    upload_folder_path = path_uploaded_metabolomics
 
-    df = upload_intro(path_uploaded_metabolomics, key_suffix)
+    df = upload_intro(upload_folder_path, key_suffix)
 
-    return common.work_with_csv(df, path_uploaded_metabolomics, key_suffix)
+    return common.work_with_csv(df, upload_folder_path, key_suffix)
 
 
 def upload_phy_che():
 
     key_suffix = 'Physico-chemical'
+    upload_folder_path = path_uploaded_phy_che
 
-    df = upload_intro(path_uploaded_phy_che, key_suffix)
+    df = upload_intro(upload_folder_path, key_suffix)
 
-    return common.work_with_csv(df, path_uploaded_phy_che, key_suffix)
+    return common.work_with_csv(df, upload_folder_path, key_suffix)
 
 
 def create_main_upload():

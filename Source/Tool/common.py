@@ -1072,6 +1072,41 @@ def work_with_csv(df, folder_path, key_suffix):
     return chosen_charts
 
 
+def work_with_zip(folder_path_or_df, data_set_type, upload_folder_path,
+                  key_suffix):
+
+    chosen_charts = []
+
+    if folder_path_or_df is None:
+        return []
+
+    # IMPORTANT: Do not run KEGG, it takes too much RAM
+    if data_set_type in ['FASTA', 'KEGG', 'BINS']:
+        file_name_type = show_folder_structure(folder_path_or_df)
+        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+
+        if key_suffix == 'Proteomics':
+            # Calculating additional physico-chemical properties
+            chosen_charts = []
+            additional_check = st.checkbox(
+                'Calculate additional physico-chemical properties?',
+                value=False, key='Additional_check_' + key_suffix)
+
+            if additional_check:
+                chosen_charts = work_with_data_set(
+                    None, 'Calculate_now', folder_path_or_df, key_suffix)
+
+        chosen_charts += work_with_data_set(
+            None, data_set_type, folder_path_or_df, key_suffix)
+
+    else:
+        show_data_set(folder_path_or_df)
+        chosen_charts += work_with_data_set(
+            folder_path_or_df, 'Calculated', upload_folder_path, key_suffix)
+
+    return chosen_charts
+
+
 def work_with_data_set(df, data_set_type, folder_path, key_suffix):
 
     chosen_charts = []
@@ -1185,8 +1220,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
                     pass
 
                 cache_dataframe(df, None, CALCULATED_NOW_DATA_SET_PATH)
-                show_calculated_data_set(df, 'Additional properties')
 
+        show_calculated_data_set(df, 'Additional properties')
         df = fix_data_set(df)
         temporal_feature, feature_list = find_temporal_feature(df)
         df, feature_list = modify_data_set(
