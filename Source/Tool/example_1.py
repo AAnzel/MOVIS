@@ -23,7 +23,6 @@ path_example_1_proteomics_fasta = os.path.join(
 
 
 def upload_multiple(key_suffix):
-    # TODO: Change for transcriptomics and add more type options
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
@@ -55,7 +54,6 @@ def upload_multiple(key_suffix):
     elif key_suffix == 'Proteomics':
         return_path = path_example_1_proteomics_fasta
 
-    # TODO: Deal with this. This is if key_suffix == 'Transcriptomics
     else:
         pass
 

@@ -34,19 +34,23 @@ def season_data(data, temporal_column):
 def time_feature(data, selected_column, temporal_column, selected_color):
 
     selected_column_type = str(data[selected_column].dtype)
+
     if selected_column_type == 'string':  # or selected_column_type == 'Int64':
-        chart = alt.Chart(data).mark_bar().encode(
-            alt.X(temporal_column, type='temporal',
-                  scale=alt.Scale(nice=True)),
-            alt.Y('count(' + selected_column + ')', type='nominal'),
-            alt.Color(selected_column, type='nominal'),
-            alt.Tooltip('count(' + selected_column + ')', type='nominal'))
+        chart = alt.Chart(
+            data, title=selected_column + ' through time').mark_bar().encode(
+                alt.X(temporal_column, type='temporal',
+                      scale=alt.Scale(nice=True)),
+                alt.Y('count(' + selected_column + ')', type='nominal'),
+                alt.Color(selected_column, type='nominal'),
+                alt.Tooltip('count(' + selected_column + ')', type='nominal'))
 
     else:
-        chart = alt.Chart(data).mark_line(stroke=selected_color).encode(
-            alt.X(temporal_column, type='temporal',
-                  scale=alt.Scale(nice=True)),
-            alt.Y(selected_column, type='quantitative'))
+        chart = alt.Chart(
+            data, title=selected_column + ' through time').mark_line(
+                stroke=selected_color).encode(
+                    alt.X(temporal_column, type='temporal',
+                          scale=alt.Scale(nice=True)),
+                    alt.Y(selected_column, type='quantitative'))
 
     return chart.interactive()
 
@@ -55,23 +59,23 @@ def two_features(data, feature_1, feature_2):
 
     if (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) != 'string'):
-        chart = alt.Chart(data).mark_bar().encode(
+        chart = alt.Chart(data, title='Two features plot').mark_bar().encode(
             alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
             alt.Y(feature_2, type='quantitative'))
 
     elif (str(data[feature_1].dtype) != 'string' and
             str(data[feature_2].dtype) == 'string'):
-        chart = alt.Chart(data).mark_bar().encode(
+        chart = alt.Chart(data, title='Two features plot').mark_bar().encode(
             alt.X(feature_2, type='nominal'),
             alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)))
 
     elif (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) == 'string'):
-        chart = alt.Chart(data).mark_point().encode(
+        chart = alt.Chart(data, title='Two features plot').mark_point().encode(
             alt.X(feature_1, type='nominal'),
             alt.Y(feature_2, type='nominal'))
     else:
-        chart = alt.Chart(data).mark_point().encode(
+        chart = alt.Chart(data, title='Two features plot').mark_point().encode(
             alt.X(feature_1, type='quantitative'),
             alt.Y(feature_2, type='quantitative'))
 
@@ -83,6 +87,7 @@ def parallel_coordinates(data, list_of_features, target_feature):
     # TODO: Implement normalization before creating a chart
     # Use https://altair-viz.github.io/gallery/normed_parallel_coordinates.html
     selected_column_type = str(data[target_feature].dtype)
+
     if selected_column_type == 'string':
         color_type = 'nominal'
     else:
@@ -91,8 +96,31 @@ def parallel_coordinates(data, list_of_features, target_feature):
     new_data = data[list_of_features].reset_index().melt(
         id_vars=['index', target_feature])
 
-    chart = alt.Chart(new_data).mark_line().encode(
-        alt.X('variable:N'),
+    # chart = alt.Chart(new_data).transform_window(
+    #     key='count()'
+    # ).transform_fold(
+    #     list_of_features
+    # ).transform_joinaggregate(
+    #     min='min(value)',
+    #     max='max(value)',
+    #     groupby=['variable']
+    # ).transform_calculate(
+    #     minmax_value=(alt.datum.value - alt.datum.min)/(alt.datum.max -
+    #                                                     alt.datum.min),
+    #     mid=(alt.datum.min + alt.datum.max)/2
+    # ).mark_line().encode(
+    #     alt.X('variable:N', axis=alt.Axis(labelAngle=0)),
+    #     alt.Y('minmax_value:Q'),
+    #     alt.Color(target_feature, type=color_type),
+    #     alt.Detail('key:N'),
+    #     opacity=alt.value(0.4)
+    # )
+
+    chart = alt.Chart(
+        new_data,
+        title='Parallel coordinates chart of selected features').mark_line(
+        ).encode(
+        alt.X('variable:N', axis=alt.Axis(labelAngle=0)),
         alt.Y('value:Q'),
         alt.Color(target_feature, type=color_type),
         alt.Detail('index:N'),
@@ -112,7 +140,9 @@ def scatter_matrix(data, list_of_features, target_feature):
     else:
         color_type = 'quantitative'
 
-    chart = alt.Chart(data).mark_circle().encode(
+    chart = alt.Chart(
+        data, title='Scatter matrix chart of selected features').mark_circle(
+        ).encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
         color=alt.Color(target_feature, type=color_type)
@@ -134,14 +164,16 @@ def heatmap(data):
     corr.columns = ["var_1", "var_2", "correlation"]
 
     # Create correlation chart
-    chart = alt.Chart(corr).mark_rect().encode(
-            alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
-            alt.Y("var_2", title=None),
-            alt.Color(
-                "correlation",
-                legend=alt.Legend(tickCount=5),
-                scale=alt.Scale(scheme="redblue", reverse=True),
-            ),
+    chart = alt.Chart(
+        corr, title='Heatmap chart of numerical features').mark_rect().encode(
+
+        alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
+        alt.Y("var_2", title=None),
+        alt.Color(
+            "correlation",
+            legend=alt.Legend(tickCount=5),
+            scale=alt.Scale(scheme="redblue", reverse=True),
+        ),
         ).properties(width=alt.Step(30), height=alt.Step(30))
 
     chart += chart.mark_text(size=8).encode(
@@ -163,7 +195,9 @@ def top_10_time(data, list_of_features, temporal_column):
 
     brush = alt.selection(type='interval')
 
-    chart = alt.Chart(new_data).mark_bar().encode(
+    chart = alt.Chart(
+        new_data, title='Top 10 elements count through time').mark_bar(
+        ).encode(
         alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
         alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
@@ -183,71 +217,8 @@ def top_10_time(data, list_of_features, temporal_column):
 
 def elbow_rule(data):
 
-    chart = alt.Chart(
-        data, title='Elbow rule chart', description='Description'
-    ).mark_line().encode(
+    chart = alt.Chart(data, title='Elbow rule chart').mark_line().encode(
         alt.X("k_range:Q"), alt.Y("k_scores:Q"))
-
-    return chart
-
-
-# Everything below is used for metabolomics data set exclusively
-def visualize_metabolites(data, temporal_column, metabolite_column,
-                          type_columns):
-
-    data_seasoned = season_data(data, temporal_column)
-
-    # Extract columns with float values
-    # NOT TESTED, MIGHT NOT WORK AS EXPECTED
-    float_columns = data.select_dtypes(include=[np.float32,
-                                                np.float64]).columns.tolist()
-
-    # Create repeated chart with varying size encodings
-    chart = (alt.Chart(data_seasoned).mark_point(opacity=1).encode(
-            alt.X(temporal_column, type="temporal",
-                  scale=alt.Scale(nice=True)),
-            alt.Y(metabolite_column, type="nominal"),
-            alt.Size(alt.repeat("row"), type="quantitative"),
-            alt.Color("season:N",
-                      scale=alt.Scale(range=["blue", "green", "orange",
-                                             "brown"])),
-            alt.Tooltip(type_columns, type="nominal"),
-        ).properties(width=1200).repeat(row=float_columns)
-        .resolve_scale(color="independent", size="independent")
-    )
-    # .interactive()
-
-    return chart
-
-
-# Everything below is used for phy_che data set exclusively
-def visualize_phy_che(data, temporal_column, list_of_columns):
-
-    # Create repeated chart
-    chart = (
-        alt.Chart(data).mark_line().encode(
-            alt.X(temporal_column, type="temporal"),  # , timeUnit = 'month'),
-            alt.Y(alt.repeat("row"), type="quantitative"),
-        ).properties(width=1200).repeat(row=list_of_columns)
-    )
-    # .resolve_scale(color = 'independent')#.interactive()
-
-    return chart
-
-
-# Everything below is used for proteomics data set exclusively
-def visualize_proteomics(data):
-
-    # Adding another column that replaces temporal data for now
-    if "Index_tmp" not in data.columns:
-        data.insert(0, "Index_tmp", data.index.tolist())
-
-    # Create repeated chart
-    chart = (alt.Chart(data).mark_area().encode(
-             alt.X("Index_tmp", type="quantitative"),
-             alt.Y(alt.repeat("row"), type="quantitative"),
-             ).properties(width=1200).repeat(row=data.columns.tolist()))
-    # .resolve_scale(size = 'independent')#.interactive()
 
     return chart
 
@@ -265,11 +236,13 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
     scaled_data = scaler.fit_transform(tmp_data)
 
     if method == 'PCA':
+        tmp_title = '2 dimensional PCA scatter plot'
         pca_model = PCA(n_components=2, random_state=SEED)
         tmp_data = pd.DataFrame(
             pca_model.fit_transform(scaled_data), columns=['PCA_1', 'PCA_2'])
 
     elif method == 'MDS':
+        tmp_title = '2 dimensional MDS scatter plot'
         mds_model = MDS(n_components=2, random_state=SEED,
                         dissimilarity="euclidean", n_jobs=NUM_OF_WORKERS)
         tmp_data = pd.DataFrame(
@@ -289,7 +262,7 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
     # select_time = alt.selection_single(
     #     fields=['New_DateTime'], bind=slider)
 
-    chart = alt.Chart(tmp_data).mark_circle(opacity=1).encode(
+    chart = alt.Chart(tmp_data, title=tmp_title).mark_circle(opacity=1).encode(
             alt.X(str(tmp_data.columns[2]), type='quantitative'),
             alt.Y(str(tmp_data.columns[3]), type='quantitative'),
             alt.Color(str(tmp_data.columns[1]), type='nominal'),
