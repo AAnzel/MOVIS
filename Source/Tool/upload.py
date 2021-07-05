@@ -259,10 +259,6 @@ def upload_intro(folder_path, key_suffix):
         return df, data_set_type
 
 
-# TODO: Find out if there is a possibility to calculate physico-chemical
-# properties for genes as it is done with proteins
-# TODO: Refactor next three omics into one function in common and use it for
-# example 1 as well. MAX PRIORITY
 def upload_genomics():
     key_suffix = 'Genomics'
     cache_folder_path = path_uploaded_genomics

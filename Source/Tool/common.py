@@ -918,8 +918,8 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
         # This is only needed for example 1 data set
         # TODO: Change this for production data sets
         # BUG: Change this for production data sets
-        example_1_fix_archive_file_names(start_date, folder_path)
-        # fix_archive_file_names(start_date, folder_path)
+        # example_1_fix_archive_file_names(start_date, folder_path)
+        fix_archive_file_names(start_date, folder_path)
         # After this step, every file has a timestamp as a name
 
     else:
