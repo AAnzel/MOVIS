@@ -51,13 +51,138 @@ def season_data(data, temporal_column):
     return new_df
 
 
-# Everything below is used for proteomics data set exclusively
-def import_proteomics(end, path_proteomics):
+def calculate_genomics_properties(end, path_fasta):
+
+    experimental_calculations_dict = {
+        'Hydrogen bond': {
+            'AA': -5.44,
+            'AC': -7.14,
+            'AG': -6.27,
+            'AT': -5.35,
+            'CA': -7.01,
+            'CC': -8.48,
+            'CG': -8.05,
+            'CT': -6.27,
+            'GA': -7.80,
+            'GC': -8.72,
+            'GG': -8.48,
+            'GT': -7.14,
+            'TA': -5.83,
+            'TC': -7.80,
+            'TG': -7.01,
+            'TT': -5.44
+        },
+        'Stacking energy': {
+            'AA': -26.71,
+            'AC': -27.73,
+            'AG': -26.89,
+            'AT': -27.20,
+            'CA': -27.15,
+            'CC': -26.28,
+            'CG': -27.93,
+            'CT': -26.89,
+            'GA': -26.78,
+            'GC': -28.13,
+            'GG': -26.28,
+            'GT': -27.73,
+            'TA': -26.90,
+            'TC': -26.78,
+            'TG': -27.15,
+            'TT': -26.71
+        },
+        'Solvation': {
+            'AA': -171.84,
+            'AC': -171.11,
+            'AG': -174.93,
+            'AT': -173.70,
+            'CA': -179.01,
+            'CC': -166.76,
+            'CG': -176.88,
+            'CT': -174.93,
+            'GA': -167.60,
+            'GC': -165.58,
+            'GG': -166.76,
+            'GT': -171.11,
+            'TA': -174.35,
+            'TC': -167.60,
+            'TG': -179.01,
+            'TT': -171.84
+        }
+    }
+
+    properties_list = ['Hydrogen bond', 'Stacking energy', 'Solvation']
+    fasta_files = os.listdir(path_fasta)
+    fasta_files.sort()
+
+    final_result_dict = {
+        'Hydrogen bond': [],
+        'Stacking energy': [],
+        'Solvation': []
+    }
+
+    for i, fasta_file_name in enumerate(fasta_files):
+
+        if i == end:
+            break
+
+        else:
+            one_fasta_result = {
+                'Hydrogen bond': 0,
+                'Stacking energy': 0,
+                'Solvation': 0
+            }
+            sequence_count = 0
+
+            with open(os.path.join(path_fasta, fasta_file_name), "r")\
+                    as input_file:
+
+                for fasta_string in SeqIO.parse(input_file, "fasta"):
+
+                    sequence_count += 1
+                    one_sequence_result = {
+                        'Hydrogen bond': 0,
+                        'Stacking energy': 0,
+                        'Solvation': 0
+                    }
+                    sequence = str(fasta_string.seq)
+
+                    # Skipping any sequence that contains unknown nucleotide
+                    if any(i in sequence for i in ["*", "-"]):
+                        continue
+
+                    n = len(sequence)
+                    for i in range(n-1):
+                        for phy_property in properties_list:
+                            one_sequence_result[phy_property] +=\
+                                experimental_calculations_dict[phy_property][
+                                    sequence[i:i+2]]
+
+                    # Taking an average values
+                    for phy_property in properties_list:
+                        one_sequence_result[phy_property] /= (n-1)
+
+                    # After taking care of one sequence, we update the
+                    # result for the whole file
+                    for phy_property in properties_list:
+                        one_fasta_result[phy_property] +=\
+                            one_sequence_result[phy_property]
+
+            # When we finish the whole FASTA file, we just average values
+            for phy_property in properties_list:
+                one_fasta_result[phy_property] /= sequence_count
+
+            # We then update the final dict with this value
+            for phy_property in properties_list:
+                final_result_dict[phy_property].append(
+                    one_fasta_result[phy_property])
+
+    # Here we create a dataframe from that final dict
+    return pd.DataFrame.from_dict(final_result_dict)
+
+
+def calculate_proteomics_properties(end, path_proteomics):
 
     print("Importing proteomics data")
-
-    # There are 78 FASTA files I have to traverse every FASTA file, and in each
-    # file every protein sequence
 
     fasta_files = os.listdir(path_proteomics)
     fasta_files.sort()
@@ -215,6 +340,7 @@ def vectorize_mags(w2v_model, path_fasta, end):
     print("Vectorizing MAGs")
 
     fasta_files = os.listdir(path_fasta)
+    fasta_files.sort()
     list_of_mag_vectors = []
 
     # This was done so that I could work with first 'end' FASTA files only.
@@ -258,7 +384,6 @@ def import_mags_and_build_model(end, path_fasta):
 
     fasta_files = os.listdir(path_fasta)
     fasta_files.sort()
-    fasta_ids = []
 
     # This was done so that I could work with first 100 FASTA files only.
     # Otherwise, I should just remove: i, and enumerate
@@ -272,7 +397,6 @@ def import_mags_and_build_model(end, path_fasta):
                     as input_file:
 
                 one_mag = []
-                one_mag_ids = []
                 for fasta_string in SeqIO.parse(input_file, "fasta"):
 
                     # Get kmers of a genome and create a sentence (list of
@@ -281,11 +405,6 @@ def import_mags_and_build_model(end, path_fasta):
 
                     # Create a document (list of sentences)
                     one_mag.append(temp_kmers)
-                    # Save FASTA ids for every MAG
-                    one_mag_ids.append(str(fasta_string.id))
-
-                # Save list of ids for one MAG in global list
-                fasta_ids.append(one_mag_ids)
 
                 # If we do not have a model, we build one
                 if i == 0:
@@ -432,6 +551,7 @@ def create_temporal_column(list_of_days, start_date, end, day_or_week):
 
     # In this case we just have to extract file names
     if day_or_week == 'TIMESTAMP':
+        list_of_days.sort()
         return [dt.datetime.strptime(i.split('.')[0], "%Y-%m-%d")
                 for i in list_of_days]
 
@@ -937,6 +1057,7 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
     MODEL_NAME = 'w2v_model.saved'
     MODEL_PATH = os.path.join(os.path.split(folder_path)[0], MODEL_NAME)
     fasta_files = os.listdir(folder_path)
+    fasta_files.sort()
     num_of_fasta_files = len(fasta_files)
 
     if os.path.exists(MODEL_PATH):
@@ -964,6 +1085,7 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
 def work_with_kegg(data_set_type, folder_path, key_suffix):
 
     besthits_files = os.listdir(folder_path)
+    besthits_files.sort()
     num_of_besthits_files = len(besthits_files)
     df = import_kegg_and_create_df(
         end=num_of_besthits_files, path_all_keggs=folder_path)
@@ -975,6 +1097,7 @@ def work_with_kegg(data_set_type, folder_path, key_suffix):
 def work_with_bins(data_set_type, folder_path, key_suffix):
 
     gff_files = os.listdir(folder_path)
+    gff_files.sort()
     num_of_gff_files = len(gff_files)
 
     df = create_annotated_data_set(
@@ -988,13 +1111,19 @@ def work_with_bins(data_set_type, folder_path, key_suffix):
 
 
 @st.cache
-def work_calculate_proteomics(data_set_type, folder_path, key_suffix):
+def work_calculate_additional(data_set_type, folder_path, key_suffix):
 
     fasta_files = os.listdir(folder_path)
+    fasta_files.sort()
     num_of_fasta_files = len(fasta_files)
 
-    df = import_proteomics(
-        path_proteomics=folder_path, end=num_of_fasta_files)
+    if key_suffix == 'Proteomics':
+        df = calculate_proteomics_properties(
+            path_proteomics=folder_path, end=num_of_fasta_files)
+
+    elif key_suffix == 'Genomics':
+        df = calculate_genomics_properties(
+            path_fasta=folder_path, end=num_of_fasta_files)
 
     list_of_dates = create_temporal_column(
         fasta_files, None, None, 'TIMESTAMP')
@@ -1028,7 +1157,8 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
         file_name_type = show_folder_structure(folder_path_or_df)
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
 
-        if key_suffix == 'Proteomics':
+        if data_set_type == 'FASTA' and key_suffix in\
+                ['Proteomics', 'Genomics']:
             # Calculating additional physico-chemical properties
             chosen_charts = []
             additional_check = st.checkbox(
@@ -1153,13 +1283,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
 
         else:
             with st.spinner('Calculating additional properties...'):
-                if key_suffix == 'Proteomics':
-                    df = work_calculate_proteomics(
-                        data_set_type, folder_path, key_suffix)
-                # TODO: Check what happens for other omics
-                # This is related to creating add. properties for genomics
-                else:
-                    pass
+                df = work_calculate_additional(
+                    data_set_type, folder_path, key_suffix)
 
                 cache_dataframe(df, CALCULATED_NOW_DATA_SET_PATH)
 

@@ -54,12 +54,6 @@ def main():
                        page_icon=os.path.join('images',
                                               'movis_logo_transparent.png'))
 
-    # I need to run this just once, so I create cache
-    # common.example_1_calc_phy_che()
-    # common.example_1_calc_metabolomics()
-    # common.example_1_calc_proteomics()
-    # common.example_1_calc_genomics()
-
     create_sidebar_and_main()
 
     return None
