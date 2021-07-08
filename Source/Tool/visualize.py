@@ -31,7 +31,7 @@ def season_data(data, temporal_column):
     return new_data
 
 
-def time_feature(data, selected_column, temporal_column, selected_color):
+def time_feature(data, selected_column, temporal_column):
 
     selected_column_type = str(data[selected_column].dtype)
 
@@ -46,16 +46,16 @@ def time_feature(data, selected_column, temporal_column, selected_color):
 
     else:
         chart = alt.Chart(
-            data, title=selected_column + ' through time').mark_line(
-                stroke=selected_color).encode(
+            data, title=selected_column + ' through time').mark_line().encode(
                     alt.X(temporal_column, type='temporal',
                           scale=alt.Scale(nice=True)),
-                    alt.Y(selected_column, type='quantitative'))
+                    alt.Y(selected_column, type='quantitative'),
+                    alt.Tooltip([temporal_column, selected_column]))
 
     return chart.interactive()
 
 
-def two_features(data, feature_1, feature_2):
+def two_features(data, feature_1, feature_2, temporal_feature):
 
     title_text = feature_1 + ' in function of ' + feature_2
 
@@ -63,23 +63,27 @@ def two_features(data, feature_1, feature_2):
             str(data[feature_2].dtype) != 'string'):
         chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
-            alt.Y(feature_2, type='quantitative'))
+            alt.Y(feature_2, type='quantitative'),
+            alt.Tooltip([feature_1, feature_2, temporal_feature]))
 
     elif (str(data[feature_1].dtype) != 'string' and
             str(data[feature_2].dtype) == 'string'):
         chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_2, type='nominal'),
-            alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)))
+            alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)),
+            alt.Tooltip([feature_1, feature_2, temporal_feature]))
 
     elif (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) == 'string'):
         chart = alt.Chart(data, title=title_text).mark_point().encode(
             alt.X(feature_1, type='nominal'),
-            alt.Y(feature_2, type='nominal'))
+            alt.Y(feature_2, type='nominal'),
+            alt.Tooltip([feature_1, feature_2, temporal_feature]))
     else:
         chart = alt.Chart(data, title=title_text).mark_point().encode(
             alt.X(feature_1, type='quantitative'),
-            alt.Y(feature_2, type='quantitative'))
+            alt.Y(feature_2, type='quantitative'),
+            alt.Tooltip([feature_1, feature_2, temporal_feature]))
 
     return chart.interactive()
 
@@ -126,13 +130,14 @@ def parallel_coordinates(data, list_of_features, target_feature):
         alt.Y('value:Q'),
         alt.Color(target_feature, type=color_type),
         alt.Detail('index:N'),
+        alt.Tooltip(['value', target_feature]),
         opacity=alt.value(0.4)
     )
 
     return chart.interactive()
 
 
-def scatter_matrix(data, list_of_features, target_feature):
+def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
 
     list_of_features.remove(target_feature)
     selected_column_type = str(data[target_feature].dtype)
@@ -147,6 +152,7 @@ def scatter_matrix(data, list_of_features, target_feature):
         ).encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
+        alt.Tooltip([target_feature, temporal_feature]),
         color=alt.Color(target_feature, type=color_type)
     ).properties(
         width=150,
@@ -163,26 +169,23 @@ def heatmap(data):
 
     new_data = data.select_dtypes(include=np.number)
     corr = new_data.corr().reset_index().melt("index")
-    corr.columns = ["var_1", "var_2", "correlation"]
+    corr.columns = ["var_1", "var_2", "Correlation"]
 
     # Create correlation chart
     chart = alt.Chart(
         corr, title='Heatmap chart of numerical features').mark_rect().encode(
+            alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
+            alt.Y("var_2", title=None),
+            alt.Color("Correlation", legend=alt.Legend(tickCount=5),
+                      scale=alt.Scale(scheme="redblue", reverse=True)),
+            alt.Tooltip(['var_1', 'var_2', 'Correlation'])
+        )
 
-        alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
-        alt.Y("var_2", title=None),
-        alt.Color(
-            "correlation",
-            legend=alt.Legend(tickCount=5),
-            scale=alt.Scale(scheme="redblue", reverse=True),
-        ),
-        ).properties(width=alt.Step(30), height=alt.Step(30))
-
-    chart += chart.mark_text(size=8).encode(
-        alt.Text("correlation", format=".2f"),
-        color=alt.condition("abs(datum.correlation) > 0.5",
-                            alt.value("white"), alt.value("black"))
-    )
+    # chart += chart.mark_text(size=8).encode(
+    #     alt.Text("correlation", format=".2f"),
+    #     color=alt.condition("abs(datum.correlation) > 0.5",
+    #                         alt.value("white"), alt.value("black"))
+    # )
 
     # This returns only lower triangle
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
@@ -198,13 +201,13 @@ def top_10_time(data, list_of_features, temporal_column):
     brush = alt.selection(type='interval')
 
     chart = alt.Chart(
-        new_data, title='Top 10 elements count through time').mark_bar(
+        new_data, title='Top 10 share through time').mark_bar(
         ).encode(
         alt.X(temporal_column, type='temporal', scale=alt.Scale(domain=brush)),
         alt.Y('value:Q'),  # , stack='normalize'),
         alt.Color('variable:N', scale=alt.Scale(scheme='category10')),
         # legend=alt.Legend(orient='top', direction='vertical')),
-        tooltip=['value']
+        tooltip=['value', temporal_column]
     )
 
     interval_chart = alt.Chart(new_data).mark_line().encode(
@@ -220,7 +223,10 @@ def top_10_time(data, list_of_features, temporal_column):
 def elbow_rule(data):
 
     chart = alt.Chart(data, title='Elbow rule chart').mark_line().encode(
-        alt.X("k_range:Q"), alt.Y("k_scores:Q"))
+            alt.X("k_range:Q"),
+            alt.Y("k_scores:Q"),
+            alt.Tooltip(['k_range', 'k_scores'])
+        )
 
     return chart
 

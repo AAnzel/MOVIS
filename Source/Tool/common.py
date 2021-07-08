@@ -601,10 +601,12 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
     # represent weeks, so I will replace D with W
     imported_file_extension = os.path.splitext(
         files_list_new[0])[1][1:].strip().lower()
-    files_list_new.sort()
+
     files_list_pass = [i.replace('D', 'W') for i in files_list_new]
     files_list_pass = [i.split('_')[0] + '.' + imported_file_extension
                        for i in files_list_pass]
+
+    files_list_pass.sort()
 
     list_of_dates = create_temporal_column(
         files_list_pass, start_date, len(files_list_pass),
@@ -1170,7 +1172,6 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
         if data_set_type == 'FASTA' and key_suffix in\
                 ['Proteomics', 'Genomics']:
             # Calculating additional physico-chemical properties
-            chosen_charts = []
             additional_check = st.checkbox(
                 'Calculate additional physico-chemical properties?',
                 value=False, key='Additional_check_' + key_suffix)
@@ -1330,7 +1331,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                                          'Scatter-plot matrix',
                                          'Multiple features parallel chart',
                                          'Heatmap',
-                                         'Top 10 count through time'],
+                                         'Top 10 share through time'],
                                         key='vis_data_' + key_suffix)
 
     for i in visualizations:
@@ -1348,70 +1349,66 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                  i + '_' + key_suffix + '_MDS'))
 
         elif i == 'Feature through time' and temporal_feature is not None:
-            selected_feature = st.selectbox('Select feature to visualize',
-                                            feature_list)
-            selected_color = None
-
-            if str(df[selected_feature].dtype) not in ['string']:  # ,'Int64']:
-                selected_color = st.color_picker(
-                    'Select line color', value='#000000',
-                    key=i + '_' + key_suffix)
+            selected_feature = st.selectbox(
+                i + ': select feature to visualize', feature_list)
 
             chosen_charts.append(
-                (visualize.time_feature(df, selected_feature, temporal_feature,
-                                        selected_color), i + '_' + key_suffix))
+                (visualize.time_feature(
+                    df, selected_feature, temporal_feature),
+                 i + '_' + key_suffix))
 
         elif i == 'Two features scatter-plot':
             feature_1 = None
             feature_2 = None
 
-            feature_1 = st.selectbox('Select 1. feature', feature_list)
+            feature_1 = st.selectbox(i + ': select 1. feature', feature_list)
 
             if feature_1 in feature_list:
                 feature_list.remove(feature_1)
 
-            feature_2 = st.selectbox('Select 2. feature', feature_list)
+            feature_2 = st.selectbox(i + ': select 2. feature', feature_list)
 
             if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append(
-                    (visualize.two_features(df, feature_1, feature_2),
+                    (visualize.two_features(
+                        df, feature_1, feature_2, temporal_feature),
                      i + '_' + key_suffix))
 
         elif i == 'Scatter-plot matrix':
             target_feature = st.selectbox(
-                'Select target feature for color', feature_list)
+                i + ': select target feature for color', feature_list)
 
-            list_of_features = st.multiselect('Choose at least 2 features',
-                                              feature_list)
+            list_of_features = st.multiselect(
+                i + ': choose at least 2 features', feature_list)
 
             if len(list_of_features) >= 2:
                 list_of_features.append(target_feature)
                 chosen_charts.append(
-                        (visualize.scatter_matrix(df, list_of_features,
-                                                  target_feature),
-                         i + '_' + key_suffix))
+                        (visualize.scatter_matrix(
+                            df, list_of_features, target_feature,
+                            temporal_feature), i + '_' + key_suffix))
 
         elif i == 'Multiple features parallel chart':
             if temporal_feature is not None:
                 target_feature = st.selectbox(
-                    'Select target feature for color',
+                    i + ': select target feature for color',
                     feature_list + [temporal_feature],
                     index=len(feature_list))
             else:
                 target_feature = st.selectbox(
-                    'Select target feature for color',
+                    i + ': select target feature for color',
                     feature_list,
                     index=len(feature_list))
 
-            list_of_features = st.multiselect('Choose at least 2 features',
-                                              feature_list)
+            list_of_features = st.multiselect(
+                i + ': choose at least 2 features', feature_list)
 
             if len(list_of_features) >= 2:
                 list_of_features.append(target_feature)
                 chosen_charts.append(
-                        (visualize.parallel_coordinates(df, list_of_features,
-                                                        target_feature),
-                            i + '_' + key_suffix))
+                        (visualize.parallel_coordinates(
+                            df, list_of_features, target_feature),
+                         i + '_' + key_suffix))
 
             # st.altair_chart(
             #    visualize.parallel_coordinates(df, list_of_features,
@@ -1422,7 +1419,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Heatmap':
             chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
 
-        elif i == 'Top 10 count through time' and temporal_feature is not None:
+        elif i == 'Top 10 share through time' and temporal_feature is not None:
             chosen_charts.append((visualize.top_10_time(df, feature_list,
                                                         temporal_feature),
                                   i + '_' + key_suffix))
