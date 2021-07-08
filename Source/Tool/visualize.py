@@ -240,8 +240,18 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
     if method == 'PCA':
         tmp_title = '2 dimensional PCA scatter plot'
         pca_model = PCA(n_components=2, random_state=SEED)
+        tmp_result = pca_model.fit_transform(scaled_data)
+
+        axis_name_1 = 'PCA_1_' + str(np.round(
+            100 * pca_model.explained_variance_ratio_[0],
+            2)).replace('.', '_') + '%'
+        axis_name_2 = 'PCA_2_' + str(np.round(
+            100 * pca_model.explained_variance_ratio_[1],
+            2)).replace('.', '_') + '%'
+
         tmp_data = pd.DataFrame(
-            pca_model.fit_transform(scaled_data), columns=['PCA_1', 'PCA_2'])
+            tmp_result,
+            columns=[axis_name_1, axis_name_2])
 
     elif method == 'MDS':
         tmp_title = '2 dimensional MDS scatter plot'
