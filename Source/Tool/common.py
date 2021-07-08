@@ -628,6 +628,7 @@ def show_data_set(df):
         st.dataframe(df.head(100))
         tmp_df = df.describe()
         if len(tmp_df.columns.to_list()) > 1:
+            st.markdown('Summary statistics')
             st.dataframe(df.describe())
 
     return None
@@ -645,6 +646,7 @@ def show_calculated_data_set(df, text_info):
         else:
             st.markdown('First 100 entries ' + '**' + text_info + '**')
             st.dataframe(df.head(100))
+            st.markdown('Summary statistics')
             st.dataframe(df.describe())
 
     return None
@@ -958,7 +960,7 @@ def find_temporal_feature(df):
             df[temporal_columns[0]] = pd.to_datetime(df[temporal_columns[0]])
             temporal_feature = temporal_columns[0]
 
-            st.success('Detected 1 temporal column named **' + temporal_feature
+            st.success('Detected 1 temporal column **' + temporal_feature
                        + '**.')
 
         # This means that we have 2 temporal columns, one for date and the
@@ -978,8 +980,10 @@ def find_temporal_feature(df):
             temporal_feature = 'DateTime'
             df.drop(temporal_columns, axis=1, inplace=True)
 
-            st.success('Detected 2 temporal columns. Successfully merged them\
-                        into one called **DateTime**.')
+            st.success(
+                'Detected 2 temporal columns: **' + temporal_columns[0] +
+                '**, **' + temporal_columns[1] + '**. Interpreted them into\
+                one called **DateTime**.')
 
         # We are not providing any functionality if there are >=3 columns
         else:
@@ -1001,34 +1005,10 @@ def find_temporal_feature(df):
 
 def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
-    columns_to_remove = st.multiselect(
-        'Select columns to remove', feature_list,
-        key='Col_remove_' + key_suffix)
-
-    if len(columns_to_remove) != 0:
-        df.drop(columns_to_remove, axis=1, inplace=True)
-        feature_list = [i for i in feature_list if i not in columns_to_remove]
-
-    rows_to_remove_text = st.text_input(
-        'Insert row numbers to remove, seperated by comma. See help (right)\
-         for example.', value='', key='Row_remove_' + key_suffix,
-        help='Example: 42 or 2, 3, 15, 55')
-
-    if rows_to_remove_text != '':
-        rows_to_remove = [i.strip() for i in rows_to_remove_text.split(',')]
-        # First we check if input is good or not
-        if any(not row.isnumeric() for row in rows_to_remove):
-            st.error('Wrong number input')
-            st.stop()
-
-        rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
-        df.drop(rows_to_remove, axis=0, inplace=True)
-
     time_to_remove_text = st.text_input(
-        'Insert the begining and the end of a time period to keep, seperated\
-         by comma. See help (right) for example.',
-        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix,
-        help='Example: 2011-03-21, 2012-05-03')
+        'Insert the time series interval you want to keep. Use ISO 8601 format:\
+         YYYY-MM-DD',
+        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix)
 
     if time_to_remove_text != '':
         try:
@@ -1040,6 +1020,36 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
         except ValueError:
             st.error('Wrong date input')
             st.stop()
+
+    filter_checkbox = st.checkbox(
+        'Filter data set (remove rows and/or columns)',
+        key='Filter_checkbox_' + key_suffix)
+
+    if filter_checkbox:
+        columns_to_remove = st.multiselect(
+            'Select columns to remove', feature_list,
+            key='Col_remove_' + key_suffix)
+
+        if len(columns_to_remove) != 0:
+            df.drop(columns_to_remove, axis=1, inplace=True)
+            feature_list =\
+                [i for i in feature_list if i not in columns_to_remove]
+
+        rows_to_remove_text = st.text_input(
+            'Insert row numbers to remove, seperated by comma. See help (right)\
+            for example.', value='', key='Row_remove_' + key_suffix,
+            help='Example: 42 or 2, 3, 15, 55')
+
+        if rows_to_remove_text != '':
+            rows_to_remove =\
+                [i.strip() for i in rows_to_remove_text.split(',')]
+            # First we check if input is good or not
+            if any(not row.isnumeric() for row in rows_to_remove):
+                st.error('Wrong number input')
+                st.stop()
+
+            rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
+            df.drop(rows_to_remove, axis=0, inplace=True)
 
     df.dropna(inplace=True)
     df.reset_index(inplace=True, drop=True)

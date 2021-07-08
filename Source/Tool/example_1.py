@@ -62,7 +62,7 @@ def upload_multiple(key_suffix):
 
 
 def upload_intro(folder_path, key_suffix):
-    st.header(key_suffix)
+    st.header(key_suffix + ' data')
     st.markdown('')
 
     df = None
@@ -132,7 +132,7 @@ def example_1_phy_che():
 
 def create_main_example_1():
 
-    col_1, col_2 = st.beta_columns(2)
+    col_1, col_2 = st.beta_columns([1, 2])
 
     col_1.info('''
             This data set comes from the following paper:
@@ -142,8 +142,8 @@ def create_main_example_1():
             ecosystems respond to disturbance. Nat Commun 11, 5281(2020).\
             https://doi.org/10.1038/s41467-020-19006-2**. Analyzed samples\
             were collected from a biological wastewater treatment plant in\
-            Schifflange, Luxembourg. A precise location is shown on the map\
-            located on the right.
+            Schifflange, Luxembourg (49.513414, 6.017925). A precise location
+            is shown on the map located on the right.
 
             It contains **genomics**, **metabolomics**, **proteomics**, and\
             **physico-chemical** data. The code used to parse the data can be\
@@ -152,7 +152,7 @@ def create_main_example_1():
             ''')
 
     col_2.map(pd.DataFrame({'lat': [49.513414], 'lon': [6.017925]}),
-              zoom=13, use_container_width=True)
+              zoom=8, use_container_width=True)
 
     example_1_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
                             'Physico-chemical']

@@ -228,22 +228,27 @@ def upload_multiple(key_suffix):
 
 
 def upload_intro(folder_path, key_suffix):
-    st.header(key_suffix)
+    st.header(key_suffix + ' data')
     st.markdown('')
 
     df = None
 
     if key_suffix in ['Metabolomics', 'Physico-chemical']:
 
-        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-        CALCULATED_DATA_SET_PATH = os.path.join(
-            folder_path, CALCULATED_DATA_SET_NAME)
+        # TODO: This should be revised, because there is not such
+        # functionality for genomics and proteomics. Maybe it is better
+        # that the user uploads the data set each time
+        # CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+        # CALCULATED_DATA_SET_PATH = os.path.join(
+        #     folder_path, CALCULATED_DATA_SET_NAME)
 
-        if os.path.exists(CALCULATED_DATA_SET_PATH):
-            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
-        else:
-            df = upload_csv(key_suffix)
-            common.cache_dataframe(df, CALCULATED_DATA_SET_PATH)
+        # if os.path.exists(CALCULATED_DATA_SET_PATH):
+        #     df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
+        # else:
+        #     df = upload_csv(key_suffix)
+        #     common.cache_dataframe(df, CALCULATED_DATA_SET_PATH)
+
+        df = upload_csv(key_suffix)
 
         if df is None:
             st.warning('Upload your data set')
