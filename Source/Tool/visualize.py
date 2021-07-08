@@ -57,25 +57,27 @@ def time_feature(data, selected_column, temporal_column, selected_color):
 
 def two_features(data, feature_1, feature_2):
 
+    title_text = feature_1 + ' in function of ' + feature_2
+
     if (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) != 'string'):
-        chart = alt.Chart(data, title='Two features plot').mark_bar().encode(
+        chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
             alt.Y(feature_2, type='quantitative'))
 
     elif (str(data[feature_1].dtype) != 'string' and
             str(data[feature_2].dtype) == 'string'):
-        chart = alt.Chart(data, title='Two features plot').mark_bar().encode(
+        chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_2, type='nominal'),
             alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)))
 
     elif (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) == 'string'):
-        chart = alt.Chart(data, title='Two features plot').mark_point().encode(
+        chart = alt.Chart(data, title=title_text).mark_point().encode(
             alt.X(feature_1, type='nominal'),
             alt.Y(feature_2, type='nominal'))
     else:
-        chart = alt.Chart(data, title='Two features plot').mark_point().encode(
+        chart = alt.Chart(data, title=title_text).mark_point().encode(
             alt.X(feature_1, type='quantitative'),
             alt.Y(feature_2, type='quantitative'))
 

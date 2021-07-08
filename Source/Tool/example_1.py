@@ -33,7 +33,7 @@ def upload_multiple(key_suffix):
     }
 
     selected_data_set_type = st.selectbox(
-        'What kind of data set do you want to upload?',
+        'What kind of data set do you want to see?',
         list(available_data_set_types[key_suffix].keys())
     )
 
@@ -156,8 +156,8 @@ def create_main_example_1():
 
     example_1_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
                             'Physico-chemical']
-    choose_omics = st.multiselect('Which omic do you want to see:',
-                                  example_1_omics_list)
+    choose_omics = st.multiselect(
+        'What kind of data set do you want to see?', example_1_omics_list)
 
     num_of_columns = len(choose_omics)
 

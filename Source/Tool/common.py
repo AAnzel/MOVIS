@@ -823,7 +823,7 @@ def show_folder_structure(folder_path):
 
     for i in range(0, min(len(files_list), max_lines)):
         folder_structure_text += tee + files_list[i] + '\n' + space
-    folder_structure_text += '...'
+    folder_structure_text += '...\n' + space + str(len(files_list)) + ' files'
 
     with st.spinner('Showing folder structure'):
         st.code(folder_structure_text)
