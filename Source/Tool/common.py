@@ -1355,13 +1355,13 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                  i + '_' + key_suffix + '_MDS'))
 
         elif i == 'Feature through time' and temporal_feature is not None:
-            selected_feature = st.selectbox(
-                i + ': select feature to visualize', feature_list)
+            selected_features = st.multiselect(
+                i + ': select features to visualize', feature_list)
 
-            chosen_charts.append(
-                (visualize.time_feature(
-                    df, selected_feature, temporal_feature),
-                 i + '_' + key_suffix))
+            for j in selected_features:
+                chosen_charts.append(
+                    (visualize.time_feature(df, j, temporal_feature),
+                     i + '_' + key_suffix))
 
         elif i == 'Two features scatter-plot':
             feature_1 = None
