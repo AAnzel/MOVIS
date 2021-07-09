@@ -559,8 +559,6 @@ def create_temporal_column(list_of_days, start_date, end, day_or_week):
         list_of_dates = []
         list_of_days.sort()
 
-        # This is specific to the metaomics data set I am using Creating list
-        # of dates for every rMAG. IT IS SAMPLED WEEKLY ! ! ! ! !! !
         for i in list_of_days[:end]:
 
             # Taking the number after D or W in D03.fa, without .fa so 03
@@ -845,8 +843,7 @@ def fix_data_set(df):
                  'category', 'datetimetz']).columns.to_list()
 
     for column in columns_to_fix:
-        df[column] = df[column].apply(
-            lambda x: str(x).replace(",", "."))
+        df[column] = df[column].apply(lambda x: str(x).replace(",", "."))
 
     # FIX 2:
 
@@ -897,8 +894,16 @@ def import_archive(imported_file, extract_folder_path):
     return_file_name_no_ext = imported_file.name[:index_of_dot]
 
     try:
+        # First we clean the directory if there are any residual files inside
+        return_path = os.path.join(
+            extract_folder_path, return_file_name_no_ext)
+
+        if os.path.exists(return_path):
+            for tmp_file in os.listdir(return_path):
+                os.remove(os.path.join(return_path, tmp_file))
+
         shutil.unpack_archive(tmp_file_path, extract_dir=extract_folder_path)
-        return os.path.join(extract_folder_path, return_file_name_no_ext)
+        return return_path
 
     except ValueError:
         st.error('Error while unpacking the archive')
@@ -1179,6 +1184,7 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
             if additional_check:
                 chosen_charts = work_with_data_set(
                     None, 'Calculate_now', folder_path_or_df, key_suffix)
+                st.markdown('---')
 
         chosen_charts += work_with_data_set(
             None, data_set_type, folder_path_or_df, key_suffix)
