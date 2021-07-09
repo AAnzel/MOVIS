@@ -59,7 +59,11 @@ def upload_csv(key_suffix):
             df = pd.read_csv(
                 imported_file,
                 delimiter=delimiter_dict[delimiter],
-                low_memory=False).dropna()
+                low_memory=False)
+            # This should be used if one wants to generate example 1 phy_che
+            # data set. First
+            # df = common.example_1_fix_double_header(df)
+            df.dropna(inplace=True)
             df.reset_index(inplace=True, drop=True)
             df = common.fix_dataframe_columns(df)
         except ValueError:

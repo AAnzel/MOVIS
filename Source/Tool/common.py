@@ -547,6 +547,19 @@ def fix_dataframe_columns(dataframe):
     return dataframe.rename(columns=new_columns_map)
 
 
+def example_1_fix_double_header(df):
+
+    first_part = df.columns.tolist()
+    second_part = df.iloc[0].fillna('')
+    new_names = [first_part[i] + ' ' + str(second_part[i])
+                 for i in range(len(first_part))]
+    new_names_dict = {}
+    for i in range(len(new_names)):
+        new_names_dict[first_part[i]] = new_names[i].strip()
+
+    return df.rename(columns=new_names_dict)
+
+
 def create_temporal_column(list_of_days, start_date, end, day_or_week):
 
     # In this case we just have to extract file names
@@ -1012,6 +1025,8 @@ def find_temporal_feature(df):
 
 def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
+    # print(get_cached_dataframe(os.path.join('uploaded', 'calculated.pkl')))
+
     time_to_remove_text = st.text_input(
         'Insert the time series interval you want to keep. Use ISO 8601 format:\
          YYYY-MM-DD',
@@ -1277,7 +1292,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
     elif data_set_type == 'Calculated':
         CALCULATED_DATA_SET_NAME = 'calculated.pkl'
         CALCULATED_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], CALCULATED_DATA_SET_NAME)
+            folder_path, CALCULATED_DATA_SET_NAME)
 
         df = fix_data_set(df)
         temporal_feature, feature_list = find_temporal_feature(df)
