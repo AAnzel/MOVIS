@@ -58,34 +58,52 @@ def time_feature(data, selected_column, temporal_column):
 def two_features(data, feature_1, feature_2, temporal_feature):
 
     title_text = feature_1 + ' in function of ' + feature_2
+    brush = alt.selection_interval()
 
     if (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) != 'string'):
         chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_1, type='nominal', scale=alt.Scale(nice=True)),
             alt.Y(feature_2, type='quantitative'),
-            alt.Tooltip([feature_1, feature_2, temporal_feature]))
+            alt.Tooltip([feature_1, feature_2, temporal_feature]),
+            color=alt.condition(
+                brush, alt.value('#4c78a8'), alt.value('lightgray')),
+            opacity=alt.condition(brush, alt.value(1.0), alt.value(0.2))
+        ).add_selection(brush)
 
     elif (str(data[feature_1].dtype) != 'string' and
             str(data[feature_2].dtype) == 'string'):
         chart = alt.Chart(data, title=title_text).mark_bar().encode(
             alt.X(feature_2, type='nominal'),
             alt.Y(feature_1, type='quantitative', scale=alt.Scale(nice=True)),
-            alt.Tooltip([feature_1, feature_2, temporal_feature]))
+            alt.Tooltip([feature_1, feature_2, temporal_feature]),
+            color=alt.condition(
+                brush, alt.value('#4c78a8'), alt.value('lightgray')),
+            opacity=alt.condition(brush, alt.value(1.0), alt.value(0.2))
+        ).add_selection(brush)
 
     elif (str(data[feature_1].dtype) == 'string' and
             str(data[feature_2].dtype) == 'string'):
-        chart = alt.Chart(data, title=title_text).mark_point().encode(
+        chart = alt.Chart(data, title=title_text).mark_circle().encode(
             alt.X(feature_1, type='nominal'),
             alt.Y(feature_2, type='nominal'),
-            alt.Tooltip([feature_1, feature_2, temporal_feature]))
+            alt.Tooltip([feature_1, feature_2, temporal_feature]),
+            color=alt.condition(
+                brush, alt.value('#4c78a8'), alt.value('lightgray')),
+            opacity=alt.condition(brush, alt.value(1.0), alt.value(0.2))
+        ).add_selection(brush)
+
     else:
-        chart = alt.Chart(data, title=title_text).mark_point().encode(
+        chart = alt.Chart(data, title=title_text).mark_circle().encode(
             alt.X(feature_1, type='quantitative'),
             alt.Y(feature_2, type='quantitative'),
-            alt.Tooltip([feature_1, feature_2, temporal_feature]))
+            alt.Tooltip([feature_1, feature_2, temporal_feature]),
+            color=alt.condition(
+                brush, alt.value('#4c78a8'), alt.value('lightgray')),
+            opacity=alt.condition(brush, alt.value(1.0), alt.value(0.2))
+        ).add_selection(brush)
 
-    return chart.interactive()
+    return chart
 
 
 def parallel_coordinates(data, list_of_features, target_feature):
@@ -143,24 +161,28 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
     selected_column_type = str(data[target_feature].dtype)
 
     if selected_column_type == 'string':
-        color_type = 'nominal'
+        color_type = 'N'
     else:
-        color_type = 'quantitative'
+        color_type = 'Q'
+
+    brush = alt.selection_interval()
 
     chart = alt.Chart(
         data, title='Scatter matrix chart of selected features').mark_circle(
         ).encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
-        alt.Tooltip([target_feature, temporal_feature]),
-        color=alt.Color(target_feature, type=color_type)
+        alt.Tooltip(list_of_features + [target_feature, temporal_feature]),
+        color=alt.condition(
+            brush, target_feature + ':' + color_type, alt.value('lightgray')),
+        opacity=alt.condition(brush, alt.value(1.0), alt.value(0.2))
     ).properties(
         width=150,
         height=150
     ).repeat(
         row=list_of_features,
         column=list_of_features
-    )
+    ).add_selection(brush)
 
     return chart
 
