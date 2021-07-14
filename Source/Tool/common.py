@@ -1342,7 +1342,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         # TODO: Implement t-SNE reduction
         visualizations = st.multiselect('Choose your visualization',
                                         ['PCA visualization',
-                                         'MDS visualization'],
+                                         'MDS visualization',
+                                         't-SNE visualization'],
                                         key='vis_data_' + key_suffix)
 
     else:
@@ -1368,6 +1369,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 'MDS'),
                  i + '_' + key_suffix + '_MDS'))
+
+        elif i == 't-SNE visualization':
+            chosen_charts.append(
+                (visualize.visualize_clusters(df, temporal_feature,
+                                              feature_list, 't-SNE'),
+                 i + '_' + key_suffix + '_t-SNE'))
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_features = st.multiselect(

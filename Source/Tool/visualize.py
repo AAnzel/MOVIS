@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import altair as alt
 from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
+from sklearn.manifold import MDS, TSNE
 from sklearn import preprocessing
 
 
@@ -287,6 +287,14 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
                         dissimilarity="euclidean", n_jobs=NUM_OF_WORKERS)
         tmp_data = pd.DataFrame(
             mds_model.fit_transform(scaled_data), columns=['MDS_1', 'MDS_2'])
+
+    elif method == 't-SNE':
+        tmp_title = '2 dimensional t-SNE scatter plot'
+        t_sne_model = TSNE(n_components=2, random_state=SEED,
+                           metric="euclidean", n_jobs=NUM_OF_WORKERS)
+        tmp_data = pd.DataFrame(
+            t_sne_model.fit_transform(scaled_data),
+            columns=['t-SNE_1', 't-SNE_2'])
 
     else:
         pass
