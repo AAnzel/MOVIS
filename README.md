@@ -13,6 +13,7 @@ Place for github badges
 This tool is created for the following paper:
 
 **MOVIS: A Multi-Omics Software Solution for Multi-modal Time-Series Clustering and Embedding Tasks**
+Aleksandar Anžel, Dominik Heider, and Georges Hattab
 
 **Paper badge placeholder, link to the PDF placeholder**
 
