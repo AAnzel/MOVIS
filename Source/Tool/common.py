@@ -465,8 +465,12 @@ def train_model(w2v_model, path_fasta, end, epochs=EPOCHS):
 
 def get_number_of_clusters(data):
 
-    if 'DateTime' in data.columns.to_list():
-        data = data.drop('DateTime', axis=1)
+    data_columns = data.columns.to_list()
+    unwanted_columns = ['DateTime', 'K-Means', 'OPTICS']
+
+    for unwanted_column in unwanted_columns:
+        if unwanted_column in data_columns:
+            data = data.drop(unwanted_column, axis=1)
 
     mag_scaler = preprocessing.StandardScaler()
     scaled_data = mag_scaler.fit_transform(data)
@@ -487,8 +491,12 @@ def get_number_of_clusters(data):
 
 def cluster_data(data, num_of_clusters, min_samples, model_name):
 
-    if 'DateTime' in data.columns.to_list():
-        data = data.drop('DateTime', axis=1)
+    data_columns = data.columns.to_list()
+    unwanted_columns = ['DateTime', 'K-Means', 'OPTICS']
+
+    for unwanted_column in unwanted_columns:
+        if unwanted_column in data_columns:
+            data = data.drop(unwanted_column, axis=1)
 
     if model_name == 'K-Means':
         model = KMeans(n_clusters=num_of_clusters, random_state=SEED)
@@ -505,7 +513,17 @@ def cluster_data(data, num_of_clusters, min_samples, model_name):
 
 
 def evaluate_clustering(data, predicted):
-    return metrics.silhouette_score(data, predicted)
+
+    data_columns = data.columns.to_list()
+    unwanted_columns = ['DateTime', 'K-Means', 'OPTICS']
+
+    for unwanted_column in unwanted_columns:
+        if unwanted_column in data_columns:
+            data = data.drop(unwanted_column, axis=1)
+
+    return [metrics.silhouette_score(data, predicted),
+            metrics.calinski_harabasz_score(data, predicted),
+            metrics.davies_bouldin_score(data, predicted)]
 
 
 def create_pairwise_jaccard(data):
@@ -521,7 +539,7 @@ def cache_dataframe(dataframe, folder_path):
     return None
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache(show_spinner=False, allow_output_mutation=True)
 def get_cached_dataframe(folder_path):
     return pd.read_pickle(folder_path).convert_dtypes()
 
@@ -683,35 +701,38 @@ def show_clustering_info(df, key_suffix):
     st.altair_chart(visualize.elbow_rule(tmp_df),
                     use_container_width=True)
 
-    help_text = '''Choose the number according to the elbow rule. The number of
-                   clusters should be the number on the x-axis of the Elbow
-                   chart where the "elbow" exists.'''
+    help_text_kmeans = '''Choose the number according to the elbow rule. The
+                    number of clusters should be the number on the x-axis of
+                    the Elbow chart where the "elbow" exists.'''
+
+    help_text_optics = '''Choose the number so that you have a valid number of
+                    clusters according to your preference.'''
 
     if all(i in clustering_methods for i in ['K-Means', 'OPTICS']):
         cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
-            min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
+            min_value=2, max_value=15, step=1, format='%d',
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans)
         cluster_samples = st.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
-            a core point:', min_value=1, max_value=15, value=1, step=1,
+            a core point:', min_value=2, max_value=15, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text)
+            help=help_text_optics)
 
     elif 'K-Means' in clustering_methods:
         cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
-            min_value=1, max_value=15, value=1, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text)
+            min_value=2, max_value=15, step=1, format='%d',
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans)
         cluster_samples = 0
 
     elif 'OPTICS' in clustering_methods:
         cluster_number = 0
         cluster_samples = st.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
-            a core point:', min_value=1, max_value=15, value=1, step=1,
+            a core point:', min_value=2, max_value=15, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text)
+            help=help_text_optics)
 
     else:
         pass
@@ -722,6 +743,18 @@ def show_clustering_info(df, key_suffix):
     for i in clustering_methods:
         labels_list.append((i, cluster_data(
             df, cluster_number, cluster_samples, i)))
+
+    # Cluster evaluation
+    # TODO: Deal with sklearn future warning !
+    evaluation_text = ''
+    for pair in labels_list:
+        evaluation_scores = evaluate_clustering(df, pair[1])
+        evaluation_text += pair[0]\
+            + '| silhouette score: ' + str(evaluation_scores[0]) + ', '\
+            + 'Calinski-Harabasz index: ' + str(evaluation_scores[1]) + ', '\
+            + 'Davies-Bouldin index: ' + str(evaluation_scores[2]) + '\n'
+
+    st.code(evaluation_text)
 
     return labels_list
 
@@ -900,7 +933,7 @@ def fix_archive_file_names(start_date, unpack_archive_path):
     return None
 
 
-@st.cache(suppress_st_warning=True)
+@st.cache(show_spinner=False, suppress_st_warning=True)
 def import_archive(imported_file, extract_folder_path):
 
     # Creating the file from BytesIO stream
@@ -987,8 +1020,8 @@ def find_temporal_feature(df):
             df[temporal_columns[0]] = pd.to_datetime(df[temporal_columns[0]])
             temporal_feature = temporal_columns[0]
 
-            st.success('Detected 1 temporal column **' + temporal_feature
-                       + '**.')
+            # st.success('Detected 1 temporal column **' + temporal_feature
+            #           + '**.')
 
         # This means that we have 2 temporal columns, one for date and the
         # other one for time
@@ -1007,10 +1040,10 @@ def find_temporal_feature(df):
             temporal_feature = 'DateTime'
             df.drop(temporal_columns, axis=1, inplace=True)
 
-            st.success(
-                'Detected 2 temporal columns: **' + temporal_columns[0] +
-                '**, **' + temporal_columns[1] + '**. Interpreted them into\
-                one called **DateTime**.')
+            # st.success(
+            #    'Detected 2 temporal columns: **' + temporal_columns[0] +
+            #    '**, **' + temporal_columns[1] + '**. Interpreted them into\
+            #    one called **DateTime**.')
 
         # We are not providing any functionality if there are >=3 columns
         else:
@@ -1089,7 +1122,7 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
     return df, feature_list
 
 
-@st.cache
+@st.cache(show_spinner=False)
 def work_with_fasta(data_set_type, folder_path, key_suffix):
 
     # TODO: Allow user to change number of epochs for training
@@ -1120,7 +1153,7 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
     return df
 
 
-@st.cache
+@st.cache(show_spinner=False)
 def work_with_kegg(data_set_type, folder_path, key_suffix):
 
     besthits_files = os.listdir(folder_path)
@@ -1132,7 +1165,7 @@ def work_with_kegg(data_set_type, folder_path, key_suffix):
     return df
 
 
-@st.cache
+@st.cache(show_spinner=False)
 def work_with_bins(data_set_type, folder_path, key_suffix):
 
     gff_files = os.listdir(folder_path)
@@ -1149,7 +1182,7 @@ def work_with_bins(data_set_type, folder_path, key_suffix):
     return df
 
 
-@st.cache
+@st.cache(show_spinner=False)
 def work_calculate_additional(data_set_type, folder_path, key_suffix):
 
     fasta_files = os.listdir(folder_path)
