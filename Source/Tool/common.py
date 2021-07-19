@@ -575,7 +575,14 @@ def create_temporal_column(list_of_days, start_date, end, day_or_week):
         for i in list_of_days[:end]:
 
             # Taking the number after D or W in D03.fa, without .fa so 03
-            tmp_number = int(i.split('.')[0][1:])
+            try:
+                tmp_number = int(i.split('.')[0][1:])
+            except ValueError:
+                st.error(
+                    '''File names are not valid. File names should start with
+                    "D" or "W" followed with a number. Example: D04, W12...''')
+                st.stop()
+
             if day_or_week == 'W':
                 tmp_datetime = start_date + dt.timedelta(weeks=tmp_number)
             else:
