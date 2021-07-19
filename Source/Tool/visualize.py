@@ -31,6 +31,7 @@ def season_data(data, temporal_column):
     return new_data
 
 
+# TODO: Implement time sampling (yearly, monthly, daily)
 def time_feature(data, selected_column, temporal_column):
 
     selected_column_type = str(data[selected_column].dtype)
