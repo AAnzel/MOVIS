@@ -1065,8 +1065,6 @@ def find_temporal_feature(df):
 
 def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
-    # print(get_cached_dataframe(os.path.join('uploaded', 'calculated.pkl')))
-
     time_to_remove_text = st.text_input(
         'Insert the time series interval you want to keep. Use ISO 8601 format:\
          YYYY-MM-DD',
