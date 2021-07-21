@@ -5,7 +5,6 @@ import example_1
 import example_2
 import upload
 import home
-# import common
 
 
 def create_sidebar_and_main():

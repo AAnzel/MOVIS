@@ -664,10 +664,14 @@ def show_data_set(df):
     with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
         st.dataframe(df.head(100))
-        tmp_df = df.describe()
-        if len(tmp_df.columns.to_list()) > 1:
-            st.markdown('Summary statistics')
-            st.dataframe(df.describe())
+
+        try:
+            tmp_df = df.describe(datetime_is_numeric=True)
+            if len(tmp_df.columns.to_list()) > 1:
+                st.markdown('Summary statistics')
+                st.dataframe(df.describe(datetime_is_numeric=True))
+        except TypeError:
+            pass
 
     return None
 
@@ -680,12 +684,12 @@ def show_calculated_data_set(df, text_info):
             st.markdown('First 50 entries and first 8 features (columns). '
                         + '**' + text_info + '**')
             st.dataframe(df.iloc[:50, :8])
-            # st.dataframe(df.describe())
+            # st.dataframe(df.describe(datetime_is_numeric=True))
         else:
             st.markdown('First 100 entries ' + '**' + text_info + '**')
             st.dataframe(df.head(100))
             st.markdown('Summary statistics')
-            st.dataframe(df.describe())
+            st.dataframe(df.describe(datetime_is_numeric=True))
 
     return None
 
@@ -1326,7 +1330,6 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         chosen_charts = visualize_data_set(
             df, temporal_feature, feature_list, key_suffix)
 
-    # TODO: This elif was never used and has to be checked ASAP
     elif data_set_type == 'Calculated':
         CALCULATED_DATA_SET_NAME = 'calculated.pkl'
         CALCULATED_DATA_SET_PATH = os.path.join(
