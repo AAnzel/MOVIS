@@ -1,0 +1,680 @@
+D31_L12_contig_100782	Prodigal:2.6	CDS	1136	1927	.	-	0	ID=D31_L12_PROKKA_67434;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF01925.13;locus_tag=PROKKA_67434;product=Sulfite exporter TauE/SafE
+D31_L12_contig_100782	Prodigal:2.6	CDS	1941	2255	.	-	0	ID=D31_L12_PROKKA_67435;gene=trxA_45;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P14949;locus_tag=PROKKA_67435;product=Thioredoxin
+D31_L12_contig_100782	Prodigal:2.6	CDS	2302	2907	.	-	0	ID=D31_L12_PROKKA_67436;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_67436;product=hypothetical protein
+D31_L12_contig_100782	Prodigal:2.6	CDS	2991	3335	.	-	0	ID=D31_L12_PROKKA_67437;gene=moeZ_23;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7D5X9;locus_tag=PROKKA_67437;product=putative adenylyltransferase/sulfurtransferase MoeZ
+D31_L12_contig_100782	Prodigal:2.6	CDS	318	1115	.	-	0	ID=D31_L12_PROKKA_67433;eC_number=3.-.-.-;gene=blh_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9PFB0;locus_tag=PROKKA_67433;product=Beta-lactamase hydrolase-like protein
+D31_L12_contig_102218	Prodigal:2.6	CDS	131	1033	.	-	0	ID=D31_L12_PROKKA_68480;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_68480;product=hypothetical protein
+D31_L12_contig_103703	Prodigal:2.6	CDS	1408	1620	.	-	0	ID=D31_L12_PROKKA_69438;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_69438;product=hypothetical protein
+D31_L12_contig_103703	Prodigal:2.6	CDS	1828	2757	.	+	0	ID=D31_L12_PROKKA_69439;eC_number=2.1.1.178;gene=rsmF_5;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P76273;locus_tag=PROKKA_69439;product=Ribosomal RNA small subunit methyltransferase F
+D31_L12_contig_103703	Prodigal:2.6	CDS	28	732	.	-	0	ID=D31_L12_PROKKA_69436;gene=clpE_1;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9S5Z2;locus_tag=PROKKA_69436;product=ATP-dependent Clp protease ATP-binding subunit ClpE
+D31_L12_contig_103703	Prodigal:2.6	CDS	985	1242	.	-	0	ID=D31_L12_PROKKA_69437;gene=clpB_13;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P53532;locus_tag=PROKKA_69437;product=Chaperone protein ClpB
+D31_L12_contig_105017	Prodigal:2.6	CDS	1015	1368	.	-	0	ID=D31_L12_PROKKA_70383;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70383;product=hypothetical protein
+D31_L12_contig_105017	Prodigal:2.6	CDS	1548	1709	.	-	0	ID=D31_L12_PROKKA_70384;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70384;product=hypothetical protein
+D31_L12_contig_105017	Prodigal:2.6	CDS	1725	2018	.	-	0	ID=D31_L12_PROKKA_70385;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70385;product=hypothetical protein
+D31_L12_contig_105017	Prodigal:2.6	CDS	2163	2516	.	-	0	ID=D31_L12_PROKKA_70386;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70386;product=hypothetical protein
+D31_L12_contig_105017	Prodigal:2.6	CDS	419	634	.	-	0	ID=D31_L12_PROKKA_70381;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70381;product=hypothetical protein
+D31_L12_contig_105017	Prodigal:2.6	CDS	55	432	.	-	0	ID=D31_L12_PROKKA_70380;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK09562;locus_tag=PROKKA_70380;product=nucleoside triphosphate pyrophosphohydrolase
+D31_L12_contig_105017	Prodigal:2.6	CDS	768	1055	.	-	0	ID=D31_L12_PROKKA_70382;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70382;product=hypothetical protein
+D31_L12_contig_105088	Prodigal:2.6	CDS	276	1847	.	-	0	ID=D31_L12_PROKKA_70439;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_70439;product=hypothetical protein
+D31_L12_contig_107134	Prodigal:2.6	CDS	2301	2594	.	+	0	ID=D31_L12_PROKKA_71944;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_71944;product=hypothetical protein
+D31_L12_contig_107134	Prodigal:2.6	CDS	2665	2829	.	+	0	ID=D31_L12_PROKKA_71945;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_71945;product=hypothetical protein
+D31_L12_contig_107134	Prodigal:2.6	CDS	573	1202	.	-	0	ID=D31_L12_PROKKA_71943;eC_number=2.7.2.11;gene=proB_11;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P39820;locus_tag=PROKKA_71943;product=Glutamate 5-kinase 1
+D31_L12_contig_107352	Prodigal:2.6	CDS	262	462	.	-	0	ID=D31_L12_PROKKA_72110;gene=cgtA_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:B8GYI7;locus_tag=PROKKA_72110;product=GTPase Obg/CgtA
+D31_L12_contig_107352	Prodigal:2.6	CDS	37	234	.	-	0	ID=D31_L12_PROKKA_72109;gene=cgtA_2;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:B8GYI7;locus_tag=PROKKA_72109;product=GTPase Obg/CgtA
+D31_L12_contig_107352	Prodigal:2.6	CDS	874	1011	.	-	0	ID=D31_L12_PROKKA_72111;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72111;product=hypothetical protein
+D31_L12_contig_107739	Prodigal:2.6	CDS	490	1014	.	-	0	ID=D31_L12_PROKKA_72358;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72358;product=hypothetical protein
+D31_L12_contig_107873	Prodigal:2.6	CDS	2	556	.	-	0	ID=D31_L12_PROKKA_72452;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72452;product=hypothetical protein
+D31_L12_contig_107873	Prodigal:2.6	CDS	566	754	.	-	0	ID=D31_L12_PROKKA_72453;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72453;product=hypothetical protein
+D31_L12_contig_108396	Prodigal:2.6	CDS	316	612	.	-	0	ID=D31_L12_PROKKA_72837;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72837;product=hypothetical protein
+D31_L12_contig_108396	Prodigal:2.6	CDS	789	989	.	-	0	ID=D31_L12_PROKKA_72838;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_72838;product=hypothetical protein
+D31_L12_contig_109595	Prodigal:2.6	CDS	222	554	.	+	0	ID=D31_L12_PROKKA_73662;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_73662;product=hypothetical protein
+D31_L12_contig_109595	Prodigal:2.6	CDS	680	1186	.	+	0	ID=D31_L12_PROKKA_73663;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_73663;product=hypothetical protein
+D31_L12_contig_10973	Prodigal:2.6	CDS	229	690	.	+	0	ID=D31_L12_PROKKA_04668;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_04668;product=hypothetical protein
+D31_L12_contig_10973	Prodigal:2.6	CDS	695	1363	.	-	0	ID=D31_L12_PROKKA_04669;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_04669;product=hypothetical protein
+D31_L12_contig_111669	Prodigal:2.6	CDS	443	691	.	-	0	ID=D31_L12_PROKKA_75125;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_75125;product=hypothetical protein
+D31_L12_contig_112080	Prodigal:2.6	CDS	199	957	.	-	0	ID=D31_L12_PROKKA_75444;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF06414.6;locus_tag=PROKKA_75444;product=Zeta toxin
+D31_L12_contig_113278	Prodigal:2.6	CDS	1070	1471	.	-	0	ID=D31_L12_PROKKA_76341;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_76341;product=hypothetical protein
+D31_L12_contig_113278	Prodigal:2.6	CDS	764	964	.	-	0	ID=D31_L12_PROKKA_76340;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_76340;product=hypothetical protein
+D31_L12_contig_113418	Prodigal:2.6	CDS	359	883	.	-	0	ID=D31_L12_PROKKA_76487;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_76487;product=hypothetical protein
+D31_L12_contig_113418	Prodigal:2.6	CDS	53	385	.	+	0	ID=D31_L12_PROKKA_76486;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_76486;product=hypothetical protein
+D31_L12_contig_113456	Prodigal:2.6	CDS	1266	1613	.	+	0	ID=D31_L12_PROKKA_76520;gene=rplT_23;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6NDR6;locus_tag=PROKKA_76520;product=50S ribosomal protein L20
+D31_L12_contig_113456	Prodigal:2.6	CDS	174	443	.	+	0	ID=D31_L12_PROKKA_76517;gene=rpsT_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9HVM1;locus_tag=PROKKA_76517;product=30S ribosomal protein S20
+D31_L12_contig_113456	Prodigal:2.6	CDS	453	614	.	+	0	ID=D31_L12_PROKKA_76518;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00028;locus_tag=PROKKA_76518;product=translation initiation factor IF-3
+D31_L12_contig_113456	Prodigal:2.6	CDS	630	1001	.	+	0	ID=D31_L12_PROKKA_76519;gene=infC_44;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q5SKU2;locus_tag=PROKKA_76519;product=Translation initiation factor IF-3
+D31_L12_contig_113609	Prodigal:2.6	CDS	71	991	.	+	0	ID=D31_L12_PROKKA_76635;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_76635;product=hypothetical protein
+D31_L12_contig_116149	Prodigal:2.6	CDS	1060	1167	.	-	0	ID=D31_L12_PROKKA_78309;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_78309;product=hypothetical protein
+D31_L12_contig_116149	Prodigal:2.6	CDS	184	519	.	+	0	ID=D31_L12_PROKKA_78307;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_78307;product=hypothetical protein
+D31_L12_contig_116149	Prodigal:2.6	CDS	559	987	.	-	0	ID=D31_L12_PROKKA_78308;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_78308;product=hypothetical protein
+D31_L12_contig_117747	Prodigal:2.6	CDS	517	888	.	+	0	ID=D31_L12_PROKKA_79447;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_79447;product=hypothetical protein
+D31_L12_contig_117841	Prodigal:2.6	CDS	571	1104	.	-	0	ID=D31_L12_PROKKA_79505;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_79505;product=hypothetical protein
+D31_L12_contig_118353	Prodigal:2.6	CDS	444	713	.	-	0	ID=D31_L12_PROKKA_79804;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_79804;product=hypothetical protein
+D31_L12_contig_118887	Prodigal:2.6	CDS	194	1141	.	+	0	ID=D31_L12_PROKKA_80149;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_80149;product=hypothetical protein
+D31_L12_contig_120655	Prodigal:2.6	CDS	1310	1672	.	-	0	ID=D31_L12_PROKKA_81361;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_81361;product=hypothetical protein
+D31_L12_contig_120655	Prodigal:2.6	CDS	266	463	.	-	0	ID=D31_L12_PROKKA_81359;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_81359;product=hypothetical protein
+D31_L12_contig_120655	Prodigal:2.6	CDS	906	1121	.	-	0	ID=D31_L12_PROKKA_81360;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_81360;product=hypothetical protein
+D31_L12_contig_121712	Prodigal:2.6	CDS	255	476	.	-	0	ID=D31_L12_PROKKA_82031;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_82031;product=hypothetical protein
+D31_L12_contig_121712	Prodigal:2.6	CDS	553	810	.	+	0	ID=D31_L12_PROKKA_82032;eC_number=2.7.7.7;gene=dnaX_6;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P06710;locus_tag=PROKKA_82032;product=DNA polymerase III subunit tau
+D31_L12_contig_122555	Prodigal:2.6	CDS	1006	1287	.	+	0	ID=D31_L12_PROKKA_82648;gene=yidC_14;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P25714;locus_tag=PROKKA_82648;product=Membrane protein insertase YidC
+D31_L12_contig_122555	Prodigal:2.6	CDS	157	402	.	+	0	ID=D31_L12_PROKKA_82647;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF02681.8;locus_tag=PROKKA_82647;product=Divergent PAP2 family protein
+D31_L12_contig_12267	Prodigal:2.6	CDS	659	1120	.	-	0	ID=D31_L12_PROKKA_05154;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_05154;product=hypothetical protein
+D31_L12_contig_123361	Prodigal:2.6	CDS	325	543	.	-	0	ID=D31_L12_PROKKA_83191;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_83191;product=hypothetical protein
+D31_L12_contig_124022	Prodigal:2.6	CDS	1472	1861	.	+	0	ID=D31_L12_PROKKA_83609;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_83609;product=hypothetical protein
+D31_L12_contig_124022	Prodigal:2.6	CDS	2220	2480	.	+	0	ID=D31_L12_PROKKA_83610;eC_number=2.6.1.42;gene=ilvE_24;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A1A5;locus_tag=PROKKA_83610;product=Branched-chain-amino-acid aminotransferase
+D31_L12_contig_124022	Prodigal:2.6	CDS	864	986	.	-	0	ID=D31_L12_PROKKA_83608;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_83608;product=hypothetical protein
+D31_L12_contig_124762	Prodigal:2.6	CDS	177	320	.	-	0	ID=D31_L12_PROKKA_84123;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_84123;product=hypothetical protein
+D31_L12_contig_125633	Prodigal:2.6	CDS	423	650	.	+	0	ID=D31_L12_PROKKA_84693;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_84693;product=hypothetical protein
+D31_L12_contig_126316	Prodigal:2.6	CDS	1358	2035	.	-	0	ID=D31_L12_PROKKA_85213;gene=nhaG_2;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9LCB5;locus_tag=PROKKA_85213;product=Na(+)/H(+) antiporter NhaG
+D31_L12_contig_126316	Prodigal:2.6	CDS	209	319	.	-	0	ID=D31_L12_PROKKA_85211;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85211;product=hypothetical protein
+D31_L12_contig_126316	Prodigal:2.6	CDS	699	1313	.	+	0	ID=D31_L12_PROKKA_85212;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85212;product=hypothetical protein
+D31_L12_contig_126740	Prodigal:2.6	CDS	1754	1894	.	+	0	ID=D31_L12_PROKKA_85513;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85513;product=hypothetical protein
+D31_L12_contig_126740	Prodigal:2.6	CDS	22	1230	.	+	0	ID=D31_L12_PROKKA_85512;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85512;product=hypothetical protein
+D31_L12_contig_127151	Prodigal:2.6	CDS	13	291	.	-	0	ID=D31_L12_PROKKA_85823;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85823;product=hypothetical protein
+D31_L12_contig_127151	Prodigal:2.6	CDS	512	955	.	+	0	ID=D31_L12_PROKKA_85824;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85824;product=hypothetical protein
+D31_L12_contig_127151	Prodigal:2.6	CDS	959	1225	.	+	0	ID=D31_L12_PROKKA_85825;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85825;product=hypothetical protein
+D31_L12_contig_127238	Prodigal:2.6	CDS	263	721	.	+	0	ID=D31_L12_PROKKA_85873;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_85873;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	1025	1633	.	+	0	ID=D31_L12_PROKKA_86672;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86672;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	1635	2033	.	+	0	ID=D31_L12_PROKKA_86673;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86673;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	2033	2197	.	+	0	ID=D31_L12_PROKKA_86674;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86674;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	2200	2760	.	+	0	ID=D31_L12_PROKKA_86675;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86675;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	2989	3276	.	+	0	ID=D31_L12_PROKKA_86676;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86676;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	3279	3770	.	+	0	ID=D31_L12_PROKKA_86677;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86677;product=hypothetical protein
+D31_L12_contig_128498	Prodigal:2.6	CDS	3770	4501	.	+	0	ID=D31_L12_PROKKA_86678;eC_number=2.1.1.72;gene=rsrIM_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P14751;locus_tag=PROKKA_86678;product=Modification methylase RsrI
+D31_L12_contig_128498	Prodigal:2.6	CDS	867	998	.	+	0	ID=D31_L12_PROKKA_86671;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_86671;product=hypothetical protein
+D31_L12_contig_128932	Prodigal:2.6	CDS	1643	2167	.	-	0	ID=D31_L12_PROKKA_87004;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87004;product=hypothetical protein
+D31_L12_contig_128932	Prodigal:2.6	CDS	515	814	.	-	0	ID=D31_L12_PROKKA_87003;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87003;product=hypothetical protein
+D31_L12_contig_128932	Prodigal:2.6	CDS	94	384	.	+	0	ID=D31_L12_PROKKA_87002;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87002;product=hypothetical protein
+D31_L12_contig_129464	Prodigal:2.6	CDS	50	334	.	+	0	ID=D31_L12_PROKKA_87413;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87413;product=hypothetical protein
+D31_L12_contig_129464	Prodigal:2.6	CDS	602	1165	.	+	0	ID=D31_L12_PROKKA_87414;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87414;product=hypothetical protein
+D31_L12_contig_129589	Prodigal:2.6	CDS	15	1166	.	+	0	ID=D31_L12_PROKKA_87492;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_87492;product=hypothetical protein
+D31_L12_contig_131348	Prodigal:2.6	CDS	1420	1761	.	-	0	ID=D31_L12_PROKKA_88654;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_88654;product=hypothetical protein
+D31_L12_contig_131348	Prodigal:2.6	CDS	354	1070	.	-	0	ID=D31_L12_PROKKA_88653;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_88653;product=hypothetical protein
+D31_L12_contig_132217	Prodigal:2.6	CDS	263	664	.	-	0	ID=D31_L12_PROKKA_89318;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_89318;product=hypothetical protein
+D31_L12_contig_132217	Prodigal:2.6	CDS	736	906	.	-	0	ID=D31_L12_PROKKA_89319;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_89319;product=hypothetical protein
+D31_L12_contig_132217	Prodigal:2.6	CDS	921	1100	.	-	0	ID=D31_L12_PROKKA_89320;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_89320;product=hypothetical protein
+D31_L12_contig_133132	Prodigal:2.6	CDS	38	538	.	+	0	ID=D31_L12_PROKKA_90037;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF01442.12;locus_tag=PROKKA_90037;product=Apolipoprotein A1/A4/E domain protein
+D31_L12_contig_133132	Prodigal:2.6	CDS	587	1147	.	+	0	ID=D31_L12_PROKKA_90038;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK10325;locus_tag=PROKKA_90038;product=heat shock protein GrpE
+D31_L12_contig_134403	Prodigal:2.6	CDS	95	1006	.	+	0	ID=D31_L12_PROKKA_90898;eC_number=2.7.1.162;gene=nahK_1;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:E8MF12;locus_tag=PROKKA_90898;product=N-acetylhexosamine 1-kinase
+D31_L12_contig_134693	Prodigal:2.6	CDS	208	651	.	-	0	ID=D31_L12_PROKKA_91088;eC_number=3.4.11.18;gene=map_26;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9ZCD3;locus_tag=PROKKA_91088;product=Methionine aminopeptidase
+D31_L12_contig_134693	Prodigal:2.6	CDS	805	1008	.	-	0	ID=D31_L12_PROKKA_91089;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00016;locus_tag=PROKKA_91089;product=metal-binding heat shock protein
+D31_L12_contig_134808	Prodigal:2.6	CDS	490	819	.	-	0	ID=D31_L12_PROKKA_91157;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_91157;product=hypothetical protein
+D31_L12_contig_134808	Prodigal:2.6	CDS	835	993	.	-	0	ID=D31_L12_PROKKA_91158;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_91158;product=hypothetical protein
+D31_L12_contig_137083	Prodigal:2.6	CDS	121	1236	.	+	0	ID=D31_L12_PROKKA_92733;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_92733;product=hypothetical protein
+D31_L12_contig_138696	Prodigal:2.6	CDS	89	1003	.	+	0	ID=D31_L12_PROKKA_93803;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_93803;product=hypothetical protein
+D31_L12_contig_139615	Prodigal:2.6	CDS	45	506	.	+	0	ID=D31_L12_PROKKA_94443;gene=swrC_6;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O31501;locus_tag=PROKKA_94443;product=Swarming motility protein SwrC
+D31_L12_contig_140132	Prodigal:2.6	CDS	213	812	.	+	0	ID=D31_L12_PROKKA_94819;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF12728.1;locus_tag=PROKKA_94819;product=Helix-turn-helix domain protein
+D31_L12_contig_140132	Prodigal:2.6	CDS	851	1567	.	+	0	ID=D31_L12_PROKKA_94820;eC_number=2.7.4.22;gene=pyrH_29;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P59009;locus_tag=PROKKA_94820;product=Uridylate kinase
+D31_L12_contig_141337	Prodigal:2.6	CDS	47	1294	.	+	0	ID=D31_L12_PROKKA_95600;eC_number=2.7.7.6;gene=rpoB_44;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9L0L0;locus_tag=PROKKA_95600;product=DNA-directed RNA polymerase subunit beta
+D31_L12_contig_141421	Prodigal:2.6	CDS	700	912	.	+	0	ID=D31_L12_PROKKA_95684;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_95684;product=hypothetical protein
+D31_L12_contig_143320	Prodigal:2.6	CDS	1380	1856	.	-	0	ID=D31_L12_PROKKA_97001;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_97001;product=hypothetical protein
+D31_L12_contig_143320	Prodigal:2.6	CDS	89	1198	.	-	0	ID=D31_L12_PROKKA_97000;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00142;locus_tag=PROKKA_97000;product=putative rhodanese-related sulfurtransferase
+D31_L12_contig_143514	Prodigal:2.6	CDS	323	571	.	-	0	ID=D31_L12_PROKKA_97125;eC_number=2.7.7.6;gene=rpoB_46;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P60278;locus_tag=PROKKA_97125;product=DNA-directed RNA polymerase subunit beta
+D31_L12_contig_1464	Prodigal:2.6	CDS	24	536	.	+	0	ID=D31_L12_PROKKA_00689;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_00689;product=hypothetical protein
+D31_L12_contig_147686	Prodigal:2.6	CDS	653	1111	.	-	0	ID=D31_L12_PROKKA_100046;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100046;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	1811	1951	.	-	0	ID=D31_L12_PROKKA_100103;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100103;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	1955	2194	.	-	0	ID=D31_L12_PROKKA_100104;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100104;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	2233	2526	.	-	0	ID=D31_L12_PROKKA_100105;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100105;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	2854	3096	.	-	0	ID=D31_L12_PROKKA_100106;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100106;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	3234	3884	.	+	0	ID=D31_L12_PROKKA_100107;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_100107;product=hypothetical protein
+D31_L12_contig_147759	Prodigal:2.6	CDS	347	649	.	-	0	ID=D31_L12_PROKKA_100102;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A0R563;locus_tag=PROKKA_100102;note=DNA repair protein RadA homolog;product=hypothetical protein
+D31_L12_contig_149976	Prodigal:2.6	CDS	1093	1233	.	-	0	ID=D31_L12_PROKKA_101648;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_101648;product=hypothetical protein
+D31_L12_contig_149976	Prodigal:2.6	CDS	1648	2247	.	-	0	ID=D31_L12_PROKKA_101649;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_101649;product=hypothetical protein
+D31_L12_contig_149976	Prodigal:2.6	CDS	327	677	.	-	0	ID=D31_L12_PROKKA_101646;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF03486.8;locus_tag=PROKKA_101646;product=HI0933-like protein
+D31_L12_contig_149976	Prodigal:2.6	CDS	831	986	.	-	0	ID=D31_L12_PROKKA_101647;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF03486.8;locus_tag=PROKKA_101647;product=HI0933-like protein
+D31_L12_contig_150405	Prodigal:2.6	CDS	552	2126	.	-	0	ID=D31_L12_PROKKA_101988;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_101988;product=hypothetical protein
+D31_L12_contig_15076	Prodigal:2.6	CDS	313	582	.	-	0	ID=D31_L12_PROKKA_06394;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_06394;product=hypothetical protein
+D31_L12_contig_15076	Prodigal:2.6	CDS	901	1077	.	-	0	ID=D31_L12_PROKKA_06395;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_06395;product=hypothetical protein
+D31_L12_contig_151428	Prodigal:2.6	CDS	248	1375	.	+	0	ID=D31_L12_PROKKA_102669;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_102669;product=hypothetical protein
+D31_L12_contig_151874	Prodigal:2.6	CDS	315	905	.	-	0	ID=D31_L12_PROKKA_102990;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_102990;product=hypothetical protein
+D31_L12_contig_152349	Prodigal:2.6	CDS	1014	1520	.	-	0	ID=D31_L12_PROKKA_103297;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_103297;product=hypothetical protein
+D31_L12_contig_152349	Prodigal:2.6	CDS	276	677	.	-	0	ID=D31_L12_PROKKA_103295;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05306;locus_tag=PROKKA_103295;product=translation initiation factor IF-2
+D31_L12_contig_152349	Prodigal:2.6	CDS	773	904	.	+	0	ID=D31_L12_PROKKA_103296;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_103296;product=hypothetical protein
+D31_L12_contig_152580	Prodigal:2.6	CDS	228	1067	.	-	0	ID=D31_L12_PROKKA_103452;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_103452;product=hypothetical protein
+D31_L12_contig_153718	Prodigal:2.6	CDS	33	236	.	-	0	ID=D31_L12_PROKKA_104225;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF03572.1;locus_tag=PROKKA_104225;product=Peptidase family S41
+D31_L12_contig_153718	Prodigal:2.6	CDS	501	743	.	-	0	ID=D31_L12_PROKKA_104226;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_104226;product=hypothetical protein
+D31_L12_contig_153718	Prodigal:2.6	CDS	762	1025	.	-	0	ID=D31_L12_PROKKA_104227;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_104227;product=hypothetical protein
+D31_L12_contig_155609	Prodigal:2.6	CDS	281	1255	.	+	0	ID=D31_L12_PROKKA_105413;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00027.23;locus_tag=PROKKA_105413;product=Cyclic nucleotide-binding domain protein
+D31_L12_contig_155609	Prodigal:2.6	CDS	9	278	.	+	0	ID=D31_L12_PROKKA_105412;gene=pilT_29;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P24559;locus_tag=PROKKA_105412;product=Twitching mobility protein
+D31_L12_contig_155782	Prodigal:2.6	CDS	308	931	.	-	0	ID=D31_L12_PROKKA_105523;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_105523;product=hypothetical protein
+D31_L12_contig_155782	Prodigal:2.6	CDS	999	1364	.	-	0	ID=D31_L12_PROKKA_105524;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_105524;product=hypothetical protein
+D31_L12_contig_156694	Prodigal:2.6	CDS	24	263	.	+	0	ID=D31_L12_PROKKA_106167;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_106167;product=hypothetical protein
+D31_L12_contig_156694	Prodigal:2.6	CDS	868	1122	.	-	0	ID=D31_L12_PROKKA_106168;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_106168;product=hypothetical protein
+D31_L12_contig_156869	Prodigal:2.6	CDS	155	766	.	+	0	ID=D31_L12_PROKKA_106286;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_106286;product=hypothetical protein
+D31_L12_contig_15810	Prodigal:2.6	CDS	1051	1194	.	-	0	ID=D31_L12_PROKKA_06905;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_06905;product=hypothetical protein
+D31_L12_contig_15810	Prodigal:2.6	CDS	405	782	.	+	0	ID=D31_L12_PROKKA_06904;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_06904;product=hypothetical protein
+D31_L12_contig_158123	Prodigal:2.6	CDS	1048	1368	.	+	0	ID=D31_L12_PROKKA_107115;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107115;product=hypothetical protein
+D31_L12_contig_158123	Prodigal:2.6	CDS	1375	1791	.	+	0	ID=D31_L12_PROKKA_107116;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107116;product=hypothetical protein
+D31_L12_contig_158123	Prodigal:2.6	CDS	1888	2097	.	+	0	ID=D31_L12_PROKKA_107117;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107117;product=hypothetical protein
+D31_L12_contig_158123	Prodigal:2.6	CDS	2134	2346	.	+	0	ID=D31_L12_PROKKA_107118;gene=spoIIQ;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P71044;locus_tag=PROKKA_107118;product=Stage II sporulation protein Q
+D31_L12_contig_158123	Prodigal:2.6	CDS	479	643	.	-	0	ID=D31_L12_PROKKA_107113;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK10646;locus_tag=PROKKA_107113;product=ADP-binding protein
+D31_L12_contig_158123	Prodigal:2.6	CDS	823	1047	.	+	0	ID=D31_L12_PROKKA_107114;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107114;product=hypothetical protein
+D31_L12_contig_158409	Prodigal:2.6	CDS	340	891	.	+	0	ID=D31_L12_PROKKA_107273;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P35872;locus_tag=PROKKA_107273;note=Transcription termination/antitermination protein NusG;product=hypothetical protein
+D31_L12_contig_158409	Prodigal:2.6	CDS	918	1583	.	+	0	ID=D31_L12_PROKKA_107274;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107274;product=hypothetical protein
+D31_L12_contig_158725	Prodigal:2.6	CDS	453	1022	.	-	0	ID=D31_L12_PROKKA_107441;eC_number=6.1.1.20;gene=pheS_30;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P68847;locus_tag=PROKKA_107441;product=Phenylalanine--tRNA ligase alpha subunit
+D31_L12_contig_158725	Prodigal:2.6	CDS	58	462	.	-	0	ID=D31_L12_PROKKA_107440;gene=rnhA_13;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P54162;locus_tag=PROKKA_107440;product=14.7 kDa ribonuclease H-like protein
+D31_L12_contig_159175	Prodigal:2.6	CDS	29	1456	.	-	0	ID=D31_L12_PROKKA_107757;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_107757;product=hypothetical protein
+D31_L12_contig_163398	Prodigal:2.6	CDS	25	1356	.	-	0	ID=D31_L12_PROKKA_110518;gene=dnaK_69;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A6UEY0;locus_tag=PROKKA_110518;product=Chaperone protein DnaK
+D31_L12_contig_163445	Prodigal:2.6	CDS	468	716	.	-	0	ID=D31_L12_PROKKA_110555;eC_number=1.8.1.9;gene=trxB_18;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A9P4;locus_tag=PROKKA_110555;product=Thioredoxin reductase
+D31_L12_contig_163445	Prodigal:2.6	CDS	735	902	.	-	0	ID=D31_L12_PROKKA_110556;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_110556;product=hypothetical protein
+D31_L12_contig_164527	Prodigal:2.6	CDS	125	421	.	+	0	ID=D31_L12_PROKKA_111309;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_111309;product=hypothetical protein
+D31_L12_contig_164527	Prodigal:2.6	CDS	583	933	.	-	0	ID=D31_L12_PROKKA_111310;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_111310;product=hypothetical protein
+D31_L12_contig_165601	Prodigal:2.6	CDS	1238	1753	.	-	0	ID=D31_L12_PROKKA_111996;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_111996;product=hypothetical protein
+D31_L12_contig_165601	Prodigal:2.6	CDS	158	367	.	-	0	ID=D31_L12_PROKKA_111994;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_111994;product=hypothetical protein
+D31_L12_contig_165601	Prodigal:2.6	CDS	521	1177	.	-	0	ID=D31_L12_PROKKA_111995;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_111995;product=hypothetical protein
+D31_L12_contig_167050	Prodigal:2.6	CDS	176	1714	.	-	0	ID=D31_L12_PROKKA_112959;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_112959;product=hypothetical protein
+D31_L12_contig_167555	Prodigal:2.6	CDS	20	589	.	+	0	ID=D31_L12_PROKKA_113332;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_113332;product=hypothetical protein
+D31_L12_contig_167555	Prodigal:2.6	CDS	776	1156	.	-	0	ID=D31_L12_PROKKA_113333;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_113333;product=hypothetical protein
+D31_L12_contig_168097	Prodigal:2.6	CDS	293	709	.	-	0	ID=D31_L12_PROKKA_113702;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_113702;product=hypothetical protein
+D31_L12_contig_168097	Prodigal:2.6	CDS	892	1335	.	-	0	ID=D31_L12_PROKKA_113703;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_113703;product=hypothetical protein
+D31_L12_contig_168578	Prodigal:2.6	CDS	18	839	.	+	0	ID=D31_L12_PROKKA_114017;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_114017;product=hypothetical protein
+D31_L12_contig_168578	Prodigal:2.6	CDS	2426	2605	.	-	0	ID=D31_L12_PROKKA_114019;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05592;locus_tag=PROKKA_114019;product=50S ribosomal protein L15
+D31_L12_contig_168578	Prodigal:2.6	CDS	882	1103	.	+	0	ID=D31_L12_PROKKA_114018;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_114018;product=hypothetical protein
+D31_L12_contig_171471	Prodigal:2.6	CDS	1497	1793	.	-	0	ID=D31_L12_PROKKA_116053;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116053;product=hypothetical protein
+D31_L12_contig_171471	Prodigal:2.6	CDS	310	549	.	-	0	ID=D31_L12_PROKKA_116050;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116050;product=hypothetical protein
+D31_L12_contig_171471	Prodigal:2.6	CDS	649	969	.	-	0	ID=D31_L12_PROKKA_116051;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116051;product=hypothetical protein
+D31_L12_contig_171471	Prodigal:2.6	CDS	981	1376	.	-	0	ID=D31_L12_PROKKA_116052;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116052;product=hypothetical protein
+D31_L12_contig_172004	Prodigal:2.6	CDS	1003	1230	.	-	0	ID=D31_L12_PROKKA_116388;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116388;product=hypothetical protein
+D31_L12_contig_172004	Prodigal:2.6	CDS	1774	1947	.	-	0	ID=D31_L12_PROKKA_116389;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_116389;product=hypothetical protein
+D31_L12_contig_173892	Prodigal:2.6	CDS	2254	2361	.	-	0	ID=D31_L12_PROKKA_117689;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_117689;product=hypothetical protein
+D31_L12_contig_173892	Prodigal:2.6	CDS	263	742	.	+	0	ID=D31_L12_PROKKA_117687;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_117687;product=hypothetical protein
+D31_L12_contig_173892	Prodigal:2.6	CDS	809	2245	.	-	0	ID=D31_L12_PROKKA_117688;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_117688;product=hypothetical protein
+D31_L12_contig_174233	Prodigal:2.6	CDS	562	741	.	-	0	ID=D31_L12_PROKKA_117903;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_117903;product=hypothetical protein
+D31_L12_contig_174233	Prodigal:2.6	CDS	835	1035	.	-	0	ID=D31_L12_PROKKA_117904;eC_number=3.-.-.-;gene=baeB_2;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A7Z4X7;locus_tag=PROKKA_117904;product=putative polyketide biosynthesis zinc-dependent hydrolase BaeB
+D31_L12_contig_174233	Prodigal:2.6	CDS	86	430	.	-	0	ID=D31_L12_PROKKA_117902;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_117902;product=hypothetical protein
+D31_L12_contig_174877	Prodigal:2.6	CDS	424	1329	.	-	0	ID=D31_L12_PROKKA_118383;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_118383;product=hypothetical protein
+D31_L12_contig_175322	Prodigal:2.6	CDS	370	606	.	+	0	ID=D31_L12_PROKKA_118667;gene=ssb_62;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P37455;locus_tag=PROKKA_118667;product=Single-stranded DNA-binding protein ssb
+D31_L12_contig_175322	Prodigal:2.6	CDS	64	351	.	+	0	ID=D31_L12_PROKKA_118666;gene=rpsF_69;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q81JI2;locus_tag=PROKKA_118666;product=30S ribosomal protein S6
+D31_L12_contig_175322	Prodigal:2.6	CDS	802	1101	.	+	0	ID=D31_L12_PROKKA_118668;gene=rpsR_60;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P66468;locus_tag=PROKKA_118668;product=30S ribosomal protein S18
+D31_L12_contig_175964	Prodigal:2.6	CDS	357	614	.	-	0	ID=D31_L12_PROKKA_119133;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_119133;product=hypothetical protein
+D31_L12_contig_175964	Prodigal:2.6	CDS	696	911	.	-	0	ID=D31_L12_PROKKA_119134;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_119134;product=hypothetical protein
+D31_L12_contig_177687	Prodigal:2.6	CDS	255	656	.	+	0	ID=D31_L12_PROKKA_120340;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_120340;product=hypothetical protein
+D31_L12_contig_177687	Prodigal:2.6	CDS	731	1093	.	+	0	ID=D31_L12_PROKKA_120341;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_120341;product=hypothetical protein
+D31_L12_contig_179977	Prodigal:2.6	CDS	1458	1835	.	+	0	ID=D31_L12_PROKKA_122002;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_122002;product=hypothetical protein
+D31_L12_contig_179977	Prodigal:2.6	CDS	1873	2433	.	+	0	ID=D31_L12_PROKKA_122003;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_122003;product=hypothetical protein
+D31_L12_contig_179977	Prodigal:2.6	CDS	2444	4354	.	+	0	ID=D31_L12_PROKKA_122004;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_122004;product=hypothetical protein
+D31_L12_contig_179977	Prodigal:2.6	CDS	33	1424	.	+	0	ID=D31_L12_PROKKA_122001;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_122001;product=hypothetical protein
+D31_L12_contig_179977	Prodigal:2.6	CDS	4323	4682	.	+	0	ID=D31_L12_PROKKA_122005;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_122005;product=hypothetical protein
+D31_L12_contig_182118	Prodigal:2.6	CDS	65	1183	.	-	0	ID=D31_L12_PROKKA_123480;eC_number=2.-.-.-;gene=mtaB_5;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P54462;locus_tag=PROKKA_123480;product=Threonylcarbamoyladenosine tRNA methylthiotransferase MtaB
+D31_L12_contig_182388	Prodigal:2.6	CDS	10	543	.	+	0	ID=D31_L12_PROKKA_123662;gene=dnaA_44;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P68866;locus_tag=PROKKA_123662;product=Chromosomal replication initiator protein DnaA
+D31_L12_contig_182388	Prodigal:2.6	CDS	744	953	.	-	0	ID=D31_L12_PROKKA_123663;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_123663;product=hypothetical protein
+D31_L12_contig_18295	Prodigal:2.6	CDS	87	1289	.	+	0	ID=D31_L12_PROKKA_08585;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF01464.14;locus_tag=PROKKA_08585;product=Transglycosylase SLT domain protein
+D31_L12_contig_18299	Prodigal:2.6	CDS	1194	1541	.	+	0	ID=D31_L12_PROKKA_08589;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_08589;product=hypothetical protein
+D31_L12_contig_18299	Prodigal:2.6	CDS	1495	1677	.	-	0	ID=D31_L12_PROKKA_08590;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_08590;product=hypothetical protein
+D31_L12_contig_18299	Prodigal:2.6	CDS	482	892	.	-	0	ID=D31_L12_PROKKA_08587;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_08587;product=hypothetical protein
+D31_L12_contig_18299	Prodigal:2.6	CDS	956	1189	.	-	0	ID=D31_L12_PROKKA_08588;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_08588;product=hypothetical protein
+D31_L12_contig_184274	Prodigal:2.6	CDS	420	1175	.	-	0	ID=D31_L12_PROKKA_124907;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF03976.8;locus_tag=PROKKA_124907;product=Polyphosphate kinase 2 (PPK2)
+D31_L12_contig_18526	Prodigal:2.6	CDS	274	1077	.	+	0	ID=D31_L12_PROKKA_08767;gene=ponA_1;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P39793;locus_tag=PROKKA_08767;product=Penicillin-binding protein 1A/1B
+D31_L12_contig_186516	Prodigal:2.6	CDS	1296	1733	.	+	0	ID=D31_L12_PROKKA_126401;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_126401;product=hypothetical protein
+D31_L12_contig_186516	Prodigal:2.6	CDS	725	1189	.	+	0	ID=D31_L12_PROKKA_126400;eC_number=3.6.4.13;gene=rhlE_22;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P25888;locus_tag=PROKKA_126400;product=ATP-dependent RNA helicase RhlE
+D31_L12_contig_188677	Prodigal:2.6	CDS	239	1201	.	+	0	ID=D31_L12_PROKKA_127998;eC_number=1.3.1.98;gene=murB_19;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q8Y776;locus_tag=PROKKA_127998;product=UDP-N-acetylenolpyruvoylglucosamine reductase
+D31_L12_contig_189134	Prodigal:2.6	CDS	241	477	.	-	0	ID=D31_L12_PROKKA_128292;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_128292;product=hypothetical protein
+D31_L12_contig_189134	Prodigal:2.6	CDS	583	879	.	-	0	ID=D31_L12_PROKKA_128293;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_128293;product=hypothetical protein
+D31_L12_contig_189611	Prodigal:2.6	CDS	1137	1364	.	+	0	ID=D31_L12_PROKKA_128665;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_128665;product=hypothetical protein
+D31_L12_contig_189611	Prodigal:2.6	CDS	1289	1660	.	-	0	ID=D31_L12_PROKKA_128666;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_128666;product=hypothetical protein
+D31_L12_contig_189611	Prodigal:2.6	CDS	282	995	.	+	0	ID=D31_L12_PROKKA_128664;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_128664;product=hypothetical protein
+D31_L12_contig_189857	Prodigal:2.6	CDS	1381	1554	.	-	0	ID=D31_L12_PROKKA_128820;gene=tufA_72;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A6N3;locus_tag=PROKKA_128820;product=Elongation factor Tu
+D31_L12_contig_189857	Prodigal:2.6	CDS	142	318	.	-	0	ID=D31_L12_PROKKA_128816;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK01064;locus_tag=PROKKA_128816;product=hypothetical protein
+D31_L12_contig_189857	Prodigal:2.6	CDS	400	630	.	-	0	ID=D31_L12_PROKKA_128817;gene=rpsP_56;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q5SJH3;locus_tag=PROKKA_128817;product=30S ribosomal protein S16
+D31_L12_contig_189857	Prodigal:2.6	CDS	759	941	.	-	0	ID=D31_L12_PROKKA_128818;gene=rpmB_58;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6NCH9;locus_tag=PROKKA_128818;product=50S ribosomal protein L28
+D31_L12_contig_189857	Prodigal:2.6	CDS	963	1292	.	-	0	ID=D31_L12_PROKKA_128819;gene=rpsJ_88;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6N4T6;locus_tag=PROKKA_128819;product=30S ribosomal protein S10
+D31_L12_contig_190661	Prodigal:2.6	CDS	98	1315	.	+	0	ID=D31_L12_PROKKA_129393;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00665.20;locus_tag=PROKKA_129393;product=Integrase core domain protein
+D31_L12_contig_191656	Prodigal:2.6	CDS	1203	1358	.	-	0	ID=D31_L12_PROKKA_130079;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130079;product=hypothetical protein
+D31_L12_contig_191656	Prodigal:2.6	CDS	1405	1632	.	+	0	ID=D31_L12_PROKKA_130080;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130080;product=hypothetical protein
+D31_L12_contig_191656	Prodigal:2.6	CDS	1878	2213	.	+	0	ID=D31_L12_PROKKA_130081;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130081;product=hypothetical protein
+D31_L12_contig_191656	Prodigal:2.6	CDS	2238	2618	.	+	0	ID=D31_L12_PROKKA_130082;eC_number=6.1.1.16;gene=cysS_31;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q99W73;locus_tag=PROKKA_130082;product=Cysteine--tRNA ligase
+D31_L12_contig_191656	Prodigal:2.6	CDS	515	754	.	-	0	ID=D31_L12_PROKKA_130078;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130078;product=hypothetical protein
+D31_L12_contig_192277	Prodigal:2.6	CDS	206	805	.	-	0	ID=D31_L12_PROKKA_130524;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130524;product=hypothetical protein
+D31_L12_contig_192927	Prodigal:2.6	CDS	1627	2196	.	-	0	ID=D31_L12_PROKKA_130909;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF04011.6;locus_tag=PROKKA_130909;product=LemA family protein
+D31_L12_contig_192927	Prodigal:2.6	CDS	2302	2703	.	-	0	ID=D31_L12_PROKKA_130910;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130910;product=hypothetical protein
+D31_L12_contig_192927	Prodigal:2.6	CDS	283	1617	.	-	0	ID=D31_L12_PROKKA_130908;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_130908;product=hypothetical protein
+D31_L12_contig_195454	Prodigal:2.6	CDS	290	1204	.	-	0	ID=D31_L12_PROKKA_132570;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_132570;product=hypothetical protein
+D31_L12_contig_197305	Prodigal:2.6	CDS	100	258	.	+	0	ID=D31_L12_PROKKA_133750;eC_number=3.6.5.-;gene=lepA_39;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q2FXY7;locus_tag=PROKKA_133750;product=Elongation factor 4
+D31_L12_contig_197305	Prodigal:2.6	CDS	379	687	.	+	0	ID=D31_L12_PROKKA_133751;eC_number=3.6.5.-;gene=lepA_40;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P60785;locus_tag=PROKKA_133751;product=Elongation factor 4
+D31_L12_contig_197305	Prodigal:2.6	CDS	688	900	.	+	0	ID=D31_L12_PROKKA_133752;eC_number=3.6.5.-;gene=lepA_41;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O67618;locus_tag=PROKKA_133752;product=Elongation factor 4
+D31_L12_contig_197305	Prodigal:2.6	CDS	910	1245	.	+	0	ID=D31_L12_PROKKA_133753;eC_number=3.6.5.-;gene=lepA_42;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q2FXY7;locus_tag=PROKKA_133753;product=Elongation factor 4
+D31_L12_contig_19874	Prodigal:2.6	CDS	1100	1354	.	+	0	ID=D31_L12_PROKKA_09802;eC_number=6.1.1.5;gene=ileS_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q10765;locus_tag=PROKKA_09802;product=Isoleucine--tRNA ligase
+D31_L12_contig_19874	Prodigal:2.6	CDS	1517	1711	.	+	0	ID=D31_L12_PROKKA_09803;eC_number=6.1.1.5;gene=ileS_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q10765;locus_tag=PROKKA_09803;product=Isoleucine--tRNA ligase
+D31_L12_contig_19874	Prodigal:2.6	CDS	1822	2082	.	-	0	ID=D31_L12_PROKKA_09804;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_09804;product=hypothetical protein
+D31_L12_contig_19874	Prodigal:2.6	CDS	239	1051	.	+	0	ID=D31_L12_PROKKA_09801;eC_number=6.1.1.5;gene=ileS_2;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P56690;locus_tag=PROKKA_09801;product=Isoleucine--tRNA ligase
+D31_L12_contig_19874	Prodigal:2.6	CDS	2420	2617	.	-	0	ID=D31_L12_PROKKA_09805;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_09805;product=hypothetical protein
+D31_L12_contig_198861	Prodigal:2.6	CDS	510	656	.	+	0	ID=D31_L12_PROKKA_134803;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_134803;product=hypothetical protein
+D31_L12_contig_198861	Prodigal:2.6	CDS	737	916	.	-	0	ID=D31_L12_PROKKA_134804;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_134804;product=hypothetical protein
+D31_L12_contig_198890	Prodigal:2.6	CDS	541	1041	.	-	0	ID=D31_L12_PROKKA_134815;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK01490;locus_tag=PROKKA_134815;product=trigger factor
+D31_L12_contig_198897	Prodigal:2.6	CDS	179	397	.	+	0	ID=D31_L12_PROKKA_134819;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_134819;product=hypothetical protein
+D31_L12_contig_19902	Prodigal:2.6	CDS	1213	1572	.	+	0	ID=D31_L12_PROKKA_09822;eC_number=2.7.7.7;gene=dnaN_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P99103;locus_tag=PROKKA_09822;product=DNA polymerase III subunit beta
+D31_L12_contig_19902	Prodigal:2.6	CDS	1603	1875	.	+	0	ID=D31_L12_PROKKA_09823;eC_number=2.7.7.7;gene=dnaN_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P99103;locus_tag=PROKKA_09823;product=DNA polymerase III subunit beta
+D31_L12_contig_19902	Prodigal:2.6	CDS	2058	2255	.	+	0	ID=D31_L12_PROKKA_09824;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00488;locus_tag=PROKKA_09824;product=phenylalanyl-tRNA synthetase subunit alpha
+D31_L12_contig_19902	Prodigal:2.6	CDS	622	822	.	-	0	ID=D31_L12_PROKKA_09820;eC_number=3.6.1.61;gene=ndx1_2;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q75UV1;locus_tag=PROKKA_09820;product=Diadenosine hexaphosphate hydrolase
+D31_L12_contig_19902	Prodigal:2.6	CDS	922	1212	.	+	0	ID=D31_L12_PROKKA_09821;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05643;locus_tag=PROKKA_09821;product=DNA polymerase III subunit beta
+D31_L12_contig_199196	Prodigal:2.6	CDS	1137	1415	.	+	0	ID=D31_L12_PROKKA_135033;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF07728.8;locus_tag=PROKKA_135033;product=AAA domain (dynein-related subfamily)
+D31_L12_contig_199196	Prodigal:2.6	CDS	114	620	.	+	0	ID=D31_L12_PROKKA_135031;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_135031;product=hypothetical protein
+D31_L12_contig_199196	Prodigal:2.6	CDS	918	1067	.	+	0	ID=D31_L12_PROKKA_135032;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_135032;product=hypothetical protein
+D31_L12_contig_200510	Prodigal:2.6	CDS	561	689	.	-	0	ID=D31_L12_PROKKA_135888;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_135888;product=hypothetical protein
+D31_L12_contig_200510	Prodigal:2.6	CDS	776	1021	.	+	0	ID=D31_L12_PROKKA_135889;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF02535.16;locus_tag=PROKKA_135889;product=ZIP Zinc transporter
+D31_L12_contig_20053	Prodigal:2.6	CDS	450	797	.	-	0	ID=D31_L12_PROKKA_09913;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_09913;product=hypothetical protein
+D31_L12_contig_200920	Prodigal:2.6	CDS	201	488	.	-	0	ID=D31_L12_PROKKA_136157;gene=rpsF_73;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q81JI2;locus_tag=PROKKA_136157;product=30S ribosomal protein S6
+D31_L12_contig_200920	Prodigal:2.6	CDS	547	1038	.	+	0	ID=D31_L12_PROKKA_136158;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_136158;product=hypothetical protein
+D31_L12_contig_201916	Prodigal:2.6	CDS	584	784	.	-	0	ID=D31_L12_PROKKA_136855;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_136855;product=hypothetical protein
+D31_L12_contig_202094	Prodigal:2.6	CDS	1409	1774	.	-	0	ID=D31_L12_PROKKA_136963;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_136963;product=hypothetical protein
+D31_L12_contig_202094	Prodigal:2.6	CDS	2200	2343	.	-	0	ID=D31_L12_PROKKA_136964;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_136964;product=hypothetical protein
+D31_L12_contig_202094	Prodigal:2.6	CDS	91	894	.	-	0	ID=D31_L12_PROKKA_136962;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_136962;product=hypothetical protein
+D31_L12_contig_202261	Prodigal:2.6	CDS	1605	1910	.	-	0	ID=D31_L12_PROKKA_137066;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_137066;product=hypothetical protein
+D31_L12_contig_202261	Prodigal:2.6	CDS	1928	3064	.	-	0	ID=D31_L12_PROKKA_137067;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF02195.12;locus_tag=PROKKA_137067;product=ParB-like nuclease domain protein
+D31_L12_contig_202261	Prodigal:2.6	CDS	3090	3431	.	-	0	ID=D31_L12_PROKKA_137068;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_137068;product=hypothetical protein
+D31_L12_contig_202261	Prodigal:2.6	CDS	91	1629	.	-	0	ID=D31_L12_PROKKA_137065;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_137065;product=hypothetical protein
+D31_L12_contig_203726	Prodigal:2.6	CDS	253	684	.	-	0	ID=D31_L12_PROKKA_138016;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00571;locus_tag=PROKKA_138016;product=F0F1 ATP synthase subunit epsilon
+D31_L12_contig_203726	Prodigal:2.6	CDS	703	966	.	-	0	ID=D31_L12_PROKKA_138017;eC_number=3.6.3.14;gene=atpD_67;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0ABB4;locus_tag=PROKKA_138017;product=ATP synthase subunit beta
+D31_L12_contig_204809	Prodigal:2.6	CDS	239	664	.	+	0	ID=D31_L12_PROKKA_138708;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_138708;product=hypothetical protein
+D31_L12_contig_204809	Prodigal:2.6	CDS	699	1280	.	+	0	ID=D31_L12_PROKKA_138709;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_138709;product=hypothetical protein
+D31_L12_contig_204908	Prodigal:2.6	CDS	116	580	.	-	0	ID=D31_L12_PROKKA_138771;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_138771;product=hypothetical protein
+D31_L12_contig_204908	Prodigal:2.6	CDS	623	1312	.	-	0	ID=D31_L12_PROKKA_138772;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_138772;product=hypothetical protein
+D31_L12_contig_205566	Prodigal:2.6	CDS	77	1339	.	+	0	ID=D31_L12_PROKKA_139175;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_139175;product=hypothetical protein
+D31_L12_contig_206454	Prodigal:2.6	CDS	479	772	.	-	0	ID=D31_L12_PROKKA_139774;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_139774;product=hypothetical protein
+D31_L12_contig_207767	Prodigal:2.6	CDS	543	1118	.	-	0	ID=D31_L12_PROKKA_140689;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_140689;product=hypothetical protein
+D31_L12_contig_207895	Prodigal:2.6	CDS	160	606	.	+	0	ID=D31_L12_PROKKA_140803;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_140803;product=hypothetical protein
+D31_L12_contig_207895	Prodigal:2.6	CDS	525	1076	.	-	0	ID=D31_L12_PROKKA_140804;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_140804;product=hypothetical protein
+D31_L12_contig_209055	Prodigal:2.6	CDS	136	1047	.	-	0	ID=D31_L12_PROKKA_141616;eC_number=6.1.1.7;gene=alaS_26;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P00957;locus_tag=PROKKA_141616;product=Alanine--tRNA ligase
+D31_L12_contig_209391	Prodigal:2.6	CDS	509	715	.	-	0	ID=D31_L12_PROKKA_141888;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_141888;product=hypothetical protein
+D31_L12_contig_209391	Prodigal:2.6	CDS	878	1141	.	-	0	ID=D31_L12_PROKKA_141889;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_141889;product=hypothetical protein
+D31_L12_contig_212344	Prodigal:2.6	CDS	164	997	.	+	0	ID=D31_L12_PROKKA_144012;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_144012;product=hypothetical protein
+D31_L12_contig_212462	Prodigal:2.6	CDS	1212	1514	.	+	0	ID=D31_L12_PROKKA_144088;gene=rplX_131;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0CI78;locus_tag=PROKKA_144088;product=50S ribosomal protein L24
+D31_L12_contig_212462	Prodigal:2.6	CDS	238	483	.	+	0	ID=D31_L12_PROKKA_144085;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00306;locus_tag=PROKKA_144085;product=50S ribosomal protein L29
+D31_L12_contig_212462	Prodigal:2.6	CDS	503	745	.	+	0	ID=D31_L12_PROKKA_144086;gene=rpsQ_120;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A0QSE0;locus_tag=PROKKA_144086;product=30S ribosomal protein S17
+D31_L12_contig_212462	Prodigal:2.6	CDS	804	1172	.	+	0	ID=D31_L12_PROKKA_144087;gene=rplN_130;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O83229;locus_tag=PROKKA_144087;product=50S ribosomal protein L14
+D31_L12_contig_213692	Prodigal:2.6	CDS	18	1157	.	-	0	ID=D31_L12_PROKKA_144962;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_144962;product=hypothetical protein
+D31_L12_contig_213742	Prodigal:2.6	CDS	1014	1238	.	-	0	ID=D31_L12_PROKKA_144992;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_144992;product=hypothetical protein
+D31_L12_contig_213742	Prodigal:2.6	CDS	381	683	.	-	0	ID=D31_L12_PROKKA_144990;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF07676.6;locus_tag=PROKKA_144990;product=WD40-like Beta Propeller Repeat protein
+D31_L12_contig_213742	Prodigal:2.6	CDS	774	932	.	-	0	ID=D31_L12_PROKKA_144991;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_144991;product=hypothetical protein
+D31_L12_contig_215492	Prodigal:2.6	CDS	35	355	.	+	0	ID=D31_L12_PROKKA_146172;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK13022;locus_tag=PROKKA_146172;product=preprotein translocase subunit SecF
+D31_L12_contig_215492	Prodigal:2.6	CDS	391	1467	.	+	0	ID=D31_L12_PROKKA_146173;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_146173;product=hypothetical protein
+D31_L12_contig_217383	Prodigal:2.6	CDS	454	951	.	+	0	ID=D31_L12_PROKKA_147516;gene=folD_31;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q5NGF3;locus_tag=PROKKA_147516;product=Bifunctional protein FolD protein
+D31_L12_contig_217741	Prodigal:2.6	CDS	1059	1508	.	+	0	ID=D31_L12_PROKKA_147762;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_147762;product=hypothetical protein
+D31_L12_contig_217741	Prodigal:2.6	CDS	568	891	.	+	0	ID=D31_L12_PROKKA_147761;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_147761;product=hypothetical protein
+D31_L12_contig_218925	Prodigal:2.6	CDS	205	423	.	+	0	ID=D31_L12_PROKKA_148537;gene=rpsS_112;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P12731;locus_tag=PROKKA_148537;product=30S ribosomal protein S19
+D31_L12_contig_218925	Prodigal:2.6	CDS	514	837	.	+	0	ID=D31_L12_PROKKA_148538;gene=rplV_92;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P61175;locus_tag=PROKKA_148538;product=50S ribosomal protein L22
+D31_L12_contig_219113	Prodigal:2.6	CDS	388	708	.	+	0	ID=D31_L12_PROKKA_148653;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_148653;product=hypothetical protein
+D31_L12_contig_219113	Prodigal:2.6	CDS	741	1235	.	-	0	ID=D31_L12_PROKKA_148654;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_148654;product=hypothetical protein
+D31_L12_contig_219756	Prodigal:2.6	CDS	1086	1454	.	-	0	ID=D31_L12_PROKKA_149115;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_149115;product=hypothetical protein
+D31_L12_contig_219756	Prodigal:2.6	CDS	430	906	.	+	0	ID=D31_L12_PROKKA_149114;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_149114;product=hypothetical protein
+D31_L12_contig_219892	Prodigal:2.6	CDS	382	687	.	-	0	ID=D31_L12_PROKKA_149225;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_149225;product=hypothetical protein
+D31_L12_contig_219892	Prodigal:2.6	CDS	706	2007	.	-	0	ID=D31_L12_PROKKA_149226;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00395.14;locus_tag=PROKKA_149226;note=S-layer homology domain;product=hypothetical protein
+D31_L12_contig_220374	Prodigal:2.6	CDS	1321	1497	.	+	0	ID=D31_L12_PROKKA_149550;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_149550;product=hypothetical protein
+D31_L12_contig_220374	Prodigal:2.6	CDS	1525	1803	.	+	0	ID=D31_L12_PROKKA_149551;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_149551;product=hypothetical protein
+D31_L12_contig_220374	Prodigal:2.6	CDS	174	824	.	+	0	ID=D31_L12_PROKKA_149549;eC_number=6.1.1.4;gene=leuS_35;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:B8ZKS5;locus_tag=PROKKA_149549;product=Leucine--tRNA ligase
+D31_L12_contig_220374	Prodigal:2.6	CDS	2048	2602	.	+	0	ID=D31_L12_PROKKA_149552;eC_number=2.1.1.189;gene=rlmCD_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O31503;locus_tag=PROKKA_149552;product=23S rRNA (uracil-C(5))-methyltransferase RlmCD
+D31_L12_contig_222020	Prodigal:2.6	CDS	85	753	.	+	0	ID=D31_L12_PROKKA_150681;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_150681;product=hypothetical protein
+D31_L12_contig_222258	Prodigal:2.6	CDS	436	744	.	+	0	ID=D31_L12_PROKKA_150829;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_150829;product=hypothetical protein
+D31_L12_contig_222258	Prodigal:2.6	CDS	757	1056	.	+	0	ID=D31_L12_PROKKA_150830;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_150830;product=hypothetical protein
+D31_L12_contig_222807	Aragorn:1.2	tRNA	1914	1989	.	+	0	ID=D31_L12_PROKKA_151306;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_151306;product=tRNA-Thr(tgt)
+D31_L12_contig_222807	Aragorn:1.2	tRNA	2011	2095	.	+	0	ID=D31_L12_PROKKA_151307;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_151307;product=tRNA-Tyr(gta)
+D31_L12_contig_222807	Aragorn:1.2	tRNA	2149	2232	.	+	0	ID=D31_L12_PROKKA_151308;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_151308;product=tRNA-Leu(tag)
+D31_L12_contig_222807	Prodigal:2.6	CDS	151	603	.	-	0	ID=D31_L12_PROKKA_151303;gene=ssb_77;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P28046;locus_tag=PROKKA_151303;product=Single-stranded DNA-binding protein
+D31_L12_contig_222807	Prodigal:2.6	CDS	1515	1856	.	+	0	ID=D31_L12_PROKKA_151305;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_151305;product=hypothetical protein
+D31_L12_contig_222807	Prodigal:2.6	CDS	798	1436	.	+	0	ID=D31_L12_PROKKA_151304;gene=rpoD_22;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P55993;locus_tag=PROKKA_151304;product=RNA polymerase sigma factor RpoD
+D31_L12_contig_22321	Prodigal:2.6	CDS	1019	1372	.	-	0	ID=D31_L12_PROKKA_11695;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_11695;product=hypothetical protein
+D31_L12_contig_22321	Prodigal:2.6	CDS	720	920	.	-	0	ID=D31_L12_PROKKA_11694;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_11694;product=hypothetical protein
+D31_L12_contig_223619	Prodigal:2.6	CDS	322	729	.	-	0	ID=D31_L12_PROKKA_151871;eC_number=1.2.-.-;gene=korA_23;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O53182;locus_tag=PROKKA_151871;product=2-oxoglutarate oxidoreductase subunit KorA
+D31_L12_contig_223619	Prodigal:2.6	CDS	739	1041	.	-	0	ID=D31_L12_PROKKA_151872;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK08659;locus_tag=PROKKA_151872;product=2-oxoglutarate ferredoxin oxidoreductase subunit alpha
+D31_L12_contig_224178	Prodigal:2.6	CDS	1110	1403	.	-	0	ID=D31_L12_PROKKA_152257;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_152257;product=hypothetical protein
+D31_L12_contig_224178	Prodigal:2.6	CDS	202	483	.	-	0	ID=D31_L12_PROKKA_152255;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_152255;product=hypothetical protein
+D31_L12_contig_224178	Prodigal:2.6	CDS	649	921	.	-	0	ID=D31_L12_PROKKA_152256;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_152256;product=hypothetical protein
+D31_L12_contig_2243	Prodigal:2.6	CDS	241	933	.	-	0	ID=D31_L12_PROKKA_00943;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF12762.1;locus_tag=PROKKA_00943;product=ISXO2-like transposase domain protein
+D31_L12_contig_2254	Prodigal:2.6	CDS	417	971	.	+	0	ID=D31_L12_PROKKA_00948;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_00948;product=hypothetical protein
+D31_L12_contig_226239	Prodigal:2.6	CDS	480	899	.	+	0	ID=D31_L12_PROKKA_153672;eC_number=3.1.-.-;gene=rny_18;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P67278;locus_tag=PROKKA_153672;product=Ribonuclease Y
+D31_L12_contig_228588	Prodigal:2.6	CDS	1292	1702	.	-	0	ID=D31_L12_PROKKA_155274;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_155274;product=hypothetical protein
+D31_L12_contig_228588	Prodigal:2.6	CDS	56	1150	.	+	0	ID=D31_L12_PROKKA_155273;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_155273;product=hypothetical protein
+D31_L12_contig_231001	Prodigal:2.6	CDS	1446	1760	.	-	0	ID=D31_L12_PROKKA_156767;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156767;product=hypothetical protein
+D31_L12_contig_231001	Prodigal:2.6	CDS	2434	2712	.	+	0	ID=D31_L12_PROKKA_156768;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156768;product=hypothetical protein
+D31_L12_contig_231001	Prodigal:2.6	CDS	38	532	.	+	0	ID=D31_L12_PROKKA_156764;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156764;product=hypothetical protein
+D31_L12_contig_231001	Prodigal:2.6	CDS	502	792	.	-	0	ID=D31_L12_PROKKA_156765;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156765;product=hypothetical protein
+D31_L12_contig_231001	Prodigal:2.6	CDS	800	1303	.	+	0	ID=D31_L12_PROKKA_156766;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156766;product=hypothetical protein
+D31_L12_contig_231218	Prodigal:2.6	CDS	297	1121	.	-	0	ID=D31_L12_PROKKA_156957;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_156957;product=hypothetical protein
+D31_L12_contig_231315	Prodigal:2.6	CDS	550	984	.	-	0	ID=D31_L12_PROKKA_157041;gene=uvrB_28;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P67425;locus_tag=PROKKA_157041;product=UvrABC system protein B
+D31_L12_contig_231315	Prodigal:2.6	CDS	73	360	.	-	0	ID=D31_L12_PROKKA_157040;gene=uvrB_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q56243;locus_tag=PROKKA_157040;product=UvrABC system protein B
+D31_L12_contig_232438	Prodigal:2.6	CDS	639	881	.	+	0	ID=D31_L12_PROKKA_157821;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_157821;product=hypothetical protein
+D31_L12_contig_234315	Prodigal:2.6	CDS	373	600	.	-	0	ID=D31_L12_PROKKA_159139;eC_number=3.4.21.89;gene=sipT_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P71013;locus_tag=PROKKA_159139;product=Signal peptidase I T
+D31_L12_contig_234315	Prodigal:2.6	CDS	713	1483	.	-	0	ID=D31_L12_PROKKA_159140;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK12904;locus_tag=PROKKA_159140;product=preprotein translocase subunit SecA
+D31_L12_contig_237404	Prodigal:2.6	CDS	333	590	.	+	0	ID=D31_L12_PROKKA_161218;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_161218;product=hypothetical protein
+D31_L12_contig_237404	Prodigal:2.6	CDS	566	850	.	-	0	ID=D31_L12_PROKKA_161219;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_161219;product=hypothetical protein
+D31_L12_contig_237404	Prodigal:2.6	CDS	942	1277	.	+	0	ID=D31_L12_PROKKA_161220;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_161220;product=hypothetical protein
+D31_L12_contig_238840	Prodigal:2.6	CDS	180	914	.	-	0	ID=D31_L12_PROKKA_162286;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_162286;product=hypothetical protein
+D31_L12_contig_238852	Prodigal:2.6	CDS	1283	1786	.	+	0	ID=D31_L12_PROKKA_162293;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_162293;product=hypothetical protein
+D31_L12_contig_238852	Prodigal:2.6	CDS	1810	2025	.	+	0	ID=D31_L12_PROKKA_162294;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_162294;product=hypothetical protein
+D31_L12_contig_238852	Prodigal:2.6	CDS	311	1132	.	-	0	ID=D31_L12_PROKKA_162292;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_162292;product=hypothetical protein
+D31_L12_contig_239645	Prodigal:2.6	CDS	214	408	.	-	0	ID=D31_L12_PROKKA_162765;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_162765;product=hypothetical protein
+D31_L12_contig_240290	Prodigal:2.6	CDS	133	291	.	+	0	ID=D31_L12_PROKKA_163191;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163191;product=hypothetical protein
+D31_L12_contig_240290	Prodigal:2.6	CDS	1818	2261	.	+	0	ID=D31_L12_PROKKA_163193;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163193;product=hypothetical protein
+D31_L12_contig_240290	Prodigal:2.6	CDS	293	1843	.	+	0	ID=D31_L12_PROKKA_163192;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163192;product=hypothetical protein
+D31_L12_contig_240358	Prodigal:2.6	CDS	2001	2309	.	-	0	ID=D31_L12_PROKKA_163235;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163235;product=hypothetical protein
+D31_L12_contig_240358	Prodigal:2.6	CDS	31	474	.	-	0	ID=D31_L12_PROKKA_163233;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163233;product=hypothetical protein
+D31_L12_contig_240358	Prodigal:2.6	CDS	449	1999	.	-	0	ID=D31_L12_PROKKA_163234;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163234;product=hypothetical protein
+D31_L12_contig_240735	Prodigal:2.6	CDS	1452	1814	.	-	0	ID=D31_L12_PROKKA_163480;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163480;product=hypothetical protein
+D31_L12_contig_240735	Prodigal:2.6	CDS	1971	2276	.	-	0	ID=D31_L12_PROKKA_163481;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_163481;product=hypothetical protein
+D31_L12_contig_241774	Prodigal:2.6	CDS	590	1015	.	-	0	ID=D31_L12_PROKKA_164140;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_164140;product=hypothetical protein
+D31_L12_contig_243136	Prodigal:2.6	CDS	51	1205	.	+	0	ID=D31_L12_PROKKA_165151;eC_number=2.4.2.29;gene=tgt_25;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P66905;locus_tag=PROKKA_165151;product=Queuine tRNA-ribosyltransferase
+D31_L12_contig_24404	Prodigal:2.6	CDS	518	982	.	-	0	ID=D31_L12_PROKKA_13114;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_13114;product=hypothetical protein
+D31_L12_contig_247212	Prodigal:2.6	CDS	739	1113	.	-	0	ID=D31_L12_PROKKA_167847;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK08999;locus_tag=PROKKA_167847;product=hypothetical protein
+D31_L12_contig_247446	Prodigal:2.6	CDS	1008	1280	.	-	0	ID=D31_L12_PROKKA_168045;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_168045;product=hypothetical protein
+D31_L12_contig_24836	Prodigal:2.6	CDS	100	639	.	+	0	ID=D31_L12_PROKKA_13423;gene=infC_8;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P48516;locus_tag=PROKKA_13423;product=Translation initiation factor IF-3
+D31_L12_contig_24836	Prodigal:2.6	CDS	658	855	.	+	0	ID=D31_L12_PROKKA_13424;gene=rpmI_7;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P80341;locus_tag=PROKKA_13424;product=50S ribosomal protein L35
+D31_L12_contig_248653	Prodigal:2.6	CDS	1151	1864	.	-	0	ID=D31_L12_PROKKA_168757;gene=ftsZ_30;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P17865;locus_tag=PROKKA_168757;product=Cell division protein FtsZ
+D31_L12_contig_248653	Prodigal:2.6	CDS	1871	2236	.	-	0	ID=D31_L12_PROKKA_168758;gene=ftsZ_31;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O08398;locus_tag=PROKKA_168758;product=Cell division protein FtsZ
+D31_L12_contig_248653	Prodigal:2.6	CDS	2248	2835	.	-	0	ID=D31_L12_PROKKA_168759;gene=ftsA_38;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P28264;locus_tag=PROKKA_168759;product=Cell division protein FtsA
+D31_L12_contig_248653	Prodigal:2.6	CDS	3208	3336	.	-	0	ID=D31_L12_PROKKA_168760;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_168760;product=hypothetical protein
+D31_L12_contig_248653	Prodigal:2.6	CDS	365	586	.	+	0	ID=D31_L12_PROKKA_168756;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_168756;product=hypothetical protein
+D31_L12_contig_248653	Prodigal:2.6	CDS	3717	4454	.	-	0	ID=D31_L12_PROKKA_168761;gene=rplA_83;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9RSS8;locus_tag=PROKKA_168761;product=50S ribosomal protein L1
+D31_L12_contig_248703	Prodigal:2.6	CDS	32	895	.	-	0	ID=D31_L12_PROKKA_168813;gene=cnrA_13;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P37972;locus_tag=PROKKA_168813;product=Nickel and cobalt resistance protein CnrA
+D31_L12_contig_248785	Prodigal:2.6	CDS	477	1088	.	-	0	ID=D31_L12_PROKKA_168869;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_168869;product=hypothetical protein
+D31_L12_contig_248785	Prodigal:2.6	CDS	48	389	.	+	0	ID=D31_L12_PROKKA_168868;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_168868;product=hypothetical protein
+D31_L12_contig_249056	Prodigal:2.6	CDS	1297	1605	.	-	0	ID=D31_L12_PROKKA_169067;eC_number=3.6.3.54;gene=copA_61;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O32220;locus_tag=PROKKA_169067;product=Copper-exporting P-type ATPase A
+D31_L12_contig_249056	Prodigal:2.6	CDS	409	780	.	-	0	ID=D31_L12_PROKKA_169066;eC_number=3.6.3.54;gene=copA_60;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A3E6;locus_tag=PROKKA_169066;product=Copper-exporting P-type ATPase A
+D31_L12_contig_250223	Prodigal:2.6	CDS	1148	1264	.	+	0	ID=D31_L12_PROKKA_169899;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_169899;product=hypothetical protein
+D31_L12_contig_250223	Prodigal:2.6	CDS	253	624	.	-	0	ID=D31_L12_PROKKA_169898;eC_number=1.15.1.1;gene=sodB_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P84612;locus_tag=PROKKA_169898;product=Superoxide dismutase [Fe]
+D31_L12_contig_250739	Prodigal:2.6	CDS	100	492	.	+	0	ID=D31_L12_PROKKA_170246;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_170246;product=hypothetical protein
+D31_L12_contig_251761	Prodigal:2.6	CDS	62	1063	.	+	0	ID=D31_L12_PROKKA_170905;gene=clpC_22;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A797;locus_tag=PROKKA_170905;product=ATP-dependent Clp protease ATP-binding subunit ClpC
+D31_L12_contig_252762	Prodigal:2.6	CDS	1053	1820	.	-	0	ID=D31_L12_PROKKA_171573;eC_number=6.1.1.1;gene=tyrS_31;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q4K517;locus_tag=PROKKA_171573;product=Tyrosine--tRNA ligase
+D31_L12_contig_252762	Prodigal:2.6	CDS	32	859	.	-	0	ID=D31_L12_PROKKA_171571;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_171571;product=hypothetical protein
+D31_L12_contig_252762	Prodigal:2.6	CDS	925	1110	.	-	0	ID=D31_L12_PROKKA_171572;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_171572;product=hypothetical protein
+D31_L12_contig_253446	Aragorn:1.2	tRNA	1033	1107	.	+	0	ID=D31_L12_PROKKA_172061;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_172061;product=tRNA-Asn(gtt)
+D31_L12_contig_253446	Prodigal:2.6	CDS	145	957	.	+	0	ID=D31_L12_PROKKA_172060;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF10107.3;locus_tag=PROKKA_172060;product=Endonuclease related to archaeal Holliday junction resolvase
+D31_L12_contig_253683	Prodigal:2.6	CDS	413	763	.	-	0	ID=D31_L12_PROKKA_172228;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05812;locus_tag=PROKKA_172228;product=preprotein translocase subunit SecD
+D31_L12_contig_254744	Prodigal:2.6	CDS	53	439	.	+	0	ID=D31_L12_PROKKA_172953;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_172953;product=hypothetical protein
+D31_L12_contig_255543	Prodigal:2.6	CDS	537	1175	.	-	0	ID=D31_L12_PROKKA_173469;gene=rplJ_130;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q8NT29;locus_tag=PROKKA_173469;product=50S ribosomal protein L10
+D31_L12_contig_255543	Prodigal:2.6	CDS	69	446	.	-	0	ID=D31_L12_PROKKA_173468;gene=rplL_123;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P02395;locus_tag=PROKKA_173468;product=50S ribosomal protein L7/L12
+D31_L12_contig_258026	Prodigal:2.6	CDS	441	998	.	-	0	ID=D31_L12_PROKKA_175063;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_175063;product=hypothetical protein
+D31_L12_contig_260108	Prodigal:2.6	CDS	1040	1132	.	-	0	ID=D31_L12_PROKKA_176469;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_176469;product=hypothetical protein
+D31_L12_contig_260108	Prodigal:2.6	CDS	1143	1745	.	-	0	ID=D31_L12_PROKKA_176470;gene=prfA_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9X183;locus_tag=PROKKA_176470;product=Peptide chain release factor 1
+D31_L12_contig_260108	Prodigal:2.6	CDS	400	642	.	-	0	ID=D31_L12_PROKKA_176468;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_176468;product=hypothetical protein
+D31_L12_contig_260858	Prodigal:2.6	CDS	1022	1360	.	+	0	ID=D31_L12_PROKKA_176985;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_176985;product=hypothetical protein
+D31_L12_contig_260858	Prodigal:2.6	CDS	605	823	.	+	0	ID=D31_L12_PROKKA_176984;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_176984;product=hypothetical protein
+D31_L12_contig_261735	Prodigal:2.6	CDS	305	505	.	-	0	ID=D31_L12_PROKKA_177529;gene=uvrA_51;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9WYV0;locus_tag=PROKKA_177529;product=UvrABC system protein A
+D31_L12_contig_261735	Prodigal:2.6	CDS	587	943	.	-	0	ID=D31_L12_PROKKA_177530;gene=uvrA_52;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P63383;locus_tag=PROKKA_177530;product=UvrABC system protein A
+D31_L12_contig_26199	Prodigal:2.6	CDS	172	666	.	-	0	ID=D31_L12_PROKKA_14421;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF04230.7;locus_tag=PROKKA_14421;product=Polysaccharide pyruvyl transferase
+D31_L12_contig_26199	Prodigal:2.6	CDS	736	894	.	-	0	ID=D31_L12_PROKKA_14422;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_14422;product=hypothetical protein
+D31_L12_contig_26199	Prodigal:2.6	CDS	898	1140	.	-	0	ID=D31_L12_PROKKA_14423;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_14423;product=hypothetical protein
+D31_L12_contig_262610	Prodigal:2.6	CDS	1381	1611	.	-	0	ID=D31_L12_PROKKA_178125;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_178125;product=hypothetical protein
+D31_L12_contig_262610	Prodigal:2.6	CDS	628	1089	.	-	0	ID=D31_L12_PROKKA_178124;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_178124;product=hypothetical protein
+D31_L12_contig_265274	Prodigal:2.6	CDS	350	706	.	+	0	ID=D31_L12_PROKKA_179950;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_179950;product=hypothetical protein
+D31_L12_contig_265274	Prodigal:2.6	CDS	841	1131	.	-	0	ID=D31_L12_PROKKA_179951;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_179951;product=hypothetical protein
+D31_L12_contig_26542	Prodigal:2.6	CDS	1399	1668	.	+	0	ID=D31_L12_PROKKA_14651;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_14651;product=hypothetical protein
+D31_L12_contig_26542	Prodigal:2.6	CDS	1723	2295	.	-	0	ID=D31_L12_PROKKA_14652;gene=ctc_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P14194;locus_tag=PROKKA_14652;product=General stress protein CTC
+D31_L12_contig_26542	Prodigal:2.6	CDS	355	831	.	+	0	ID=D31_L12_PROKKA_14649;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_14649;product=hypothetical protein
+D31_L12_contig_26542	Prodigal:2.6	CDS	919	1185	.	+	0	ID=D31_L12_PROKKA_14650;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_14650;product=hypothetical protein
+D31_L12_contig_266833	Prodigal:2.6	CDS	1282	1470	.	+	0	ID=D31_L12_PROKKA_180979;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK09281;locus_tag=PROKKA_180979;product=F0F1 ATP synthase subunit alpha
+D31_L12_contig_266833	Prodigal:2.6	CDS	1543	2790	.	+	0	ID=D31_L12_PROKKA_180980;eC_number=3.6.3.14;gene=atpA_101;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P09219;locus_tag=PROKKA_180980;product=ATP synthase subunit alpha
+D31_L12_contig_266833	Prodigal:2.6	CDS	216	440	.	+	0	ID=D31_L12_PROKKA_180976;gene=atpE_102;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q2RFX4;locus_tag=PROKKA_180976;product=ATP synthase subunit c
+D31_L12_contig_266833	Prodigal:2.6	CDS	2793	3035	.	+	0	ID=D31_L12_PROKKA_180981;gene=atpG_81;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P50006;locus_tag=PROKKA_180981;product=ATP synthase gamma chain
+D31_L12_contig_266833	Prodigal:2.6	CDS	3282	3701	.	+	0	ID=D31_L12_PROKKA_180982;gene=atpG_82;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P09222;locus_tag=PROKKA_180982;product=ATP synthase gamma chain precursor
+D31_L12_contig_266833	Prodigal:2.6	CDS	583	963	.	+	0	ID=D31_L12_PROKKA_180977;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05759;locus_tag=PROKKA_180977;product=F0F1 ATP synthase subunit B
+D31_L12_contig_266833	Prodigal:2.6	CDS	967	1272	.	+	0	ID=D31_L12_PROKKA_180978;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_180978;product=hypothetical protein
+D31_L12_contig_266885	Prodigal:2.6	CDS	615	1196	.	-	0	ID=D31_L12_PROKKA_181011;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_181011;product=hypothetical protein
+D31_L12_contig_268441	Prodigal:2.6	CDS	1914	2171	.	+	0	ID=D31_L12_PROKKA_182086;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_182086;product=hypothetical protein
+D31_L12_contig_268441	Prodigal:2.6	CDS	3	425	.	-	0	ID=D31_L12_PROKKA_182084;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_182084;product=hypothetical protein
+D31_L12_contig_268441	Prodigal:2.6	CDS	811	1242	.	-	0	ID=D31_L12_PROKKA_182085;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_182085;product=hypothetical protein
+D31_L12_contig_269608	Prodigal:2.6	CDS	12	1103	.	+	0	ID=D31_L12_PROKKA_182875;eC_number=3.4.24.-;gene=ftsH1_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P73179;locus_tag=PROKKA_182875;product=ATP-dependent zinc metalloprotease FtsH 1
+D31_L12_contig_271924	Prodigal:2.6	CDS	739	1014	.	-	0	ID=D31_L12_PROKKA_184376;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_184376;product=hypothetical protein
+D31_L12_contig_271924	Prodigal:2.6	CDS	92	304	.	-	0	ID=D31_L12_PROKKA_184375;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_184375;product=hypothetical protein
+D31_L12_contig_272261	Prodigal:2.6	CDS	897	1091	.	-	0	ID=D31_L12_PROKKA_184574;gene=mtrA_13;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A0QTK2;locus_tag=PROKKA_184574;product=DNA-binding response regulator MtrA
+D31_L12_contig_273523	Prodigal:2.6	CDS	86	508	.	-	0	ID=D31_L12_PROKKA_185422;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_185422;product=hypothetical protein
+D31_L12_contig_27453	Prodigal:2.6	CDS	243	449	.	+	0	ID=D31_L12_PROKKA_15304;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_15304;product=hypothetical protein
+D31_L12_contig_27453	Prodigal:2.6	CDS	465	1226	.	+	0	ID=D31_L12_PROKKA_15305;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_15305;product=hypothetical protein
+D31_L12_contig_275460	Prodigal:2.6	CDS	1005	1463	.	-	0	ID=D31_L12_PROKKA_186647;gene=infB_56;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P04766;locus_tag=PROKKA_186647;product=Translation initiation factor IF-2
+D31_L12_contig_275460	Prodigal:2.6	CDS	137	367	.	-	0	ID=D31_L12_PROKKA_186645;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_186645;product=hypothetical protein
+D31_L12_contig_275460	Prodigal:2.6	CDS	589	999	.	-	0	ID=D31_L12_PROKKA_186646;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00027.23;locus_tag=PROKKA_186646;product=Cyclic nucleotide-binding domain protein
+D31_L12_contig_276435	Prodigal:2.6	CDS	1173	1439	.	+	0	ID=D31_L12_PROKKA_187326;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187326;product=hypothetical protein
+D31_L12_contig_276435	Prodigal:2.6	CDS	774	1109	.	+	0	ID=D31_L12_PROKKA_187325;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187325;product=hypothetical protein
+D31_L12_contig_276438	Prodigal:2.6	CDS	1095	1739	.	-	0	ID=D31_L12_PROKKA_187330;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187330;product=hypothetical protein
+D31_L12_contig_276438	Prodigal:2.6	CDS	111	404	.	-	0	ID=D31_L12_PROKKA_187327;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187327;product=hypothetical protein
+D31_L12_contig_276438	Prodigal:2.6	CDS	1934	2110	.	-	0	ID=D31_L12_PROKKA_187331;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187331;product=hypothetical protein
+D31_L12_contig_276438	Prodigal:2.6	CDS	2132	2389	.	-	0	ID=D31_L12_PROKKA_187332;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187332;product=hypothetical protein
+D31_L12_contig_276438	Prodigal:2.6	CDS	429	713	.	-	0	ID=D31_L12_PROKKA_187328;eC_number=3.6.3.54;gene=copA_68;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O32220;locus_tag=PROKKA_187328;product=Copper-exporting P-type ATPase A
+D31_L12_contig_276438	Prodigal:2.6	CDS	745	909	.	+	0	ID=D31_L12_PROKKA_187329;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_187329;product=hypothetical protein
+D31_L12_contig_27734	Prodigal:2.6	CDS	1037	1375	.	+	0	ID=D31_L12_PROKKA_15519;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00110;locus_tag=PROKKA_15519;product=hypothetical protein
+D31_L12_contig_27734	Prodigal:2.6	CDS	1402	1797	.	+	0	ID=D31_L12_PROKKA_15520;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_15520;product=hypothetical protein
+D31_L12_contig_277912	Prodigal:2.6	CDS	110	640	.	+	0	ID=D31_L12_PROKKA_188293;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_188293;product=hypothetical protein
+D31_L12_contig_277912	Prodigal:2.6	CDS	671	979	.	+	0	ID=D31_L12_PROKKA_188294;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_188294;product=hypothetical protein
+D31_L12_contig_278021	Prodigal:2.6	CDS	1278	1499	.	+	0	ID=D31_L12_PROKKA_188375;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_188375;product=hypothetical protein
+D31_L12_contig_278021	Prodigal:2.6	CDS	720	1025	.	+	0	ID=D31_L12_PROKKA_188374;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_188374;product=hypothetical protein
+D31_L12_contig_278154	Prodigal:2.6	CDS	1	444	.	+	0	ID=D31_L12_PROKKA_188463;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_188463;product=hypothetical protein
+D31_L12_contig_279958	Prodigal:2.6	CDS	254	379	.	-	0	ID=D31_L12_PROKKA_189616;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_189616;product=hypothetical protein
+D31_L12_contig_279958	Prodigal:2.6	CDS	428	574	.	-	0	ID=D31_L12_PROKKA_189617;eC_number=1.1.1.38;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P16468;locus_tag=PROKKA_189617;product=NAD-dependent malic enzyme
+D31_L12_contig_279958	Prodigal:2.6	CDS	740	1132	.	-	0	ID=D31_L12_PROKKA_189618;eC_number=1.1.1.38;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P16468;locus_tag=PROKKA_189618;product=NAD-dependent malic enzyme
+D31_L12_contig_283377	Prodigal:2.6	CDS	1630	2076	.	-	0	ID=D31_L12_PROKKA_191774;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_191774;product=hypothetical protein
+D31_L12_contig_283377	Prodigal:2.6	CDS	557	892	.	+	0	ID=D31_L12_PROKKA_191772;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_191772;product=hypothetical protein
+D31_L12_contig_283377	Prodigal:2.6	CDS	862	1029	.	-	0	ID=D31_L12_PROKKA_191773;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_191773;product=hypothetical protein
+D31_L12_contig_284413	Prodigal:2.6	CDS	1174	1302	.	+	0	ID=D31_L12_PROKKA_192429;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_192429;product=hypothetical protein
+D31_L12_contig_284413	Prodigal:2.6	CDS	1312	1731	.	+	0	ID=D31_L12_PROKKA_192430;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_192430;product=hypothetical protein
+D31_L12_contig_284413	Prodigal:2.6	CDS	274	717	.	+	0	ID=D31_L12_PROKKA_192428;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_192428;product=hypothetical protein
+D31_L12_contig_286870	Prodigal:2.6	CDS	1759	2052	.	-	0	ID=D31_L12_PROKKA_193954;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00153;locus_tag=PROKKA_193954;product=hypothetical protein
+D31_L12_contig_286870	Prodigal:2.6	CDS	2165	2905	.	+	0	ID=D31_L12_PROKKA_193955;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_193955;product=hypothetical protein
+D31_L12_contig_286870	Prodigal:2.6	CDS	403	720	.	+	0	ID=D31_L12_PROKKA_193952;gene=rplS_82;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P66083;locus_tag=PROKKA_193952;product=50S ribosomal protein L19
+D31_L12_contig_286870	Prodigal:2.6	CDS	817	1716	.	+	0	ID=D31_L12_PROKKA_193953;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_193953;product=hypothetical protein
+D31_L12_contig_288076	Prodigal:2.6	CDS	310	501	.	-	0	ID=D31_L12_PROKKA_194757;gene=clpB_61;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A6G6;locus_tag=PROKKA_194757;product=Chaperone protein ClpB
+D31_L12_contig_288076	Prodigal:2.6	CDS	787	1017	.	-	0	ID=D31_L12_PROKKA_194758;gene=clpB_62;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9RA63;locus_tag=PROKKA_194758;product=Chaperone protein ClpB
+D31_L12_contig_291161	Prodigal:2.6	CDS	171	836	.	-	0	ID=D31_L12_PROKKA_196795;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_196795;product=hypothetical protein
+D31_L12_contig_291161	Prodigal:2.6	CDS	1882	2094	.	-	0	ID=D31_L12_PROKKA_196797;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_196797;product=hypothetical protein
+D31_L12_contig_291161	Prodigal:2.6	CDS	858	1733	.	-	0	ID=D31_L12_PROKKA_196796;gene=era_39;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P42182;locus_tag=PROKKA_196796;product=GTPase Era
+D31_L12_contig_291437	Prodigal:2.6	CDS	537	848	.	+	0	ID=D31_L12_PROKKA_196968;eC_number=6.1.1.20;gene=pheT_47;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P67041;locus_tag=PROKKA_196968;product=Phenylalanine--tRNA ligase beta subunit
+D31_L12_contig_291437	Prodigal:2.6	CDS	54	422	.	-	0	ID=D31_L12_PROKKA_196967;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_196967;product=hypothetical protein
+D31_L12_contig_292053	Prodigal:2.6	CDS	342	1028	.	-	0	ID=D31_L12_PROKKA_197314;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_197314;product=hypothetical protein
+D31_L12_contig_292567	Prodigal:2.6	CDS	1034	1510	.	-	0	ID=D31_L12_PROKKA_197712;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_197712;product=hypothetical protein
+D31_L12_contig_292567	Prodigal:2.6	CDS	52	936	.	+	0	ID=D31_L12_PROKKA_197711;gene=htrA_18;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P73354;locus_tag=PROKKA_197711;product=Putative serine protease HtrA
+D31_L12_contig_293160	Prodigal:2.6	CDS	320	901	.	+	0	ID=D31_L12_PROKKA_198131;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_198131;product=hypothetical protein
+D31_L12_contig_295123	Prodigal:2.6	CDS	257	817	.	-	0	ID=D31_L12_PROKKA_199370;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_199370;product=hypothetical protein
+D31_L12_contig_295123	Prodigal:2.6	CDS	828	2117	.	-	0	ID=D31_L12_PROKKA_199371;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_199371;product=hypothetical protein
+D31_L12_contig_296175	Prodigal:2.6	CDS	288	485	.	-	0	ID=D31_L12_PROKKA_200027;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_200027;product=hypothetical protein
+D31_L12_contig_296175	Prodigal:2.6	CDS	632	979	.	-	0	ID=D31_L12_PROKKA_200028;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF02388.10;locus_tag=PROKKA_200028;product=FemAB family protein
+D31_L12_contig_296377	Prodigal:2.6	CDS	1587	2159	.	-	0	ID=D31_L12_PROKKA_200159;eC_number=2.7.7.9;gene=gtaB_18;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q05852;locus_tag=PROKKA_200159;product=UTP--glucose-1-phosphate uridylyltransferase
+D31_L12_contig_296377	Prodigal:2.6	CDS	457	1542	.	+	0	ID=D31_L12_PROKKA_200158;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_200158;product=hypothetical protein
+D31_L12_contig_297356	Prodigal:2.6	CDS	185	475	.	+	0	ID=D31_L12_PROKKA_200793;gene=groS3_17;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P35864;locus_tag=PROKKA_200793;product=10 kDa chaperonin 3
+D31_L12_contig_297356	Prodigal:2.6	CDS	507	824	.	+	0	ID=D31_L12_PROKKA_200794;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_200794;product=hypothetical protein
+D31_L12_contig_297356	Prodigal:2.6	CDS	858	1127	.	-	0	ID=D31_L12_PROKKA_200795;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_200795;product=hypothetical protein
+D31_L12_contig_29804	Prodigal:2.6	CDS	1148	1465	.	+	0	ID=D31_L12_PROKKA_17021;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_17021;product=hypothetical protein
+D31_L12_contig_29804	Prodigal:2.6	CDS	1767	2027	.	+	0	ID=D31_L12_PROKKA_17022;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_17022;product=hypothetical protein
+D31_L12_contig_29804	Prodigal:2.6	CDS	194	1144	.	+	0	ID=D31_L12_PROKKA_17020;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_17020;product=hypothetical protein
+D31_L12_contig_29804	Prodigal:2.6	CDS	2095	2727	.	+	0	ID=D31_L12_PROKKA_17023;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_17023;product=hypothetical protein
+D31_L12_contig_29804	Prodigal:2.6	CDS	2762	2959	.	+	0	ID=D31_L12_PROKKA_17024;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_17024;product=hypothetical protein
+D31_L12_contig_299295	Prodigal:2.6	CDS	157	585	.	+	0	ID=D31_L12_PROKKA_202148;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_202148;product=hypothetical protein
+D31_L12_contig_299295	Prodigal:2.6	CDS	869	1081	.	-	0	ID=D31_L12_PROKKA_202149;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_202149;product=hypothetical protein
+D31_L12_contig_299675	Prodigal:2.6	CDS	1030	1278	.	-	0	ID=D31_L12_PROKKA_202351;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK10574;locus_tag=PROKKA_202351;product=putative major pilin subunit
+D31_L12_contig_299675	Prodigal:2.6	CDS	26	355	.	-	0	ID=D31_L12_PROKKA_202349;gene=epsE_88;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P37093;locus_tag=PROKKA_202349;product=Type II secretion system protein E
+D31_L12_contig_299675	Prodigal:2.6	CDS	682	909	.	-	0	ID=D31_L12_PROKKA_202350;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_202350;product=hypothetical protein
+D31_L12_contig_301930	Prodigal:2.6	CDS	88	1041	.	-	0	ID=D31_L12_PROKKA_203741;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_203741;product=hypothetical protein
+D31_L12_contig_304470	Prodigal:2.6	CDS	461	889	.	+	0	ID=D31_L12_PROKKA_205506;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_205506;product=hypothetical protein
+D31_L12_contig_306261	Prodigal:2.6	CDS	888	1259	.	-	0	ID=D31_L12_PROKKA_206636;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_206636;product=hypothetical protein
+D31_L12_contig_30855	Prodigal:2.6	CDS	1470	1682	.	+	0	ID=D31_L12_PROKKA_17808;eC_number=6.1.1.9;gene=valS_7;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P96142;locus_tag=PROKKA_17808;product=Valine--tRNA ligase
+D31_L12_contig_30855	Prodigal:2.6	CDS	1773	2204	.	+	0	ID=D31_L12_PROKKA_17809;eC_number=6.1.1.9;gene=valS_8;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q55522;locus_tag=PROKKA_17809;product=Valine--tRNA ligase
+D31_L12_contig_30855	Prodigal:2.6	CDS	2211	2519	.	+	0	ID=D31_L12_PROKKA_17810;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK05729;locus_tag=PROKKA_17810;product=valyl-tRNA synthetase
+D31_L12_contig_30855	Prodigal:2.6	CDS	252	1313	.	+	0	ID=D31_L12_PROKKA_17807;eC_number=6.1.1.9;gene=valS_6;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q55522;locus_tag=PROKKA_17807;product=Valine--tRNA ligase
+D31_L12_contig_30855	Prodigal:2.6	CDS	84	227	.	+	0	ID=D31_L12_PROKKA_17806;eC_number=6.1.1.9;gene=valS_5;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q99TJ8;locus_tag=PROKKA_17806;product=Valine--tRNA ligase
+D31_L12_contig_309616	Prodigal:2.6	CDS	157	1119	.	+	0	ID=D31_L12_PROKKA_208721;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_208721;product=hypothetical protein
+D31_L12_contig_310011	Prodigal:2.6	CDS	120	521	.	+	0	ID=D31_L12_PROKKA_208971;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_208971;product=hypothetical protein
+D31_L12_contig_310011	Prodigal:2.6	CDS	443	733	.	-	0	ID=D31_L12_PROKKA_208972;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_208972;product=hypothetical protein
+D31_L12_contig_310011	Prodigal:2.6	CDS	771	1169	.	+	0	ID=D31_L12_PROKKA_208973;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_208973;product=hypothetical protein
+D31_L12_contig_310172	Prodigal:2.6	CDS	84	218	.	-	0	ID=D31_L12_PROKKA_209125;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_209125;product=hypothetical protein
+D31_L12_contig_310403	Prodigal:2.6	CDS	1384	1527	.	+	0	ID=D31_L12_PROKKA_209250;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_209250;product=hypothetical protein
+D31_L12_contig_310403	Prodigal:2.6	CDS	1717	1878	.	+	0	ID=D31_L12_PROKKA_209251;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_209251;product=hypothetical protein
+D31_L12_contig_310403	Prodigal:2.6	CDS	199	1083	.	+	0	ID=D31_L12_PROKKA_209249;eC_number=6.1.1.4;gene=leuS_41;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:B8ZKS5;locus_tag=PROKKA_209249;product=Leucine--tRNA ligase
+D31_L12_contig_312631	Prodigal:2.6	CDS	1286	1723	.	-	0	ID=D31_L12_PROKKA_210594;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_210594;product=hypothetical protein
+D31_L12_contig_312631	Prodigal:2.6	CDS	505	801	.	+	0	ID=D31_L12_PROKKA_210592;gene=bigR_21;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9PFB1;locus_tag=PROKKA_210592;product=Biofilm growth-associated repressor
+D31_L12_contig_312631	Prodigal:2.6	CDS	798	1007	.	-	0	ID=D31_L12_PROKKA_210593;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_210593;product=hypothetical protein
+D31_L12_contig_31716	Prodigal:2.6	CDS	135	620	.	+	0	ID=D31_L12_PROKKA_18402;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF07885.10;locus_tag=PROKKA_18402;product=Ion channel
+D31_L12_contig_31716	Prodigal:2.6	CDS	630	1649	.	+	0	ID=D31_L12_PROKKA_18403;eC_number=1.17.4.1;gene=nrdB_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9KFH7;locus_tag=PROKKA_18403;product=Ribonucleoside-diphosphate reductase subunit beta
+D31_L12_contig_320530	Prodigal:2.6	CDS	58	300	.	+	0	ID=D31_L12_PROKKA_215720;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_215720;product=hypothetical protein
+D31_L12_contig_320530	Prodigal:2.6	CDS	835	1029	.	+	0	ID=D31_L12_PROKKA_215721;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_215721;product=hypothetical protein
+D31_L12_contig_321367	Prodigal:2.6	CDS	21	215	.	-	0	ID=D31_L12_PROKKA_216222;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_216222;product=hypothetical protein
+D31_L12_contig_321367	Prodigal:2.6	CDS	322	1215	.	-	0	ID=D31_L12_PROKKA_216223;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_216223;product=hypothetical protein
+D31_L12_contig_32188	Aragorn:1.2	tRNA	163	239	.	+	0	ID=D31_L12_PROKKA_18783;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_18783;product=tRNA-Arg(tct)
+D31_L12_contig_32188	Aragorn:1.2	tRNA	362	439	.	+	0	ID=D31_L12_PROKKA_18784;inference=COORDINATES:profile:Aragorn:1.2;locus_tag=PROKKA_18784;product=tRNA-Val(gac)
+D31_L12_contig_32290	Prodigal:2.6	CDS	1623	2105	.	-	0	ID=D31_L12_PROKKA_18923;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_18923;product=hypothetical protein
+D31_L12_contig_32290	Prodigal:2.6	CDS	866	1636	.	+	0	ID=D31_L12_PROKKA_18922;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_18922;product=hypothetical protein
+D31_L12_contig_32290	Prodigal:2.6	CDS	94	852	.	-	0	ID=D31_L12_PROKKA_18921;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_18921;product=hypothetical protein
+D31_L12_contig_323092	Prodigal:2.6	CDS	613	831	.	-	0	ID=D31_L12_PROKKA_217288;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_217288;product=hypothetical protein
+D31_L12_contig_326441	Prodigal:2.6	CDS	1621	2475	.	+	0	ID=D31_L12_PROKKA_219481;eC_number=2.7.7.9;gene=gtaB_20;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A3J9;locus_tag=PROKKA_219481;product=UTP--glucose-1-phosphate uridylyltransferase
+D31_L12_contig_326441	Prodigal:2.6	CDS	2948	3115	.	-	0	ID=D31_L12_PROKKA_219482;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219482;product=hypothetical protein
+D31_L12_contig_326441	Prodigal:2.6	CDS	61	762	.	+	0	ID=D31_L12_PROKKA_219479;eC_number=5.99.1.3;gene=gyrB_73;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A0K8;locus_tag=PROKKA_219479;product=DNA gyrase subunit B
+D31_L12_contig_326441	Prodigal:2.6	CDS	777	1634	.	+	0	ID=D31_L12_PROKKA_219480;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219480;product=hypothetical protein
+D31_L12_contig_326922	Prodigal:2.6	CDS	36	1238	.	-	0	ID=D31_L12_PROKKA_219786;eC_number=4.3.2.1;gene=argH_8;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q5SLL0;locus_tag=PROKKA_219786;product=Argininosuccinate lyase
+D31_L12_contig_327036	Prodigal:2.6	CDS	1021	1830	.	+	0	ID=D31_L12_PROKKA_219873;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219873;product=hypothetical protein
+D31_L12_contig_327036	Prodigal:2.6	CDS	1793	1918	.	+	0	ID=D31_L12_PROKKA_219874;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219874;product=hypothetical protein
+D31_L12_contig_327036	Prodigal:2.6	CDS	2200	2733	.	+	0	ID=D31_L12_PROKKA_219875;gene=spoVD_25;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q03524;locus_tag=PROKKA_219875;product=Stage V sporulation protein D
+D31_L12_contig_327036	Prodigal:2.6	CDS	2758	3045	.	+	0	ID=D31_L12_PROKKA_219876;eC_number=2.4.1.129;gene=pbpB_6;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A0R022;locus_tag=PROKKA_219876;product=Penicillin-binding protein PbpB
+D31_L12_contig_327036	Prodigal:2.6	CDS	431	649	.	+	0	ID=D31_L12_PROKKA_219872;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219872;product=hypothetical protein
+D31_L12_contig_327036	Prodigal:2.6	CDS	44	214	.	+	0	ID=D31_L12_PROKKA_219871;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_219871;product=hypothetical protein
+D31_L12_contig_327083	Prodigal:2.6	CDS	576	839	.	-	0	ID=D31_L12_PROKKA_219915;eC_number=5.99.1.3;gene=gyrB_74;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0AES6;locus_tag=PROKKA_219915;product=DNA gyrase subunit B
+D31_L12_contig_327083	Prodigal:2.6	CDS	9	446	.	-	0	ID=D31_L12_PROKKA_219914;eC_number=5.99.1.3;gene=gyrBR_7;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P50074;locus_tag=PROKKA_219914;product=DNA gyrase subunit B%2C novobiocin-resistant
+D31_L12_contig_32874	Prodigal:2.6	CDS	49	432	.	+	0	ID=D31_L12_PROKKA_19379;gene=rplD_10;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P61059;locus_tag=PROKKA_19379;product=50S ribosomal protein L4
+D31_L12_contig_32874	Prodigal:2.6	CDS	547	687	.	+	0	ID=D31_L12_PROKKA_19380;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19380;product=hypothetical protein
+D31_L12_contig_32874	Prodigal:2.6	CDS	951	1358	.	-	0	ID=D31_L12_PROKKA_19381;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19381;product=hypothetical protein
+D31_L12_contig_329006	Prodigal:2.6	CDS	1509	2306	.	-	0	ID=D31_L12_PROKKA_221259;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_221259;product=hypothetical protein
+D31_L12_contig_329006	Prodigal:2.6	CDS	270	536	.	-	0	ID=D31_L12_PROKKA_221257;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_221257;product=hypothetical protein
+D31_L12_contig_329006	Prodigal:2.6	CDS	771	1157	.	-	0	ID=D31_L12_PROKKA_221258;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_221258;product=hypothetical protein
+D31_L12_contig_331626	Prodigal:2.6	CDS	9	1616	.	+	0	ID=D31_L12_PROKKA_223043;eC_number=6.3.4.2;gene=pyrG_35;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P99072;locus_tag=PROKKA_223043;product=CTP synthase
+D31_L12_contig_332069	Prodigal:2.6	CDS	456	896	.	-	0	ID=D31_L12_PROKKA_223315;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_223315;product=hypothetical protein
+D31_L12_contig_332126	Prodigal:2.6	CDS	123	695	.	-	0	ID=D31_L12_PROKKA_223349;gene=pilE1_21;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P02974;locus_tag=PROKKA_223349;product=Fimbrial protein precursor
+D31_L12_contig_332126	Prodigal:2.6	CDS	770	1273	.	-	0	ID=D31_L12_PROKKA_223350;gene=pilE_60;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P05431;locus_tag=PROKKA_223350;product=Fimbrial protein precursor
+D31_L12_contig_332909	Prodigal:2.6	CDS	1285	1464	.	+	0	ID=D31_L12_PROKKA_223834;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_223834;product=hypothetical protein
+D31_L12_contig_332909	Prodigal:2.6	CDS	1705	2019	.	+	0	ID=D31_L12_PROKKA_223835;gene=relA_36;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q54089;locus_tag=PROKKA_223835;product=Bifunctional (p)ppGpp synthase/hydrolase RelA
+D31_L12_contig_332909	Prodigal:2.6	CDS	28	615	.	+	0	ID=D31_L12_PROKKA_223832;eC_number=6.1.1.20;gene=pheT_50;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P67041;locus_tag=PROKKA_223832;product=Phenylalanine--tRNA ligase beta subunit
+D31_L12_contig_332909	Prodigal:2.6	CDS	862	1128	.	+	0	ID=D31_L12_PROKKA_223833;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00629;locus_tag=PROKKA_223833;product=phenylalanyl-tRNA synthetase subunit beta
+D31_L12_contig_33307	Prodigal:2.6	CDS	1082	1333	.	+	0	ID=D31_L12_PROKKA_19667;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19667;product=hypothetical protein
+D31_L12_contig_33307	Prodigal:2.6	CDS	131	352	.	+	0	ID=D31_L12_PROKKA_19665;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19665;product=hypothetical protein
+D31_L12_contig_33307	Prodigal:2.6	CDS	1835	2113	.	+	0	ID=D31_L12_PROKKA_19668;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19668;product=hypothetical protein
+D31_L12_contig_33307	Prodigal:2.6	CDS	2777	2968	.	+	0	ID=D31_L12_PROKKA_19669;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19669;product=hypothetical protein
+D31_L12_contig_33307	Prodigal:2.6	CDS	638	850	.	+	0	ID=D31_L12_PROKKA_19666;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_19666;product=hypothetical protein
+D31_L12_contig_334279	Prodigal:2.6	CDS	316	924	.	-	0	ID=D31_L12_PROKKA_224783;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_224783;product=hypothetical protein
+D31_L12_contig_336039	Prodigal:2.6	CDS	1428	2054	.	+	0	ID=D31_L12_PROKKA_225910;gene=rplD_152;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P42921;locus_tag=PROKKA_225910;product=50S ribosomal protein L4
+D31_L12_contig_336039	Prodigal:2.6	CDS	2058	2357	.	+	0	ID=D31_L12_PROKKA_225911;gene=rplW_157;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P04454;locus_tag=PROKKA_225911;product=50S ribosomal protein L23
+D31_L12_contig_336039	Prodigal:2.6	CDS	2370	3218	.	+	0	ID=D31_L12_PROKKA_225912;gene=rplB_161;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P04257;locus_tag=PROKKA_225912;product=50S ribosomal protein L2
+D31_L12_contig_336039	Prodigal:2.6	CDS	305	538	.	+	0	ID=D31_L12_PROKKA_225908;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_225908;product=hypothetical protein
+D31_L12_contig_336039	Prodigal:2.6	CDS	3237	3500	.	+	0	ID=D31_L12_PROKKA_225913;gene=rpsS_165;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P12731;locus_tag=PROKKA_225913;product=30S ribosomal protein S19
+D31_L12_contig_336039	Prodigal:2.6	CDS	3695	3841	.	+	0	ID=D31_L12_PROKKA_225914;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00565;locus_tag=PROKKA_225914;product=50S ribosomal protein L22
+D31_L12_contig_336039	Prodigal:2.6	CDS	3846	4478	.	+	0	ID=D31_L12_PROKKA_225915;gene=rpsC_144;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A7V3;locus_tag=PROKKA_225915;product=30S ribosomal protein S3
+D31_L12_contig_336039	Prodigal:2.6	CDS	4519	4920	.	+	0	ID=D31_L12_PROKKA_225916;gene=rplP_186;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q72I11;locus_tag=PROKKA_225916;product=50S ribosomal protein L16
+D31_L12_contig_336039	Prodigal:2.6	CDS	4926	5069	.	+	0	ID=D31_L12_PROKKA_225917;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK00461;locus_tag=PROKKA_225917;product=50S ribosomal protein L29
+D31_L12_contig_336039	Prodigal:2.6	CDS	5075	5302	.	+	0	ID=D31_L12_PROKKA_225918;gene=rpsQ_187;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6N4U3;locus_tag=PROKKA_225918;product=30S ribosomal protein S17
+D31_L12_contig_336039	Prodigal:2.6	CDS	5309	5677	.	+	0	ID=D31_L12_PROKKA_225919;gene=rplN_179;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P04450;locus_tag=PROKKA_225919;product=50S ribosomal protein L14
+D31_L12_contig_336039	Prodigal:2.6	CDS	5978	6424	.	+	0	ID=D31_L12_PROKKA_225920;gene=rplE_202;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9RXJ0;locus_tag=PROKKA_225920;product=50S ribosomal protein L5
+D31_L12_contig_336039	Prodigal:2.6	CDS	6444	6668	.	+	0	ID=D31_L12_PROKKA_225921;gene=rpsZ_21;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P54798;locus_tag=PROKKA_225921;product=30S ribosomal protein S14 type Z
+D31_L12_contig_336039	Prodigal:2.6	CDS	7155	7637	.	+	0	ID=D31_L12_PROKKA_225922;gene=rplF_187;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:C5CC48;locus_tag=PROKKA_225922;product=50S ribosomal protein L6
+D31_L12_contig_336039	Prodigal:2.6	CDS	7644	7982	.	+	0	ID=D31_L12_PROKKA_225923;gene=rplR_160;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A467;locus_tag=PROKKA_225923;product=50S ribosomal protein L18
+D31_L12_contig_336039	Prodigal:2.6	CDS	7995	8504	.	+	0	ID=D31_L12_PROKKA_225924;gene=rpsE_145;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P21467;locus_tag=PROKKA_225924;product=30S ribosomal protein S5
+D31_L12_contig_336039	Prodigal:2.6	CDS	860	1414	.	+	0	ID=D31_L12_PROKKA_225909;gene=rplC_169;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q5SHN8;locus_tag=PROKKA_225909;product=50S ribosomal protein L3
+D31_L12_contig_339065	Prodigal:2.6	CDS	465	980	.	-	0	ID=D31_L12_PROKKA_227902;gene=infB_73;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P04766;locus_tag=PROKKA_227902;product=Translation initiation factor IF-2
+D31_L12_contig_339502	Prodigal:2.6	CDS	279	827	.	-	0	ID=D31_L12_PROKKA_228210;eC_number=3.5.4.13;gene=dcd_48;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O07247;locus_tag=PROKKA_228210;product=Deoxycytidine triphosphate deaminase
+D31_L12_contig_339621	Prodigal:2.6	CDS	72	815	.	-	0	ID=D31_L12_PROKKA_228291;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK09442;locus_tag=PROKKA_228291;product=sodium/panthothenate symporter
+D31_L12_contig_339621	Prodigal:2.6	CDS	843	1376	.	-	0	ID=D31_L12_PROKKA_228292;gene=sglT_11;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P96169;locus_tag=PROKKA_228292;product=Sodium/glucose cotransporter
+D31_L12_contig_341315	Prodigal:2.6	CDS	533	1288	.	-	0	ID=D31_L12_PROKKA_229371;eC_number=6.1.1.3;gene=thrS_58;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q8NW68;locus_tag=PROKKA_229371;product=Threonine--tRNA ligase
+D31_L12_contig_34234	Prodigal:2.6	CDS	344	736	.	+	0	ID=D31_L12_PROKKA_20309;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_20309;product=hypothetical protein
+D31_L12_contig_343187	Prodigal:2.6	CDS	38	982	.	+	0	ID=D31_L12_PROKKA_230536;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_230536;product=hypothetical protein
+D31_L12_contig_343405	Prodigal:2.6	CDS	3	746	.	+	0	ID=D31_L12_PROKKA_230660;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_230660;product=hypothetical protein
+D31_L12_contig_344842	Prodigal:2.6	CDS	297	623	.	-	0	ID=D31_L12_PROKKA_231390;gene=cbpA_23;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P36659;locus_tag=PROKKA_231390;product=Curved DNA-binding protein
+D31_L12_contig_344842	Prodigal:2.6	CDS	566	823	.	-	0	ID=D31_L12_PROKKA_231391;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_231391;product=hypothetical protein
+D31_L12_contig_345576	Prodigal:2.6	CDS	370	1077	.	+	0	ID=D31_L12_PROKKA_231738;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_231738;product=hypothetical protein
+D31_L12_contig_35482	Prodigal:2.6	CDS	32	325	.	+	0	ID=D31_L12_PROKKA_21188;gene=rplE_19;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P12877;locus_tag=PROKKA_21188;product=50S ribosomal protein L5
+D31_L12_contig_35482	Prodigal:2.6	CDS	397	588	.	+	0	ID=D31_L12_PROKKA_21189;gene=rpsZ_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P54798;locus_tag=PROKKA_21189;product=30S ribosomal protein S14 type Z
+D31_L12_contig_35482	Prodigal:2.6	CDS	669	1055	.	+	0	ID=D31_L12_PROKKA_21190;gene=rpsH_13;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P24319;locus_tag=PROKKA_21190;product=30S ribosomal protein S8
+D31_L12_contig_35563	Prodigal:2.6	CDS	9	581	.	+	0	ID=D31_L12_PROKKA_21245;gene=rhtC_1;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0AG38;locus_tag=PROKKA_21245;product=Threonine efflux protein
+D31_L12_contig_36032	Prodigal:2.6	CDS	530	940	.	+	0	ID=D31_L12_PROKKA_21623;eC_number=3.-.-.-;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P44956;locus_tag=PROKKA_21623;product=HIT-like protein
+D31_L12_contig_40469	Prodigal:2.6	CDS	102	1076	.	-	0	ID=D31_L12_PROKKA_24672;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00665.20;locus_tag=PROKKA_24672;product=Integrase core domain protein
+D31_L12_contig_40469	Prodigal:2.6	CDS	1060	1266	.	-	0	ID=D31_L12_PROKKA_24673;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_24673;product=hypothetical protein
+D31_L12_contig_41259	Prodigal:2.6	CDS	17	577	.	-	0	ID=D31_L12_PROKKA_25213;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_25213;product=hypothetical protein
+D31_L12_contig_41259	Prodigal:2.6	CDS	640	1248	.	+	0	ID=D31_L12_PROKKA_25214;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_25214;product=hypothetical protein
+D31_L12_contig_41611	Prodigal:2.6	CDS	320	799	.	-	0	ID=D31_L12_PROKKA_25460;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_25460;product=hypothetical protein
+D31_L12_contig_42532	Prodigal:2.6	CDS	23	475	.	-	0	ID=D31_L12_PROKKA_26050;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_26050;product=hypothetical protein
+D31_L12_contig_42532	Prodigal:2.6	CDS	515	1141	.	-	0	ID=D31_L12_PROKKA_26051;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_26051;product=hypothetical protein
+D31_L12_contig_44585	Prodigal:2.6	CDS	645	1331	.	-	0	ID=D31_L12_PROKKA_27474;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_27474;product=hypothetical protein
+D31_L12_contig_51254	Prodigal:2.6	CDS	129	467	.	-	0	ID=D31_L12_PROKKA_32260;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32260;product=hypothetical protein
+D31_L12_contig_51254	Prodigal:2.6	CDS	654	839	.	-	0	ID=D31_L12_PROKKA_32261;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32261;product=hypothetical protein
+D31_L12_contig_51544	Prodigal:2.6	CDS	442	579	.	-	0	ID=D31_L12_PROKKA_32424;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32424;product=hypothetical protein
+D31_L12_contig_51544	Prodigal:2.6	CDS	715	933	.	-	0	ID=D31_L12_PROKKA_32425;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32425;product=hypothetical protein
+D31_L12_contig_51563	Prodigal:2.6	CDS	1192	1662	.	-	0	ID=D31_L12_PROKKA_32441;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32441;product=hypothetical protein
+D31_L12_contig_51563	Prodigal:2.6	CDS	1936	2148	.	-	0	ID=D31_L12_PROKKA_32442;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32442;product=hypothetical protein
+D31_L12_contig_51563	Prodigal:2.6	CDS	25	567	.	-	0	ID=D31_L12_PROKKA_32438;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32438;product=hypothetical protein
+D31_L12_contig_51563	Prodigal:2.6	CDS	595	909	.	-	0	ID=D31_L12_PROKKA_32439;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32439;product=hypothetical protein
+D31_L12_contig_51563	Prodigal:2.6	CDS	931	1092	.	-	0	ID=D31_L12_PROKKA_32440;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_32440;product=hypothetical protein
+D31_L12_contig_533	Prodigal:2.6	CDS	182	1111	.	+	0	ID=D31_L12_PROKKA_00235;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF00665.20;locus_tag=PROKKA_00235;product=Integrase core domain protein
+D31_L12_contig_53857	Prodigal:2.6	CDS	117	938	.	-	0	ID=D31_L12_PROKKA_34013;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_34013;product=hypothetical protein
+D31_L12_contig_53857	Prodigal:2.6	CDS	916	1299	.	-	0	ID=D31_L12_PROKKA_34014;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_34014;product=hypothetical protein
+D31_L12_contig_53945	Prodigal:2.6	CDS	418	1044	.	-	0	ID=D31_L12_PROKKA_34087;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_34087;product=hypothetical protein
+D31_L12_contig_54476	Prodigal:2.6	CDS	65	229	.	+	0	ID=D31_L12_PROKKA_34479;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_34479;product=hypothetical protein
+D31_L12_contig_55438	Prodigal:2.6	CDS	212	592	.	+	0	ID=D31_L12_PROKKA_35154;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_35154;product=hypothetical protein
+D31_L12_contig_57012	Prodigal:2.6	CDS	281	541	.	-	0	ID=D31_L12_PROKKA_36318;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_36318;product=hypothetical protein
+D31_L12_contig_57012	Prodigal:2.6	CDS	555	1463	.	-	0	ID=D31_L12_PROKKA_36319;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_36319;product=hypothetical protein
+D31_L12_contig_59916	Prodigal:2.6	CDS	1	642	.	+	0	ID=D31_L12_PROKKA_38484;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_38484;product=hypothetical protein
+D31_L12_contig_59916	Prodigal:2.6	CDS	725	1315	.	-	0	ID=D31_L12_PROKKA_38485;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_38485;product=hypothetical protein
+D31_L12_contig_60123	Prodigal:2.6	CDS	82	2031	.	-	0	ID=D31_L12_PROKKA_38592;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK03598;locus_tag=PROKKA_38592;product=putative efflux pump membrane fusion protein
+D31_L12_contig_60809	Prodigal:2.6	CDS	106	750	.	+	0	ID=D31_L12_PROKKA_39022;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_39022;product=hypothetical protein
+D31_L12_contig_61594	Prodigal:2.6	CDS	53	859	.	-	0	ID=D31_L12_PROKKA_39583;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_39583;product=hypothetical protein
+D31_L12_contig_61984	Prodigal:2.6	CDS	2727	2990	.	-	0	ID=D31_L12_PROKKA_39832;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_39832;product=hypothetical protein
+D31_L12_contig_61984	Prodigal:2.6	CDS	442	1695	.	+	0	ID=D31_L12_PROKKA_39831;eC_number=5.99.1.3;gene=gyrA_16;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P05653;locus_tag=PROKKA_39831;product=DNA gyrase subunit A
+D31_L12_contig_61984	Prodigal:2.6	CDS	49	405	.	+	0	ID=D31_L12_PROKKA_39830;eC_number=5.99.1.3;gene=gyrA_15;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P05653;locus_tag=PROKKA_39830;product=DNA gyrase subunit A
+D31_L12_contig_63356	Prodigal:2.6	CDS	731	1066	.	-	0	ID=D31_L12_PROKKA_40686;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_40686;product=hypothetical protein
+D31_L12_contig_63797	Prodigal:2.6	CDS	158	865	.	-	0	ID=D31_L12_PROKKA_41008;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q83BS0;locus_tag=PROKKA_41008;note=Transcription termination/antitermination protein NusA;product=hypothetical protein
+D31_L12_contig_63797	Prodigal:2.6	CDS	899	1231	.	-	0	ID=D31_L12_PROKKA_41009;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK09202;locus_tag=PROKKA_41009;product=transcription elongation factor NusA
+D31_L12_contig_64941	Prodigal:2.6	CDS	1194	1940	.	-	0	ID=D31_L12_PROKKA_41857;eC_number=2.1.1.72;gene=rsrIM_3;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P14751;locus_tag=PROKKA_41857;product=Modification methylase RsrI
+D31_L12_contig_64941	Prodigal:2.6	CDS	448	687	.	-	0	ID=D31_L12_PROKKA_41855;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_41855;product=hypothetical protein
+D31_L12_contig_64941	Prodigal:2.6	CDS	880	1161	.	-	0	ID=D31_L12_PROKKA_41856;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_41856;product=hypothetical protein
+D31_L12_contig_67418	Prodigal:2.6	CDS	1042	1218	.	-	0	ID=D31_L12_PROKKA_43806;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_43806;product=hypothetical protein
+D31_L12_contig_67418	Prodigal:2.6	CDS	221	601	.	+	0	ID=D31_L12_PROKKA_43804;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_43804;product=hypothetical protein
+D31_L12_contig_67418	Prodigal:2.6	CDS	632	1096	.	+	0	ID=D31_L12_PROKKA_43805;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_43805;product=hypothetical protein
+D31_L12_contig_67692	Prodigal:2.6	CDS	129	434	.	+	0	ID=D31_L12_PROKKA_44003;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_44003;product=hypothetical protein
+D31_L12_contig_67692	Prodigal:2.6	CDS	770	952	.	-	0	ID=D31_L12_PROKKA_44004;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_44004;product=hypothetical protein
+D31_L12_contig_69291	Prodigal:2.6	CDS	354	830	.	-	0	ID=D31_L12_PROKKA_45074;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_45074;product=hypothetical protein
+D31_L12_contig_69544	Prodigal:2.6	CDS	212	703	.	+	0	ID=D31_L12_PROKKA_45200;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_45200;product=hypothetical protein
+D31_L12_contig_69544	Prodigal:2.6	CDS	713	1216	.	+	0	ID=D31_L12_PROKKA_45201;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_45201;product=hypothetical protein
+D31_L12_contig_72874	Prodigal:2.6	CDS	244	1038	.	+	0	ID=D31_L12_PROKKA_47475;eC_number=3.6.4.13;gene=deaD_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A9P6;locus_tag=PROKKA_47475;product=ATP-dependent RNA helicase DeaD
+D31_L12_contig_74031	Prodigal:2.6	CDS	475	822	.	-	0	ID=D31_L12_PROKKA_48283;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_48283;product=hypothetical protein
+D31_L12_contig_74031	Prodigal:2.6	CDS	806	1039	.	-	0	ID=D31_L12_PROKKA_48284;inference=ab initio prediction:Prodigal:2.6,protein motif:CLUSTERS:PRK06986;locus_tag=PROKKA_48284;product=flagellar biosynthesis sigma factor
+D31_L12_contig_75633	Prodigal:2.6	CDS	1908	2033	.	+	0	ID=D31_L12_PROKKA_49488;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49488;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	2049	2207	.	+	0	ID=D31_L12_PROKKA_49489;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49489;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	2364	2480	.	+	0	ID=D31_L12_PROKKA_49490;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49490;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	2838	3056	.	+	0	ID=D31_L12_PROKKA_49491;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49491;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	3126	3530	.	+	0	ID=D31_L12_PROKKA_49492;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49492;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	3587	3811	.	-	0	ID=D31_L12_PROKKA_49493;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49493;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	359	613	.	+	0	ID=D31_L12_PROKKA_49487;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49487;product=hypothetical protein
+D31_L12_contig_75633	Prodigal:2.6	CDS	95	337	.	+	0	ID=D31_L12_PROKKA_49486;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_49486;product=hypothetical protein
+D31_L12_contig_76598	Prodigal:2.6	CDS	1324	1716	.	-	0	ID=D31_L12_PROKKA_50256;gene=rpsI_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P21470;locus_tag=PROKKA_50256;product=30S ribosomal protein S9
+D31_L12_contig_76598	Prodigal:2.6	CDS	1731	2165	.	-	0	ID=D31_L12_PROKKA_50257;gene=rplM_44;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P60488;locus_tag=PROKKA_50257;product=50S ribosomal protein L13
+D31_L12_contig_76598	Prodigal:2.6	CDS	2172	2534	.	-	0	ID=D31_L12_PROKKA_50258;gene=rplQ_19;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:A0QSL9;locus_tag=PROKKA_50258;product=50S ribosomal protein L17
+D31_L12_contig_76598	Prodigal:2.6	CDS	2621	3337	.	-	0	ID=D31_L12_PROKKA_50259;eC_number=2.7.7.6;gene=rpoA_39;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q925Z2;locus_tag=PROKKA_50259;product=DNA-directed RNA polymerase subunit alpha
+D31_L12_contig_76598	Prodigal:2.6	CDS	3561	4166	.	-	0	ID=D31_L12_PROKKA_50260;gene=rpsD_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O54297;locus_tag=PROKKA_50260;product=30S ribosomal protein S4
+D31_L12_contig_76598	Prodigal:2.6	CDS	413	865	.	-	0	ID=D31_L12_PROKKA_50254;gene=rpsG_38;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6N4T3;locus_tag=PROKKA_50254;product=30S ribosomal protein S7
+D31_L12_contig_76598	Prodigal:2.6	CDS	4206	4595	.	-	0	ID=D31_L12_PROKKA_50261;gene=rpsK_34;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P66357;locus_tag=PROKKA_50261;product=30S ribosomal protein S11
+D31_L12_contig_76598	Prodigal:2.6	CDS	4620	4823	.	-	0	ID=D31_L12_PROKKA_50262;gene=rpsM_28;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6N4V5;locus_tag=PROKKA_50262;product=30S ribosomal protein S13
+D31_L12_contig_76598	Prodigal:2.6	CDS	883	1305	.	-	0	ID=D31_L12_PROKKA_50255;gene=rpsL_38;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A0G8;locus_tag=PROKKA_50255;product=30S ribosomal protein S12
+D31_L12_contig_77365	Prodigal:2.6	CDS	916	1134	.	+	0	ID=D31_L12_PROKKA_50887;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_50887;product=hypothetical protein
+D31_L12_contig_77365	Prodigal:2.6	CDS	97	666	.	+	0	ID=D31_L12_PROKKA_50886;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_50886;product=hypothetical protein
+D31_L12_contig_79309	Prodigal:2.6	CDS	591	920	.	-	0	ID=D31_L12_PROKKA_52291;inference=ab initio prediction:Prodigal:2.6,protein motif:Pfam:PF03819.11;locus_tag=PROKKA_52291;product=MazG nucleotide pyrophosphohydrolase domain protein
+D31_L12_contig_79309	Prodigal:2.6	CDS	88	579	.	-	0	ID=D31_L12_PROKKA_52290;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_52290;product=hypothetical protein
+D31_L12_contig_80256	Prodigal:2.6	CDS	1147	1533	.	+	0	ID=D31_L12_PROKKA_52989;eC_number=2.7.4.9;gene=tmk_14;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O67099;locus_tag=PROKKA_52989;product=Thymidylate kinase
+D31_L12_contig_80256	Prodigal:2.6	CDS	1756	1980	.	+	0	ID=D31_L12_PROKKA_52990;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_52990;product=hypothetical protein
+D31_L12_contig_80256	Prodigal:2.6	CDS	372	641	.	+	0	ID=D31_L12_PROKKA_52987;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_52987;product=hypothetical protein
+D31_L12_contig_80256	Prodigal:2.6	CDS	650	784	.	-	0	ID=D31_L12_PROKKA_52988;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_52988;product=hypothetical protein
+D31_L12_contig_81896	Prodigal:2.6	CDS	500	790	.	-	0	ID=D31_L12_PROKKA_54188;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54188;product=hypothetical protein
+D31_L12_contig_81896	Prodigal:2.6	CDS	801	983	.	-	0	ID=D31_L12_PROKKA_54189;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54189;product=hypothetical protein
+D31_L12_contig_81896	Prodigal:2.6	CDS	993	1244	.	-	0	ID=D31_L12_PROKKA_54190;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54190;product=hypothetical protein
+D31_L12_contig_82071	Prodigal:2.6	CDS	295	486	.	+	0	ID=D31_L12_PROKKA_54311;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54311;product=hypothetical protein
+D31_L12_contig_82071	Prodigal:2.6	CDS	727	831	.	+	0	ID=D31_L12_PROKKA_54312;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54312;product=hypothetical protein
+D31_L12_contig_82071	Prodigal:2.6	CDS	850	1140	.	+	0	ID=D31_L12_PROKKA_54313;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54313;product=hypothetical protein
+D31_L12_contig_82266	Prodigal:2.6	CDS	463	1725	.	+	0	ID=D31_L12_PROKKA_54443;eC_number=3.4.24.-;gene=ftsH_26;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q9WZ49;locus_tag=PROKKA_54443;product=ATP-dependent zinc metalloprotease FtsH
+D31_L12_contig_82266	Prodigal:2.6	CDS	76	453	.	+	0	ID=D31_L12_PROKKA_54442;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_54442;product=hypothetical protein
+D31_L12_contig_86760	Prodigal:2.6	CDS	334	1065	.	+	0	ID=D31_L12_PROKKA_57721;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_57721;product=hypothetical protein
+D31_L12_contig_87901	Prodigal:2.6	CDS	1108	1734	.	-	0	ID=D31_L12_PROKKA_58495;eC_number=6.1.1.16;gene=cysS_22;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q06752;locus_tag=PROKKA_58495;product=Cysteine--tRNA ligase
+D31_L12_contig_87901	Prodigal:2.6	CDS	294	1097	.	-	0	ID=D31_L12_PROKKA_58494;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_58494;product=hypothetical protein
+D31_L12_contig_89355	Prodigal:2.6	CDS	471	1583	.	-	0	ID=D31_L12_PROKKA_59587;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_59587;product=hypothetical protein
+D31_L12_contig_89556	Prodigal:2.6	CDS	588	800	.	-	0	ID=D31_L12_PROKKA_59719;eC_number=3.6.3.5;gene=ziaA_4;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q59998;locus_tag=PROKKA_59719;product=Zinc-transporting ATPase
+D31_L12_contig_89917	Prodigal:2.6	CDS	82	1194	.	+	0	ID=D31_L12_PROKKA_59940;gene=dnaK_30;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P0A6Y8;locus_tag=PROKKA_59940;product=Chaperone protein DnaK
+D31_L12_contig_91344	Prodigal:2.6	CDS	77	1102	.	+	0	ID=D31_L12_PROKKA_60963;gene=rpsA_27;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A5J0;locus_tag=PROKKA_60963;product=30S ribosomal protein S1
+D31_L12_contig_93146	Prodigal:2.6	CDS	1870	2208	.	-	0	ID=D31_L12_PROKKA_62195;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_62195;product=hypothetical protein
+D31_L12_contig_93146	Prodigal:2.6	CDS	955	1536	.	-	0	ID=D31_L12_PROKKA_62194;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_62194;product=hypothetical protein
+D31_L12_contig_93707	Prodigal:2.6	CDS	309	788	.	-	0	ID=D31_L12_PROKKA_62568;eC_number=5.99.1.2;gene=topA_8;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A5Y5;locus_tag=PROKKA_62568;product=DNA topoisomerase 1
+D31_L12_contig_93707	Prodigal:2.6	CDS	969	1262	.	-	0	ID=D31_L12_PROKKA_62569;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_62569;product=hypothetical protein
+D31_L12_contig_95416	Prodigal:2.6	CDS	134	316	.	+	0	ID=D31_L12_PROKKA_63721;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_63721;product=hypothetical protein
+D31_L12_contig_95416	Prodigal:2.6	CDS	380	2176	.	+	0	ID=D31_L12_PROKKA_63722;eC_number=3.1.-.-;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q6GHZ6;locus_tag=PROKKA_63722;product=Ribonuclease J 1
+D31_L12_contig_96029	Prodigal:2.6	CDS	1188	1637	.	-	0	ID=D31_L12_PROKKA_64147;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_64147;product=hypothetical protein
+D31_L12_contig_96029	Prodigal:2.6	CDS	65	1195	.	-	0	ID=D31_L12_PROKKA_64146;eC_number=2.4.1.11;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:O53279;locus_tag=PROKKA_64146;product=Glycogen synthase
+D31_L12_contig_96613	Prodigal:2.6	CDS	436	672	.	+	0	ID=D31_L12_PROKKA_64522;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_64522;product=hypothetical protein
+D31_L12_contig_96613	Prodigal:2.6	CDS	990	1634	.	+	0	ID=D31_L12_PROKKA_64523;eC_number=3.4.24.-;gene=htpX_7;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P65813;locus_tag=PROKKA_64523;product=Protease HtpX
+D31_L12_contig_98747	Prodigal:2.6	CDS	1451	2692	.	+	0	ID=D31_L12_PROKKA_66050;eC_number=2.1.2.1;gene=glyA_9;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:P99091;locus_tag=PROKKA_66050;product=Serine hydroxymethyltransferase
+D31_L12_contig_98747	Prodigal:2.6	CDS	162	1439	.	+	0	ID=D31_L12_PROKKA_66049;eC_number=3.4.21.-;inference=ab initio prediction:Prodigal:2.6,similar to AA sequence:UniProtKB:Q7A5M9;locus_tag=PROKKA_66049;product=putative CtpA-like serine protease
+D31_L12_contig_98747	Prodigal:2.6	CDS	2683	3288	.	+	0	ID=D31_L12_PROKKA_66051;inference=ab initio prediction:Prodigal:2.6;locus_tag=PROKKA_66051;product=hypothetical protein

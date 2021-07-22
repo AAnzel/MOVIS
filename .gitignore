@@ -1,10 +1,8 @@
 .ipynb_checkpoints/
-Data/
 Ideas*
 New_project*
 *.log
 .vscode/
 __pycache__/
 *.backup
-Source/Tool/uploaded/
-Source/Tool/cached/
+Data/uploaded/
