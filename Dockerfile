@@ -9,6 +9,7 @@ RUN /opt/conda/bin/conda install --yes \
         pandas==1.2.5 \
         scikit-learn==0.24.2 \
         scipy==1.6.2 \
+        protobuf==3.14.0 \
         nomkl
 
 RUN /opt/conda/bin/conda config --add channels conda-forge
@@ -29,8 +30,8 @@ RUN find /opt/conda/ -follow -type f -name '*.a' -delete \
 
 COPY . .
 
+WORKDIR ./Source/
+
 EXPOSE 8501
 
-ENTRYPOINT ['streamlit', 'run']
-
-CMD ['Source/main.py']
+CMD streamlit run main.py

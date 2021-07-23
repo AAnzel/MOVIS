@@ -1,4 +1,5 @@
 .ipynb_checkpoints/
+.streamlit/
 Ideas*
 New_project*
 *.log

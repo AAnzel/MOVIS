@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import common
 
-path_example_1_root_data = os.path.join('cached', 'example_1')
+path_example_1_root_data = os.path.join('..', 'Data', 'cached', 'example_1')
 path_example_1_genomics = os.path.join(path_example_1_root_data, 'genomics')
 path_example_1_proteomics = os.path.join(
     path_example_1_root_data, 'proteomics')
@@ -21,6 +21,9 @@ path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'Bins')
 path_example_1_proteomics_fasta = os.path.join(
     path_example_1_proteomics, 'set_of_78')
 
+
+# TODO: Fix bins data set and fix KEGG data set zip files
+# TODO: Create CI/CD
 
 def upload_multiple(key_suffix):
     available_data_set_types = {

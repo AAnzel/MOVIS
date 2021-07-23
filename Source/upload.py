@@ -15,7 +15,7 @@ type_list_zip = []
 for i in shutil.get_unpack_formats():
     type_list_zip += i[1]
 
-path_uploaded = 'uploaded'
+path_uploaded = os.path.join('..', 'Data', 'uploaded')
 path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
 path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
 path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')

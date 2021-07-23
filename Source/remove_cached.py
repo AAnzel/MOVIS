@@ -2,8 +2,7 @@ import os
 import shutil
 
 
-# TODO: Change this for production
-path_uploaded = 'uploaded_try'
+path_uploaded = os.path.join('..', 'Data', 'uploaded')
 path_uploaded_genomics = os.path.join(path_uploaded, 'genomics')
 path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
 path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')
@@ -19,6 +18,8 @@ path_uploaded_dict = {
     }
 
 
+# TODO: Implement checking last_modified time for files and remove
+# only uploaded files older than 1 hour
 def remove_cached_data(path_omic):
 
     for file_name in os.listdir(path_omic):
