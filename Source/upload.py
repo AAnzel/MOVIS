@@ -1,4 +1,5 @@
 import os
+import time
 import shutil
 import common
 import streamlit as st
@@ -29,6 +30,33 @@ path_uploaded_dict = {
     'Metabolomics': path_uploaded_metabolomics,
     'Physico-chemical': path_uploaded_phy_che
 }
+
+
+# TODO: Check this function
+def remove_cached_data():
+
+    time_limit = time.time() - 3600
+
+    # Traversing every cache directory and deleting everything from it
+    for omic in path_uploaded_dict:
+        path_omic = path_uploaded_dict(omic)
+
+        for file_name in os.listdir(path_omic):
+            file_path = os.path.join(path_omic, file_name)
+
+            # Check if file is older than 1h, and if yes, delete it
+            if os.stat(file_path).st_mtime < time_limit:
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except OSError as e:
+                    print('Failed to delete ' + file_path + '. Reason: ' + e)
+
+        print('Successfully removed everything from ' + omic + ' data set')
+
+    return None
 
 
 def upload_csv(key_suffix):
