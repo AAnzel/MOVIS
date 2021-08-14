@@ -20,11 +20,12 @@ from scipy.spatial.distance import jaccard, pdist, squareform
 SEED = 42
 MAX_ROWS = 15000
 EPOCHS = 10
-NUM_OF_WORKERS = 8
+NUM_OF_WORKERS = os.cpu_count() if os.cpu_count() is not None else 2
 EX_1 = 1
 EX_2 = 2
 random.seed(SEED)
 np.random.seed(SEED)
+
 
 # Important if you want to visualize datasets with >5000 samples
 alt.data_transformers.enable("default", max_rows=MAX_ROWS)

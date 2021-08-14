@@ -3,6 +3,7 @@ import streamlit as st
 
 import example_1
 import example_2
+import common
 import upload
 import home
 
@@ -33,6 +34,9 @@ def create_sidebar_and_main():
     st.sidebar.markdown('**Navigation:**')
     choice_data_set = st.sidebar.radio('', ('Home', 'Example 1', 'Example 2',
                                             'Upload'), index=0)
+
+    # Deleting old user-uploaded cached data
+    common.remove_cached_data()
 
     if choice_data_set == 'Home':
         home.create_home()

@@ -6,11 +6,6 @@ import streamlit as st
 import pandas as pd
 
 
-# TODO: Implement removing previously extracted archives and files
-# it should be done at the end of a session. The session feature was
-# introduced to streamlit in 84.0 version, and should be used for this.
-# Info: https://blog.streamlit.io/session-state-for-streamlit/
-
 type_list_csv = ['csv', 'tsv']
 type_list_zip = []
 for i in shutil.get_unpack_formats():
@@ -32,14 +27,14 @@ path_uploaded_dict = {
 }
 
 
-# TODO: Check this function
 def remove_cached_data():
 
-    time_limit = time.time() - 3600
+    SAVE_TIME = 5400  # Time is given in seconds, 5400s = 1.5h
+    time_limit = time.time() - SAVE_TIME
 
     # Traversing every cache directory and deleting everything from it
     for omic in path_uploaded_dict:
-        path_omic = path_uploaded_dict(omic)
+        path_omic = path_uploaded_dict[omic]
 
         for file_name in os.listdir(path_omic):
             file_path = os.path.join(path_omic, file_name)
@@ -54,7 +49,11 @@ def remove_cached_data():
                 except OSError as e:
                     print('Failed to delete ' + file_path + '. Reason: ' + e)
 
-        print('Successfully removed everything from ' + omic + ' data set')
+                print('Successfully removed everything from ' + omic +
+                      ' data set')
+
+            else:
+                pass
 
     return None
 
@@ -202,8 +201,7 @@ def upload_multiple(key_suffix):
             'Raw FASTA files': 'FASTA',
             'Calculated data set': 'Calculated'},
         'Transcriptomics': {
-            'Raw FASTA files': 'FASTA',
-            'KEGG annotation files': 'KEGG'}
+            'Raw FASTA files': 'FASTA'}
     }
 
     selected_data_set_type = st.selectbox(

@@ -23,7 +23,6 @@ path_example_1_proteomics_fasta = os.path.join(
 
 
 # TODO: Fix bins data set and fix KEGG data set zip files
-# TODO: Implement uploaded data sets removal after certain time
 # TODO: Create CI/CD
 
 def upload_multiple(key_suffix):
