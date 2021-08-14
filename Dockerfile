@@ -26,8 +26,6 @@ RUN find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete
 
-# TODO: Add Uploaded data sets removal script
-
 COPY . .
 
 WORKDIR ./Source/

@@ -26,7 +26,6 @@ EX_2 = 2
 random.seed(SEED)
 np.random.seed(SEED)
 
-
 # Important if you want to visualize datasets with >5000 samples
 alt.data_transformers.enable("default", max_rows=MAX_ROWS)
 
@@ -660,7 +659,6 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
     return None
 
 
-########
 def show_data_set(df):
     with st.spinner('Showing the data set and related info'):
         st.markdown('First 100 entries')
@@ -677,8 +675,6 @@ def show_data_set(df):
     return None
 
 
-# This function is used when working with proteomics data i.e. FASTA files
-# It is used to show calculated features of those FASTA files
 def show_calculated_data_set(df, text_info):
     with st.spinner('Calculating features and showing the data set'):
         if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
