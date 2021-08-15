@@ -681,12 +681,17 @@ def show_calculated_data_set(df, text_info):
             st.markdown('First 50 entries and first 8 features (columns). '
                         + '**' + text_info + '**')
             st.dataframe(df.iloc[:50, :8])
+
+            # TODO: Uncomment pd.describe when the bug is fixed in Pandas
+            # Bug: https://github.com/pandas-dev/pandas/issues/37429
+            # More: https://github.com/pandas-dev/pandas/issues/42626
+            # st.markdown('Summary statistics')
             # st.dataframe(df.describe(datetime_is_numeric=True))
         else:
             st.markdown('First 100 entries ' + '**' + text_info + '**')
             st.dataframe(df.head(100))
-            st.markdown('Summary statistics')
-            st.dataframe(df.describe(datetime_is_numeric=True))
+            # st.markdown('Summary statistics')
+            # st.dataframe(df.describe(datetime_is_numeric=True))
 
     return None
 
@@ -1315,7 +1320,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(BINS_DATA_SET_PATH)
 
         else:
-            with st.spinner('Creating KO matrix...'):
+            with st.spinner('Creating BINS data frame...'):
                 df = work_with_bins(data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, BINS_DATA_SET_PATH)
 
