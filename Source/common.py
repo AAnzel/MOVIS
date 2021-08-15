@@ -754,13 +754,16 @@ def show_clustering_info(df, key_suffix):
     # TODO: Deal with sklearn future warning !
     evaluation_text = ''
     for pair in labels_list:
-        evaluation_scores = evaluate_clustering(df, pair[1])
-        evaluation_text += pair[0]\
-            + '| silhouette score: ' + str(evaluation_scores[0]) + ', '\
-            + 'Calinski-Harabasz index: ' + str(evaluation_scores[1]) + ', '\
-            + 'Davies-Bouldin index: ' + str(evaluation_scores[2]) + '\n'
+        if pair[0] != 'OPTICS':
+            evaluation_scores = evaluate_clustering(df, pair[1])
+            evaluation_text += pair[0]\
+                + '| silhouette score: ' + str(evaluation_scores[0]) + ', '\
+                + 'Calinski-Harabasz index: ' + str(evaluation_scores[1])\
+                + ', '\
+                + 'Davies-Bouldin index: ' + str(evaluation_scores[2]) + '\n'
 
-    st.code(evaluation_text)
+    if evaluation_text != '':
+        st.code(evaluation_text)
 
     return labels_list
 
