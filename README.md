@@ -1,6 +1,6 @@
 ![movis_logo](./Source/images/movis_logo_transparent.png)
 
-Place for github badges
+[![Build status](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml/badge.svg)](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml)
 
 ---
 # MOVIS
