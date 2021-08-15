@@ -1,6 +1,9 @@
 ![movis_logo](./Source/images/movis_logo_transparent.png)
 
 [![Build status](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml/badge.svg)](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml)
+![Docker Automated build](https://img.shields.io/docker/automated/AAnzel/MOVIS)
+![GitHub issues](https://img.shields.io/github/issues-raw/AAnzel/MOVIS)
+![GitHub](https://img.shields.io/github/license/AAnzel/MOVIS)
 
 ---
 # MOVIS
