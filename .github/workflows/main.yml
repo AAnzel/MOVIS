@@ -23,33 +23,40 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Check Out Repo 
+      # Check out code
+      - name: Checkout
         uses: actions/checkout@v2
-
-	  - name: Cache Docker layers
+      # This is the a separate action that sets up buildx runner
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      # So now you can use Actions' own caching!
+      - name: Cache Docker layers
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
-      - name: Login to Docker Hub
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-	  - name: Build and push
-        id: docker_build
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # And make it available for the builds
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/movis:latest
+          context: .
+          push: false
+          tags: user/app:latest
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+        # This ugly bit is necessary if you don't want your cache to grow forever
+        # till it hits GitHub's limit of 5GB.
+        # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
