@@ -15,7 +15,7 @@ def create_main_example_3():
             from time-series multiomics data. npj Syst Biol Appl 4, 19 (2018).
             https://doi.org/10.1038/s41540-018-0054-3**. Analyzed samples
             were processed in Powell-Focht Bioengineering Hall
-            (32.88180365509607, -117.23388140034122).
+            (32.881803, -117.233881).
             A precise location is shown on the map located on the right.
 
             It contains **metabolomics** and **proteomics** data. The code used
@@ -23,7 +23,7 @@ def create_main_example_3():
             (https://github.com/JBEI/KineticLearning)
             ''')
 
-    col_2.map(pd.DataFrame({'lat': [32.88180365509607], 
+    col_2.map(pd.DataFrame({'lat': [32.88180365509607],
                             'lon': [-117.23388140034122]}),
               zoom=8, use_container_width=True)
 

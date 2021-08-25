@@ -32,8 +32,10 @@ def create_sidebar_and_main():
     st.sidebar.markdown('---')
 
     st.sidebar.markdown('**Navigation:**')
+
+    # TODO: Add 'Example 3' below when the data is ready
     choice_data_set = st.sidebar.radio(
-        '', ('Home', 'Example 1', 'Example 2', 'Example 3', 'Upload'), index=0)
+        '', ('Home', 'Example 1', 'Example 2', 'Upload'), index=0)
 
     # Deleting old user-uploaded cached data
     upload.remove_cached_data()
