@@ -7,44 +7,93 @@ import common
 path_example_2_root_data = os.path.join('..', 'Data', 'cached', 'example_2')
 path_example_2_transcriptomics = os.path.join(path_example_2_root_data,
                                               'transcriptomics')
+path_example_2_transcriptomics_control_1 = os.path.join(
+    path_example_2_transcriptomics, 'CONTROL_1.csv')
+path_example_2_transcriptomics_control_2 = os.path.join(
+    path_example_2_transcriptomics, 'CONTROL_2.csv')
+path_example_2_transcriptomics_control_3 = os.path.join(
+    path_example_2_transcriptomics, 'CONTROL_3.csv')
+
+path_example_2_transcriptomics_benz_1 = os.path.join(
+    path_example_2_transcriptomics, 'BENZ_1.csv')
+path_example_2_transcriptomics_benz_2 = os.path.join(
+    path_example_2_transcriptomics, 'BENZ_2.csv')
+path_example_2_transcriptomics_benz_3 = os.path.join(
+    path_example_2_transcriptomics, 'BENZ_3.csv')
+
+path_example_2_transcriptomics_phe_1 = os.path.join(
+    path_example_2_transcriptomics, 'PHE_1.csv')
+path_example_2_transcriptomics_phe_2 = os.path.join(
+    path_example_2_transcriptomics, 'PHE_1.csv')
+path_example_2_transcriptomics_phe_3 = os.path.join(
+    path_example_2_transcriptomics, 'PHE_3.csv')
+
+path_example_2_transcriptomics_pov_1 = os.path.join(
+    path_example_2_transcriptomics, 'POV_1.csv')
+path_example_2_transcriptomics_pov_2 = os.path.join(
+    path_example_2_transcriptomics, 'POV_2.csv')
+path_example_2_transcriptomics_pov_3 = os.path.join(
+    path_example_2_transcriptomics, 'POV_3.csv')
+
+
+def upload_multiple(key_suffix):
+
+    data_set_type = 'Multi-tabular'
+
+    available_data_sets = {
+        'Control replicate 1': path_example_2_transcriptomics_control_1,
+        'Control replicate 2': path_example_2_transcriptomics_control_2,
+        'Control replicate 3': path_example_2_transcriptomics_control_3,
+        'Benz. chl. replicate 1': path_example_2_transcriptomics_benz_1,
+        'Benz. chl. replicate 2': path_example_2_transcriptomics_benz_2,
+        'Benz. chl. replicate 3': path_example_2_transcriptomics_benz_3,
+        'Pov. iod. replicate 1': path_example_2_transcriptomics_pov_1,
+        'Pov. iod. replicate 2': path_example_2_transcriptomics_pov_2,
+        'Pov. iod. replicate 3': path_example_2_transcriptomics_pov_3,
+        'Chloroph. replicate 1': path_example_2_transcriptomics_phe_1,
+        'Chloroph. replicate 2': path_example_2_transcriptomics_phe_2,
+        'Chloroph. replicate 3': path_example_2_transcriptomics_phe_3
+    }
+
+    selected_data_sets = st.multiselect(
+        'What data sets do you want to see?', list(available_data_sets.keys()),
+        default=['Control replicate 1', 'Control replicate 2',
+                 'Control replicate 3'])
+
+    df_list = []
+
+    for data_set in selected_data_sets:
+        tmp_df = pd.read_csv(available_data_sets[data_set])
+        tmp_df = common.fix_dataframe_columns(tmp_df)
+        tmp_df = tmp_df.convert_dtypes()
+
+        df_list.append(tmp_df)
+
+    return df_list, data_set_type
 
 
 def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
 
-    df = None
+    path_list = None
 
-    if key_suffix in ['Metabolomics', 'Physico-chemical']:
+    path_list, data_set_type = upload_multiple(key_suffix)
 
-        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-        CALCULATED_DATA_SET_PATH = os.path.join(
-            folder_path, CALCULATED_DATA_SET_NAME)
+    if path_list is None:
+        st.warning('Choose your data set')
+        st.stop()
 
-        if os.path.exists(CALCULATED_DATA_SET_PATH):
-            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
-        else:
-            st.error('Wrong cache path')
-            st.stop()
-
-        return df
-
-    else:
-        df, data_set_type = upload_multiple(key_suffix)
-
-        if df is None:
-            st.warning('Upload your data set')
-
-        return df, data_set_type
+    return path_list, data_set_type
 
 
 def example_2_transcriptomics():
     key_suffix = 'Transcriptomics'
     cache_folder_path = path_example_2_transcriptomics
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    df_list, data_set_type = upload_intro(cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    return common.work_with_csv(df_list, cache_folder_path, key_suffix)
 
 
 def create_main_example_2():

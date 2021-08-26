@@ -1216,9 +1216,16 @@ def work_with_csv(df, folder_path, key_suffix):
     if df is None:
         return []
 
-    show_data_set(df)
-    chosen_charts = work_with_data_set(
-        df, 'Calculated', folder_path, key_suffix)
+    # In this case we have a list of dfs
+    if key_suffix == 'Transcriptomics':
+        show_calculated_data_set(df[0], 'The first data set')
+        chosen_charts = work_with_data_set(
+            df, 'Multi-tabular', folder_path, key_suffix)
+
+    else:
+        show_data_set(df)
+        chosen_charts = work_with_data_set(
+            df, 'Calculated', folder_path, key_suffix)
 
     return chosen_charts
 
@@ -1373,6 +1380,15 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df, temporal_feature, feature_list, key_suffix)
         chosen_charts = visualize_data_set(
             df, temporal_feature, feature_list, key_suffix)
+
+    elif data_set_type == 'Multi-tabular':
+        # TODO: Implement this properly
+        for single_df in df:
+            single_df = fix_data_set(single_df)
+            temporal_feature, feature_list = find_temporal_feature(single_df)
+
+            chosen_charts += visualize_data_set(
+                single_df, temporal_feature, feature_list, key_suffix)
 
     else:
         pass
