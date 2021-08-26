@@ -4,6 +4,49 @@ import pandas as pd
 import common
 
 
+path_example_2_root_data = os.path.join('..', 'Data', 'cached', 'example_2')
+path_example_2_transcriptomics = os.path.join(path_example_2_root_data,
+                                              'transcriptomics')
+
+
+def upload_intro(folder_path, key_suffix):
+    st.header(key_suffix + ' data')
+    st.markdown('')
+
+    df = None
+
+    if key_suffix in ['Metabolomics', 'Physico-chemical']:
+
+        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+        CALCULATED_DATA_SET_PATH = os.path.join(
+            folder_path, CALCULATED_DATA_SET_NAME)
+
+        if os.path.exists(CALCULATED_DATA_SET_PATH):
+            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
+        else:
+            st.error('Wrong cache path')
+            st.stop()
+
+        return df
+
+    else:
+        df, data_set_type = upload_multiple(key_suffix)
+
+        if df is None:
+            st.warning('Upload your data set')
+
+        return df, data_set_type
+
+
+def example_2_transcriptomics():
+    key_suffix = 'Transcriptomics'
+    cache_folder_path = path_example_2_transcriptomics
+
+    df = upload_intro(cache_folder_path, key_suffix)
+
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
+
+
 def create_main_example_2():
 
     col_1, col_2 = st.beta_columns([1, 2])
@@ -30,32 +73,15 @@ def create_main_example_2():
     choose_omics = st.multiselect(
         'What kind of data set do you want to see?', example_2_omics_list)
 
-    num_of_columns = len(choose_omics)
-
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    # with st.beta_expander('Show/hide data sets and related info',
-    #                       expanded=True):
-    #     if num_of_columns >= 2:
-    #         column_list = st.beta_columns(num_of_columns)
-    #         curr_pos = 0
-
-    #         for i in choose_omics:
-    #             if i == 'Proteomics':
-    #                 with column_list[curr_pos]:
-    #                     curr_pos += 1
-    #                     charts += example_2_proteomics()
-    #             else:
-    #                 with column_list[curr_pos]:
-    #                     curr_pos += 1
-    #                     charts += example_2_metabolomics()
-
-    #     else:
-    #         for i in choose_omics:
-    #             if i == 'Proteomics':
-    #                 charts += example_2_proteomics()
-    #             else:
-    #                 charts += example_2_metabolomics()
+    with st.beta_expander('Show/hide data sets and related info',
+                          expanded=True):
+        for i in choose_omics:
+            if i == 'Transcriptomics':
+                charts += example_2_transcriptomics()
+            else:
+                pass
 
     with st.beta_expander('Show/hide visualizations', expanded=True):
         for i in charts:
