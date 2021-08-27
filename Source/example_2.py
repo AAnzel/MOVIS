@@ -38,8 +38,6 @@ path_example_2_transcriptomics_pov_3 = os.path.join(
 
 def upload_multiple(key_suffix):
 
-    data_set_type = 'Multi-tabular'
-
     available_data_sets = {
         'Control replicate 1': path_example_2_transcriptomics_control_1,
         'Control replicate 2': path_example_2_transcriptomics_control_2,
@@ -61,6 +59,7 @@ def upload_multiple(key_suffix):
                  'Control replicate 3'])
 
     df_list = []
+    selected_df_names = []
 
     for data_set in selected_data_sets:
         tmp_df = pd.read_csv(available_data_sets[data_set])
@@ -68,32 +67,36 @@ def upload_multiple(key_suffix):
         tmp_df = tmp_df.convert_dtypes()
 
         df_list.append(tmp_df)
+        selected_df_names.append(data_set)
 
-    return df_list, data_set_type
+    return df_list, selected_df_names
 
 
 def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
 
-    path_list = None
+    df_list = None
+    df_list, selected_df_names = upload_multiple(key_suffix)
 
-    path_list, data_set_type = upload_multiple(key_suffix)
-
-    if path_list is None:
-        st.warning('Choose your data set')
+    if df_list is None:
+        st.warning('Choose your data set(s)')
         st.stop()
 
-    return path_list, data_set_type
+    return df_list, selected_df_names
 
 
 def example_2_transcriptomics():
     key_suffix = 'Transcriptomics'
     cache_folder_path = path_example_2_transcriptomics
 
-    df_list, data_set_type = upload_intro(cache_folder_path, key_suffix)
+    df_list, selected_df_names = upload_intro(cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df_list, cache_folder_path, key_suffix)
+    if len(df_list) > 1:
+        df = common.work_with_multi_transcriptomics(
+            df_list, selected_df_names)
+
+    return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
 def create_main_example_2():

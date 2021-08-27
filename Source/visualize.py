@@ -18,6 +18,9 @@ alt.data_transformers.enable(
 )  # Important if you want to visualize datasets with >5000 samples
 
 
+# TODO: Implement resizing data frame if it has to many columns
+# This is important for heatmap chart and top 10 share thorugh time
+
 # This function creates new dataframe with column that represent season
 # according to date It also concatenates important types with metabolite names
 def season_data(data, temporal_column):

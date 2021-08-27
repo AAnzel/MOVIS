@@ -1079,7 +1079,8 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
          YYYY-MM-DD',
         value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix)
 
-    if time_to_remove_text != '':
+    if time_to_remove_text != '' and\
+            time_to_remove_text != '2011-03-21, 2012-05-03':
         try:
             time_to_remove = [dt.datetime.strptime(
                 i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
@@ -1189,6 +1190,24 @@ def work_with_bins(data_set_type, folder_path, key_suffix):
     return df
 
 
+# This function binds multiple data frames into one
+def work_with_multi_transcriptomics(df_list, selected_df_names):
+
+    # Create a new column that contains the same string value of its name
+    # for each data set. We will call it Type
+    for i in range(len(df_list)):
+        tmp_type_column = [
+            selected_df_names[i] for j in range(len(df_list[i]))]
+
+        # Add that column into a data frame
+        df_list[i].insert(0, 'Type', tmp_type_column)
+
+    # Create one singular data frame out of all data frames in a list
+    df = pd.concat(df_list, axis=0)
+
+    return df
+
+
 @st.cache(show_spinner=False)
 def work_calculate_additional(data_set_type, folder_path, key_suffix):
 
@@ -1218,14 +1237,12 @@ def work_with_csv(df, folder_path, key_suffix):
 
     # In this case we have a list of dfs
     if key_suffix == 'Transcriptomics':
-        show_calculated_data_set(df[0], 'The first data set')
-        chosen_charts = work_with_data_set(
-            df, 'Multi-tabular', folder_path, key_suffix)
-
+        show_calculated_data_set(df, 'Concatenated transcriptomics data sets')
     else:
         show_data_set(df)
-        chosen_charts = work_with_data_set(
-            df, 'Calculated', folder_path, key_suffix)
+
+    chosen_charts = work_with_data_set(
+        df, 'Calculated', folder_path, key_suffix)
 
     return chosen_charts
 
@@ -1381,14 +1398,47 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         chosen_charts = visualize_data_set(
             df, temporal_feature, feature_list, key_suffix)
 
+    ####################
+    ####################
+    ####################
+    ####################
+    ####################
     elif data_set_type == 'Multi-tabular':
         # TODO: Implement this properly
-        for single_df in df:
-            single_df = fix_data_set(single_df)
-            temporal_feature, feature_list = find_temporal_feature(single_df)
+        features_check_dict = {}
 
-            chosen_charts += visualize_data_set(
-                single_df, temporal_feature, feature_list, key_suffix)
+        for i in range(len(df)):
+            df[i] = fix_data_set(df[i])
+            temporal_feature, feature_list = find_temporal_feature(df[i])
+
+            # Add temporal feature to dict or increment the number
+            # of appearences
+            if temporal_feature not in features_check_dict:
+                features_check_dict[temporal_feature] = 0
+            else:
+                features_check_dict[temporal_feature] += 1
+
+            # Same for other features
+            for feature in feature_list:
+                if feature not in features_check_dict:
+                    features_check_dict[feature] = 0
+                else:
+                    features_check_dict[feature] += 1
+
+        # Now we check if all numbers of appearnces are the same, as they
+        # should be, because data sets must have the same features
+        tmp_error_signal = None
+        for feature in features_check_dict:
+            if tmp_error_signal is None:
+                tmp_error_signal = features_check_dict[feature]
+                continue
+            else:
+                if tmp_error_signal != features_check_dict[feature]:
+                    st.error('Data sets must have the same features (columns)')
+                    st.stop()
+
+        chosen_charts += visualize_data_set(
+                df, temporal_feature, feature_list, key_suffix)
 
     else:
         pass
@@ -1406,7 +1456,6 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                                          'MDS visualization',
                                          't-SNE visualization'],
                                         key='vis_data_' + key_suffix)
-
     else:
         visualizations = st.multiselect('Choose your visualization',
                                         ['Feature through time',
@@ -1508,7 +1557,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Heatmap':
             chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
 
-        elif i == 'Top 10 share through time' and temporal_feature is not None:
+        elif i == 'Share through time' and temporal_feature is not None:
             chosen_charts.append((visualize.top_10_time(df, feature_list,
                                                         temporal_feature),
                                   i + '_' + key_suffix))
