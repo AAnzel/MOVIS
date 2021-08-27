@@ -1204,6 +1204,7 @@ def work_with_multi_transcriptomics(df_list, selected_df_names):
 
     # Create one singular data frame out of all data frames in a list
     df = pd.concat(df_list, axis=0)
+    df.reset_index(drop=True, inplace=True)
 
     return df
 
@@ -1490,21 +1491,43 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             selected_features = st.multiselect(
                 i + ': select features to visualize', feature_list)
 
-            for j in selected_features:
-                chosen_charts.append(
-                    (visualize.time_feature(df, j, temporal_feature),
-                     i + '_' + key_suffix))
+            encode_feature_color = st.checkbox(
+                'Encode one nominal feature with color?',
+                key=i + '_' + key_suffix + 'color checkbox')
+
+            if encode_feature_color:
+                for j in selected_features:
+                    feature_list.remove(j)
+                target_feature = st.selectbox(
+                    i + ': select target feature', feature_list)
+
+                if target_feature in feature_list:
+                    feature_list.remove(target_feature)
+
+                for j in selected_features:
+                    chosen_charts.append(
+                        (visualize.time_feature(
+                            df, j, temporal_feature, target_feature),
+                         i + '_' + key_suffix))
+            else:
+                for j in selected_features:
+                    chosen_charts.append(
+                        (visualize.time_feature(
+                            df, j, temporal_feature, None),
+                         i + '_' + key_suffix))
 
         elif i == 'Two features scatter-plot':
             feature_1 = None
             feature_2 = None
 
-            feature_1 = st.selectbox(i + ': select 1. feature', feature_list)
+            feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
+                                     key=i + '_' + key_suffix + '1. feature')
 
             if feature_1 in feature_list:
                 feature_list.remove(feature_1)
 
-            feature_2 = st.selectbox(i + ': select 2. feature', feature_list)
+            feature_2 = st.selectbox(i + ': select 2. feature', feature_list,
+                                     key=i + '_' + key_suffix + '2. feature')
 
             if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append(

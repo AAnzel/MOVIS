@@ -35,7 +35,7 @@ def season_data(data, temporal_column):
 
 
 # TODO: Implement time sampling (yearly, monthly, daily)
-def time_feature(data, selected_column, temporal_column):
+def time_feature(data, selected_column, temporal_column, target_feature):
 
     selected_column_type = str(data[selected_column].dtype)
 
@@ -49,12 +49,23 @@ def time_feature(data, selected_column, temporal_column):
                 alt.Tooltip('count(' + selected_column + ')', type='nominal'))
 
     else:
-        chart = alt.Chart(
-            data, title=selected_column + ' through time').mark_line().encode(
-                    alt.X(temporal_column, type='temporal',
-                          scale=alt.Scale(nice=True)),
-                    alt.Y(selected_column, type='quantitative'),
-                    alt.Tooltip([temporal_column, selected_column]))
+        if target_feature is not None:
+            chart = alt.Chart(
+                data,
+                title=selected_column + ' through time').mark_line().encode(
+                        alt.X(temporal_column, type='temporal',
+                              scale=alt.Scale(nice=True)),
+                        alt.Y(selected_column, type='quantitative'),
+                        alt.Color(target_feature, type='nominal'),
+                        alt.Tooltip([temporal_column, selected_column]))
+        else:
+            chart = alt.Chart(
+                data,
+                title=selected_column + ' through time').mark_line().encode(
+                        alt.X(temporal_column, type='temporal',
+                              scale=alt.Scale(nice=True)),
+                        alt.Y(selected_column, type='quantitative'),
+                        alt.Tooltip([temporal_column, selected_column]))
 
     return chart.interactive()
 
