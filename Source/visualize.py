@@ -38,12 +38,16 @@ def season_data(data, temporal_column):
 # This function is used to check whether the data set is too big to visualize
 # If that is the case, it is resized to a preditermined value
 def shrink_data(data, num_of_columns=MAX_COLUMNS):
-    if len(data.columns) > MAX_COLUMNS:
-        data.drop(data.columns.toList()[MAX_COLUMNS:], axis=1, inplace=True)
-    if num_of_columns != MAX_COLUMNS:
-        data.drop(data.columns.toList()[num_of_columns:], axis=1, inplace=True)
+    shrink_signal = False
 
-    return data
+    if len(data.columns) > MAX_COLUMNS:
+        data.drop(data.columns.tolist()[MAX_COLUMNS:], axis=1, inplace=True)
+        shrink_signal = True
+    if num_of_columns != MAX_COLUMNS:
+        data.drop(data.columns.tolist()[num_of_columns:], axis=1, inplace=True)
+        shrink_signal = True
+
+    return data, shrink_signal
 
 
 # TODO: Implement time sampling (yearly, monthly, daily)
@@ -218,13 +222,19 @@ def heatmap(data):
 
     new_data = data.copy()
     new_data = data.select_dtypes(include=np.number)
-    new_data = shrink_data(data, num_of_columns=MAX_COLUMNS)
+    new_data, shrink_signal = shrink_data(data, num_of_columns=MAX_COLUMNS)
     corr = new_data.corr().reset_index().melt("index")
     corr.columns = ["var_1", "var_2", "Correlation"]
 
+    if shrink_signal:
+        title_text = 'Heatmap chart of numerical features (first '\
+                     + str(MAX_COLUMNS) + ' features only)'
+    else:
+        title_text = 'Heatmap chart of numerical features'
+
     # Create correlation chart
     chart = alt.Chart(
-        corr, title='Heatmap chart of numerical features').mark_rect().encode(
+        corr, title=title_text).mark_rect().encode(
             alt.X("var_1", title=None, axis=alt.Axis(labelAngle=-45)),
             alt.Y("var_2", title=None),
             alt.Color("Correlation", legend=alt.Legend(tickCount=5),
@@ -248,8 +258,8 @@ def top_10_time(data, list_of_features, temporal_column):
     # and on y axis I will have stacked precentages of a whole
     # Example: https://altair-viz.github.io/gallery/bar_rounded.html
     new_data = data.copy()
-    new_data = shrink_data(new_data, 10)
-    new_data = data.reset_index().melt(id_vars=['index', temporal_column])
+    new_data, shrink_signal = shrink_data(new_data, 10)
+    new_data = new_data.reset_index().melt(id_vars=['index', temporal_column])
 
     brush = alt.selection(type='interval')
 

@@ -8,7 +8,6 @@ import upload
 import home
 
 
-# TODO: Fix visualization if data sets are too big
 # TODO: Implement transcriptomics in the upload page
 
 

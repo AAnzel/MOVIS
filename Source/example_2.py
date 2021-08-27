@@ -75,7 +75,7 @@ def upload_multiple(key_suffix):
 def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
-    st.info('This data set has many features and takes time to load')
+    st.info('This data set has many features and takes time to load.')
     st.markdown('')
 
     df_list = None
