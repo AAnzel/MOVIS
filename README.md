@@ -60,12 +60,20 @@ The code is written in Python 3.8.10 and tested on Linux with the following libr
 
 
 ## Data
-The data used in the Example 1 comes from the following paper:
+The data used in the **Example 1** comes from the following paper:
 
 > **Integration of time-series meta-omics data reveals how microbial ecosystems respond to disturbance**, Herold, M., Martínez Arbas, S., Narayanasamy, S. et al. Nat Commun 11, 5281(2020).
 https://doi.org/10.1038/s41467-020-19006-2.
 
 It is stored at [Data/cached/example_1/](./Data/cached/example_1) in either a raw format or as a [pickle](https://docs.python.org/3/library/pickle.html) object.
+
+The data used in the **Example 2** comes from the following paper:
+
+> **Short- and Long-Term Transcriptomic Responses of Escherichia coli to Biocides: a Systems Analysis**, Merchel Piovesan Pereira, B., Wang, X., & Tagkopoulos, I. (2020). Applied and environmental microbiology, 86(14), e00708-20.
+https://doi.org/10.1128/AEM.00708-20.
+
+It is stored at [Data/cached/example_2/](./Data/cached/example_2) in a raw format.
+
 
 ## Code
 |Script|Description|
@@ -73,7 +81,8 @@ It is stored at [Data/cached/example_1/](./Data/cached/example_1) in either a ra
 |[Source/](./Source/)|contains all scripts necessary to run the tool.
 |[Source/main.py](./Source/main.py)|contains the code that builds the main layout and connects all pages.
 |[Source/home.py](./Source/home.py)|contains the code that builds the home page.
-|[Source/example_1.py](./Source/example_1.py)|contains the code that builds the example page.
+|[Source/example_1.py](./Source/example_1.py)|contains the code that builds the example 1 page.
+|[Source/example_2.py](./Source/example_2.py)|contains the code that builds the example 2 page.
 |[Source/upload.py](./Source/upload.py)|contains the code that builds the upload page.
 |[Source/common.py](./Source/common.py)|contains the code with functions shared by all pages.
 |[Source/visualize.py](./Source/visualize.py)|contains the code with functions that create various visualizations present in this tool.
