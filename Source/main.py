@@ -8,6 +8,10 @@ import upload
 import home
 
 
+# TODO: Fix visualization if data sets are too big
+# TODO: Implement transcriptomics in the upload page
+
+
 def create_sidebar_and_main():
 
     tmp_col_1, tmp_col_2, tmp_col_3, tmp_col_4, tmp_col_5 = st.beta_columns(5)

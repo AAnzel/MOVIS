@@ -1580,7 +1580,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Heatmap':
             chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
 
-        elif i == 'Share through time' and temporal_feature is not None:
+        elif i == 'Top 10 share through time' and temporal_feature is not None:
             chosen_charts.append((visualize.top_10_time(df, feature_list,
                                                         temporal_feature),
                                   i + '_' + key_suffix))

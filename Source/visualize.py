@@ -9,6 +9,7 @@ from sklearn import preprocessing
 
 SEED = 42
 MAX_ROWS = 15000
+MAX_COLUMNS = 100
 EPOCHS = 10
 NUM_OF_WORKERS = 8
 random.seed(SEED)
@@ -32,6 +33,17 @@ def season_data(data, temporal_column):
     # = data[important_types].agg('\n'.join, axis=1)
 
     return new_data
+
+
+# This function is used to check whether the data set is too big to visualize
+# If that is the case, it is resized to a preditermined value
+def shrink_data(data, num_of_columns=MAX_COLUMNS):
+    if len(data.columns) > MAX_COLUMNS:
+        data.drop(data.columns.toList()[MAX_COLUMNS:], axis=1, inplace=True)
+    if num_of_columns != MAX_COLUMNS:
+        data.drop(data.columns.toList()[num_of_columns:], axis=1, inplace=True)
+
+    return data
 
 
 # TODO: Implement time sampling (yearly, monthly, daily)
@@ -204,7 +216,9 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
 
 def heatmap(data):
 
+    new_data = data.copy()
     new_data = data.select_dtypes(include=np.number)
+    new_data = shrink_data(data, num_of_columns=MAX_COLUMNS)
     corr = new_data.corr().reset_index().melt("index")
     corr.columns = ["var_1", "var_2", "Correlation"]
 
@@ -233,6 +247,8 @@ def top_10_time(data, list_of_features, temporal_column):
     # I want to create a stacked bar chart where on x axis I will have time
     # and on y axis I will have stacked precentages of a whole
     # Example: https://altair-viz.github.io/gallery/bar_rounded.html
+    new_data = data.copy()
+    new_data = shrink_data(new_data, 10)
     new_data = data.reset_index().melt(id_vars=['index', temporal_column])
 
     brush = alt.selection(type='interval')
