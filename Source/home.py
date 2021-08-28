@@ -3,32 +3,29 @@ import streamlit as st
 
 def create_home():
     st.markdown('''
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed\
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua.\
-                Mattis molestie a iaculis at erat. Magnis dis parturient\
-                montes nascetur ridiculus mus mauris. Enim ut tellus elementum\
-                sagittis vitae et leo duis ut. Nulla posuere sollicitudin\
-                aliquam ultrices. Quisque non tellus orci ac. Ut venenatis\
-                tellus in metus vulputate eu. Eget nunc scelerisque viverra\
-                mauris in. Imperdiet sed euismod nisi porta lorem mollis\
-                aliquam ut. Morbi tristique senectus et netus. Egestas sed sed\
-                risus pretium quam vulputate dignissim suspendisse. Odio eu\
-                feugiat pretium nibh. Eu tincidunt tortor aliquam nulla\
-                facilisi cras fermentum odio. Netus et malesuada fames ac.\
-                Nibh praesent tristique magna sit amet purus gravida quis.\
-                Urna condimentum mattis pellentesque id nibh tortor id aliquet\
-                lectus. Id donec ultrices tincidunt arcu non. Pellentesque sit\
-                amet porttitor eget dolor morbi non arcu.
+                Welcome to **MOVIS** - a time-series multi-omics visualization
+                tool. MOVIS allows you to explore multiple time-series omics
+                data sets at once, so that you can easily pin-point anomalies
+                and/or patterns in your temporal data.
 
-                Amet mauris commodo quis imperdiet massa. Id volutpat lacus\
-                laoreet non curabitur gravida arcu. Laoreet suspendisse\
-                interdum consectetur libero id faucibus nisl tincidunt.\
-                Congue nisi vitae suscipit tellus mauris a. Sed velit\
-                dignissim sodales ut. Pretium fusce id velit ut tortor pretium\
-                viverra suspendisse. Morbi quis commodo odio aenean sed\
-                adipiscing diam. Purus in massa tempor nec feugiat nisl.\
-                Nunc non blandit massa enim nec dui nunc mattis. Dictum at\
-                tempor commodo ullamcorper a lacus vestibulum sed.
+                Currently, MOVIS supports:
+                *genomics*, *proteomics*, *metabolomics*, *transcriptomics*,
+                and *physico-chemical* data sets.
+
+
+
+                If you have any problems with MOVIS, please make an issue
+                ticket so that we can fix it for you. Click on
+                [this link](https://github.com/AAnzel/MOVIS/issues/new/choose)
+                and then create a new *Bug report*.
+
+                If you want to propose a new feature to MOVIS, click on
+                [this link](https://github.com/AAnzel/MOVIS/issues/new/choose)
+                and then create a new *Feature request*.
+
+                If you have technical experience and want collaborate and
+                improve MOVIS, check our
+                [GitHub repo](https://github.com/AAnzel/MOVIS).
                 ''')
 
     return None
