@@ -768,6 +768,41 @@ def show_clustering_info(df, key_suffix):
     return labels_list
 
 
+def check_multi_csv_validity(df_list):
+    features_check_dict = {}
+
+    for i in range(len(df_list)):
+        temporal_feature, feature_list = find_temporal_feature(df_list[i])
+
+        # Add temporal feature to dict or increment the number
+        # of appearences
+        if temporal_feature not in features_check_dict:
+            features_check_dict[temporal_feature] = 0
+        else:
+            features_check_dict[temporal_feature] += 1
+
+        # Same for other features
+        for feature in feature_list:
+            if feature not in features_check_dict:
+                features_check_dict[feature] = 0
+            else:
+                features_check_dict[feature] += 1
+
+    # Now we check if all numbers of appearences are the same, as they
+    # should be, because data sets must have the same features
+    tmp_error_signal = None
+    for feature in features_check_dict:
+        if tmp_error_signal is None:
+            tmp_error_signal = features_check_dict[feature]
+            continue
+        else:
+            if tmp_error_signal != features_check_dict[feature]:
+                st.error('Data sets must have the same features (columns)')
+                st.stop()
+
+    return None
+
+
 def create_kegg_matrix(list_data, path_keggs):
 
     print("Creating KEGG matrix")
@@ -1398,48 +1433,6 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df, temporal_feature, feature_list, key_suffix)
         chosen_charts = visualize_data_set(
             df, temporal_feature, feature_list, key_suffix)
-
-    ####################
-    ####################
-    ####################
-    ####################
-    ####################
-    elif data_set_type == 'Multi-tabular':
-        # TODO: Implement this properly
-        features_check_dict = {}
-
-        for i in range(len(df)):
-            df[i] = fix_data_set(df[i])
-            temporal_feature, feature_list = find_temporal_feature(df[i])
-
-            # Add temporal feature to dict or increment the number
-            # of appearences
-            if temporal_feature not in features_check_dict:
-                features_check_dict[temporal_feature] = 0
-            else:
-                features_check_dict[temporal_feature] += 1
-
-            # Same for other features
-            for feature in feature_list:
-                if feature not in features_check_dict:
-                    features_check_dict[feature] = 0
-                else:
-                    features_check_dict[feature] += 1
-
-        # Now we check if all numbers of appearnces are the same, as they
-        # should be, because data sets must have the same features
-        tmp_error_signal = None
-        for feature in features_check_dict:
-            if tmp_error_signal is None:
-                tmp_error_signal = features_check_dict[feature]
-                continue
-            else:
-                if tmp_error_signal != features_check_dict[feature]:
-                    st.error('Data sets must have the same features (columns)')
-                    st.stop()
-
-        chosen_charts += visualize_data_set(
-                df, temporal_feature, feature_list, key_suffix)
 
     else:
         pass
