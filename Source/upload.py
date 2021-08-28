@@ -89,7 +89,13 @@ def upload_csv(key_suffix):
 
     number_of_files = len(imported_files)
 
-    if number_of_files != 0:
+    if imported_files == [] or imported_files[0] is None:
+        if key_suffix == 'Transcriptomics':
+            return None, None
+        else:
+            return None
+
+    else:
 
         # Checking file extension for the first file only
         imported_file_extension = os.path.splitext(
@@ -141,10 +147,7 @@ def upload_csv(key_suffix):
             return df_list, selected_df_names
 
         else:
-            return df_list
-
-    else:
-        return None
+            return df_list[0]
 
 
 def upload_multiple(key_suffix):
@@ -291,7 +294,7 @@ def upload_intro(folder_path, key_suffix):
 
         df_list = upload_csv(key_suffix)
 
-        if len(df_list) == 0:
+        if df_list is None:
             st.warning('Upload your data set')
 
         return df_list
@@ -335,12 +338,8 @@ def upload_transcriptomics():
 
     df_list, selected_df_names = upload_intro(cache_folder_path, key_suffix)
 
-    if len(df_list) > 1:
-        common.check_multi_csv_validity(df_list)
-        df = common.work_with_multi_transcriptomics(
-            df_list, selected_df_names)
-    else:
-        df = df_list[0]
+    df = common.work_with_multi_transcriptomics(
+        df_list, selected_df_names)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 
@@ -350,7 +349,7 @@ def upload_metabolomics():
     key_suffix = 'Metabolomics'
     cache_folder_path = path_uploaded_metabolomics
 
-    df = upload_intro(cache_folder_path, key_suffix)[0]
+    df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 
@@ -360,7 +359,7 @@ def upload_phy_che():
     key_suffix = 'Physico-chemical'
     cache_folder_path = path_uploaded_phy_che
 
-    df = upload_intro(cache_folder_path, key_suffix)[0]
+    df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 
