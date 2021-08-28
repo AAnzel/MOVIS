@@ -64,7 +64,8 @@ def upload_csv(key_suffix):
         'Physico-chemical': '''Upload your data set here. Maximum size is
                                200MB''',
         'Transcriptomics': '''Upload one or more data sets here. Maximum size
-                              is 200MB'''}
+                              is 200MB. Data sets must have exactly the same
+                              features(columns)'''}
 
     imported_files = []
 

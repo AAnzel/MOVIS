@@ -2,30 +2,66 @@ import streamlit as st
 
 
 def create_home():
+    st.info('''Welcome to **MOVIS** - a time-series multi-omics visualization
+               tool. MOVIS allows you to explore multiple time-series omics
+               data sets at once so that you can easily pinpoint anomalies
+               and/or patterns in your temporal data.''')
+
     st.markdown('''
-                Welcome to **MOVIS** - a time-series multi-omics visualization
-                tool. MOVIS allows you to explore multiple time-series omics
-                data sets at once, so that you can easily pin-point anomalies
-                and/or patterns in your temporal data.
+                Currently, MOVIS supports *genomics*, *proteomics*,
+                *metabolomics*, *transcriptomics*, and *physico-chemical*
+                data sets.
 
-                Currently, MOVIS supports:
-                *genomics*, *proteomics*, *metabolomics*, *transcriptomics*,
-                and *physico-chemical* data sets.
+                You can see the examples of what kind of data sets MOVIS
+                supports on *Example 1* and *Example 2* pages on the left.
+                Example 1 consists of genomics, proteomics, metabolomics, and
+                physico-chemical data. Example 2 contains only transcriptomics
+                data.
 
+                ### Data set formats
 
+                MOVIS supports various data set formats for each omic and we
+                are constantly working on expanding the support to even more
+                formats in the future. Current support is shown below:
+                ''')
 
-                If you have any problems with MOVIS, please make an issue
-                ticket so that we can fix it for you. Click on
-                [this link](https://github.com/AAnzel/MOVIS/issues/new/choose)
-                and then create a new *Bug report*.
+    col_1, col_2 = st.beta_columns(2)
+    col_1.markdown('''
+                    - Genomics
+                        - Archived FASTA files
+                        - Archived BIN files
+                        - Tabular file
+                    - Proteomics
+                        - Archived FASTA files
+                        - Tabular file
+                    ''')
 
-                If you want to propose a new feature to MOVIS, click on
-                [this link](https://github.com/AAnzel/MOVIS/issues/new/choose)
-                and then create a new *Feature request*.
+    col_2.markdown('''
+                    - Metabolomics
+                        - Tabular file
+                    - Transcriptomics
+                        - One or many tabular files
+                    - Physico-chemical
+                        - Tabular file
+                    ''')
+    ################################
+    # TODO: Fix uploading CALCULATED PROTEOMICS DATA SET
+    ################################
+    st.warning('''For archived data sets, you must follow the naming convection
+                  for archived files. Each file should be named as shown on the
+                  *Upload* page.
+                  **Archived** data sets are supported in the
+                  following formats: TARBZ2, TBZ2, TARGZ, TGZ, TAR, TARXZ, TXZ,
+                  ZIP. **Tabular** files are supported in CSV or TSV format.
+                  ''')
 
-                If you have technical experience and want collaborate and
-                improve MOVIS, check our
-                [GitHub repo](https://github.com/AAnzel/MOVIS).
+    st.markdown('''
+                   ---
+
+                   ### Changelog
+                   | Date | Info |
+                   | --- | --- |
+                   | 03.09.2021. | MOVIS v1.0.0 released    🎉 🎈 🍾|
                 ''')
 
     return None

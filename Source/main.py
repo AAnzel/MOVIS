@@ -45,6 +45,13 @@ def create_sidebar_and_main():
     choice_data_set = st.sidebar.radio(
         '', ('Home', 'Example 1', 'Example 2', 'Upload'), index=0)
 
+    st.sidebar.markdown('''
+        ---
+        **Bug report**: [report here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=bug&template=bug_report.md&title=)
+
+        **Feature request**: [propose here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=enhancement&template=feature_request.md&title=)
+        ''') # noqa
+
     # Deleting old user-uploaded cached data
     upload.remove_cached_data()
 
