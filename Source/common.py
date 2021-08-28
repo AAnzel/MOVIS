@@ -777,16 +777,9 @@ def check_multi_csv_validity(df_list):
         features_check_dict = {}
 
         for i in range(len(df_list)):
-            temporal_feature, feature_list = find_temporal_feature(df_list[i])
+            feature_list = df_list[i].columns.astype(str).to_list()
 
-            # Add temporal feature to dict or increment the number
-            # of appearences
-            if temporal_feature not in features_check_dict:
-                features_check_dict[temporal_feature] = 0
-            else:
-                features_check_dict[temporal_feature] += 1
-
-            # Same for other features
+            # Add features to dict or increment the number
             for feature in feature_list:
                 if feature not in features_check_dict:
                     features_check_dict[feature] = 0
@@ -1051,7 +1044,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
 def find_temporal_feature(df):
     feature_list = df.columns.astype(str).to_list()
     temporal_feature = None
-    datetime_strings = ['date', 'time']
+    datetime_strings = ['date', 'time', 'hour', 'minute']
     temporal_columns = []
 
     try:
@@ -1079,8 +1072,11 @@ def find_temporal_feature(df):
                 if i.lower() == 'date':
                     tmp_date = pd.to_datetime(df[i])
                     df[i] = tmp_date
-                else:
+                elif i.lower() == 'time' or i.lower() == 'hour':
                     tmp_time = pd.to_timedelta(pd.to_numeric(df[i]), unit='h')
+                    df[i] = tmp_time
+                else:
+                    tmp_time = pd.to_timedelta(pd.to_numeric(df[i]), unit='m')
                     df[i] = tmp_time
 
             tmp_combined = tmp_date + tmp_time
@@ -1116,11 +1112,10 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
 
     time_to_remove_text = st.text_input(
         'Insert the time series interval you want to keep. Use ISO 8601 format:\
-         YYYY-MM-DD',
-        value='2011-03-21, 2012-05-03', key='Row_remove_' + key_suffix)
+         YYYY-MM-DD', value='', key='Row_remove_' + key_suffix,
+        help='Example: 2011-03-21, 2012-05-03')
 
-    if time_to_remove_text != '' and\
-            time_to_remove_text != '2011-03-21, 2012-05-03':
+    if time_to_remove_text != '':
         try:
             time_to_remove = [dt.datetime.strptime(
                 i.strip(), "%Y-%m-%d") for i in time_to_remove_text.split(',')]
@@ -1237,6 +1232,8 @@ def work_with_multi_transcriptomics(df_list, selected_df_names):
         return None
 
     else:
+        # TODO: Use session state here to cache data sets if they are not
+        # changed during re-runs
         check_multi_csv_validity(df_list)
 
         # Create a new column that contains the same string value of its name

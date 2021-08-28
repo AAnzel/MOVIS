@@ -25,10 +25,12 @@ path_example_1_proteomics_fasta = os.path.join(
 # TODO: Fix bins data set and fix KEGG data set zip files
 
 def upload_multiple(key_suffix):
+
+    # TODO: Add KEGG data set, since it is not yet ready for production
+    # 'KEGG annotation files': 'KEGG',
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
-            'KEGG annotation files': 'KEGG',
             'BINS annotation files': 'BINS'},
         'Proteomics': {
             'Raw FASTA files': 'FASTA'}
@@ -40,15 +42,12 @@ def upload_multiple(key_suffix):
     )
 
     if key_suffix == 'Genomics':
-        if selected_data_set_type == list(
-                available_data_set_types[key_suffix].keys())[0]:
+        if selected_data_set_type == 'FASTA':
 
             return_path = path_example_1_genomics_fasta
 
-        elif selected_data_set_type == list(
-                available_data_set_types[key_suffix].keys())[1]:
-
-            return_path = path_example_1_genomics_kegg
+        # elif selected_data_set_type == 'KEGG':
+        #     return_path = path_example_1_genomics_kegg
 
         else:
             return_path = path_example_1_genomics_bins
