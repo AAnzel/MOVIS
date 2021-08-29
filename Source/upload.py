@@ -61,6 +61,7 @@ def remove_cached_data():
 def upload_csv(key_suffix):
     upload_text_csv = {
         'Metabolomics': '''Upload your data set here. Maximum size is 200MB''',
+        'Proteomics': '''Upload your data set here. Maximum size is 200MB''',
         'Physico-chemical': '''Upload your data set here. Maximum size is
                                200MB''',
         'Transcriptomics': '''Upload one or more data sets here. Maximum size
@@ -226,14 +227,12 @@ def upload_multiple(key_suffix):
     )
 
     if key_suffix == 'Genomics':
-        if selected_data_set_type == list(
-                available_data_set_types[key_suffix].keys())[0]:
+        if selected_data_set_type == 'FASTA':
 
             label_text = upload_text_zip_fasta[key_suffix]
             help_text = upload_help_zip_fasta[key_suffix]
 
-        elif selected_data_set_type == list(
-                available_data_set_types[key_suffix].keys())[1]:
+        elif selected_data_set_type == 'KEGG':
 
             label_text = upload_text_zip_kegg[key_suffix]
             help_text = upload_help_zip_kegg[key_suffix]
@@ -247,8 +246,7 @@ def upload_multiple(key_suffix):
             help=help_text, key='Upload_file_' + key_suffix)
 
     elif key_suffix == 'Proteomics':
-        if selected_data_set_type == list(
-                available_data_set_types[key_suffix].keys())[0]:
+        if selected_data_set_type == 'FASTA':
             imported_file = st.file_uploader(
                 upload_text_zip_fasta[key_suffix], type=type_list_zip,
                 accept_multiple_files=False,
