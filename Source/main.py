@@ -50,6 +50,8 @@ def create_sidebar_and_main():
         **Bug report**: [report here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=bug&template=bug_report.md&title=)
 
         **Feature request**: [propose here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=enhancement&template=feature_request.md&title=)
+
+        **Documentation**: [see here](https://github.com/AAnzel/MOVIS/wiki/0.-Home)
         ''') # noqa
 
     # Deleting old user-uploaded cached data
