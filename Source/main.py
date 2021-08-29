@@ -72,7 +72,7 @@ def create_sidebar_and_main():
 def main():
 
     st.set_page_config(page_title='MOVIS', layout='wide',
-                       initial_sidebar_state='auto',
+                       initial_sidebar_state='expanded',
                        page_icon=os.path.join('images',
                                               'movis_logo_transparent.png'))
 
