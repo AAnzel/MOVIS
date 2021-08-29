@@ -1231,6 +1231,9 @@ def work_with_multi_transcriptomics(df_list, selected_df_names):
     if df_list is None:
         return None
 
+    if len(df_list) == 1:
+        return df_list[0]
+
     else:
         # TODO: Use session state here to cache data sets if they are not
         # changed during re-runs

@@ -35,68 +35,31 @@ path_example_2_transcriptomics_pov_2 = os.path.join(
 path_example_2_transcriptomics_pov_3 = os.path.join(
     path_example_2_transcriptomics, 'POV_3.csv')
 
-
-def upload_multiple(key_suffix):
-
-    available_data_sets = {
-        'Control replicate 1': path_example_2_transcriptomics_control_1,
-        'Control replicate 2': path_example_2_transcriptomics_control_2,
-        'Control replicate 3': path_example_2_transcriptomics_control_3,
-        'Benz. chl. replicate 1': path_example_2_transcriptomics_benz_1,
-        'Benz. chl. replicate 2': path_example_2_transcriptomics_benz_2,
-        'Benz. chl. replicate 3': path_example_2_transcriptomics_benz_3,
-        'Pov. iod. replicate 1': path_example_2_transcriptomics_pov_1,
-        'Pov. iod. replicate 2': path_example_2_transcriptomics_pov_2,
-        'Pov. iod. replicate 3': path_example_2_transcriptomics_pov_3,
-        'Chloroph. replicate 1': path_example_2_transcriptomics_phe_1,
-        'Chloroph. replicate 2': path_example_2_transcriptomics_phe_2,
-        'Chloroph. replicate 3': path_example_2_transcriptomics_phe_3
-    }
-
-    selected_data_sets = st.multiselect(
-        'What data sets do you want to see?', list(available_data_sets.keys()),
-        default=['Control replicate 1', 'Control replicate 2',
-                 'Control replicate 3'])
-
-    df_list = []
-    selected_df_names = []
-
-    for data_set in selected_data_sets:
-        tmp_df = pd.read_csv(available_data_sets[data_set])
-        tmp_df = common.fix_dataframe_columns(tmp_df)
-        tmp_df = tmp_df.convert_dtypes()
-
-        df_list.append(tmp_df)
-        selected_df_names.append(data_set)
-
-    return df_list, selected_df_names
+path_example_2_transcriptomics_final = os.path.join(
+    path_example_2_transcriptomics, 'Final.csv')
 
 
 def upload_intro(folder_path, key_suffix):
-    st.header(key_suffix + ' data')
-    st.markdown('')
-    st.info('This data set has many features and takes time to load.')
-    st.markdown('')
+    df = None
 
-    df_list = None
-    df_list, selected_df_names = upload_multiple(key_suffix)
+    CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+    CALCULATED_DATA_SET_PATH = os.path.join(
+        folder_path, CALCULATED_DATA_SET_NAME)
 
-    if df_list is None:
-        st.warning('Choose your data set(s)')
+    if os.path.exists(CALCULATED_DATA_SET_PATH):
+        df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
+    else:
+        st.error('Wrong cache path')
         st.stop()
 
-    return df_list, selected_df_names
+    return df
 
 
 def example_2_transcriptomics():
     key_suffix = 'Transcriptomics'
     cache_folder_path = path_example_2_transcriptomics
 
-    df_list, selected_df_names = upload_intro(cache_folder_path, key_suffix)
-
-    if len(df_list) > 1:
-        df = common.work_with_multi_transcriptomics(
-            df_list, selected_df_names)
+    df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 

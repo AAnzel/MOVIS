@@ -43,9 +43,26 @@ def shrink_data(data, num_of_columns=MAX_COLUMNS):
     if len(data.columns) > MAX_COLUMNS:
         data.drop(data.columns.tolist()[MAX_COLUMNS:], axis=1, inplace=True)
         shrink_signal = True
+
+    # if num_of_columns == 10:
+    #     # Returning the TOP 10 features based on counts
+    #     # TODO: There is a bug here. We have to include only numerical
+    #     #  columns, without temporal and other column types
+    #     sorted_columns = data.sum(axis=0).sort_values(ascending=False)
+    #     sorted_columns = sorted_columns.index.tolist()
+    #     data = data[sorted_columns]
+
+    #     other_series = data.iloc[:, 10:].sum(axis=1)
+
+    #     data.drop(sorted_columns[10:], axis=1, inplace=True)
+    #     data['Other'] = other_series
+
     if num_of_columns != MAX_COLUMNS:
         data.drop(data.columns.tolist()[num_of_columns:], axis=1, inplace=True)
         shrink_signal = True
+
+    else:
+        pass
 
     return data, shrink_signal
 
