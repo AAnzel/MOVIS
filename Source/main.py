@@ -39,14 +39,19 @@ def create_sidebar_and_main():
     # col_4.markdown('Paper doi with journal logo')
 
     st.sidebar.markdown('---')
-    col_1, col_2 = st.sidebar.beta_columns([1, 3])
-    col_1.image(os.path.join('images', 'GitHub-Mark-120px-plus.png'), width=52)
-    col_1.markdown('[GitHub](https://github.com/AAnzel/MOVIS)')
-    col_2.markdown('**MOVIS** - **M**ulti-**O**mics **VIS**ualization tool\
-                        for time series data sets')
-    st.sidebar.markdown('---')
+    col_1, col_2 = st.sidebar.beta_columns([3, 1])
+    col_2.image(os.path.join('images', 'GitHub-Mark-120px-plus.png'), width=54)
+    col_2.markdown('[GitHub](https://github.com/AAnzel/MOVIS)')
+    col_1.markdown('''
+                      **MOVIS**
 
-    st.sidebar.markdown('**Navigation:**')
+                      **M**ulti-**O**mics **VIS**ualization tool for
+                      time-series data sets''')
+
+    st.sidebar.markdown('''
+                            ---
+
+                            **Navigation:**''')
 
     # TODO: Add 'Example 3' below when the data is ready
     choice_data_set = st.sidebar.radio(
@@ -59,6 +64,8 @@ def create_sidebar_and_main():
         **Feature request**: [propose here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=enhancement&template=feature_request.md&title=)
 
         **Documentation**: [see here](https://github.com/AAnzel/MOVIS/wiki/0.-Home)
+
+        ---
         ''') # noqa
 
     # Deleting old user-uploaded cached data

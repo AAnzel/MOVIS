@@ -30,10 +30,10 @@ def create_home():
 
                 ---
 
-                If you do not know how to use MOVIS, or you just want to see
-                how MOVIS works, check out our documentation (link on the
-                sidebar). If you want to start exploring your data, head out to
-                the *Upload* page.
+                If you do not know how to use MOVIS, or want to see how MOVIS
+                works, check out our documentation (link on the sidebar). If
+                you want to start exploring your data, head out to the *Upload*
+                page.
                 ''')
 
     st.markdown('''

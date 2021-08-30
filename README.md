@@ -88,10 +88,13 @@ It is stored at [Data/cached/example_2/](./Data/cached/example_2) in a raw forma
 |[Source/visualize.py](./Source/visualize.py)|contains the code with functions that create various visualizations present in this tool.
 
 ## Getting started
-Some text on what a user can expect
+Check out our [Wiki page](https://github.com/AAnzel/MOVIS/wiki/0.-Home) for detailed information about MOVIS and how to use it.
 
 ## Installation & Running
-How to run the tool
+The easiest way to install the tool is to use our latest Docker image:
+`docker pull aanzel/movis:latest`
+`docker run --publish 8501 --detach --name movis aanzel/movis:latest
+`
 
 
 ## License
