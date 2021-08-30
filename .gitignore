@@ -1,9 +1,7 @@
 .ipynb_checkpoints/
-Source/.streamlit/
 Ideas*
 New_project*
 *.log
 .vscode/
 __pycache__/
 *.backup
-Data/uploaded/
