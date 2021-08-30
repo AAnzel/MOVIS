@@ -45,7 +45,7 @@ online.
 
 ## Dependancy
 
-The code is written in Python 3.8.10 and tested on Linux with the following libraries installed:
+The code is written in Python 3.8.11 and tested on Linux with the following libraries installed:
 
 |Library|Version|
 |---|---|
@@ -53,10 +53,10 @@ The code is written in Python 3.8.10 and tested on Linux with the following libr
 |biopython|1.78|
 |gensim|4.0.1|
 |numpy|1.20.3|
-|pandas|1.2.5|
+|pandas|1.3.2|
 |scikit-learn|0.24.2|
 |scipy|1.6.2|
-|streamlit|0.83.0|
+|streamlit|0.81.1|
 
 
 ## Data
