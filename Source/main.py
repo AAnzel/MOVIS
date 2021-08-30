@@ -8,7 +8,14 @@ import upload
 import home
 
 
-# TODO: Implement transcriptomics in the upload page
+__author__ = 'Aleksandar Anžel'
+__copyright__ = ''
+__credits__ = ['Aleksandar Anžel', 'Georges Hattab']
+__license__ = 'GNU General Public License v3.0'
+__version__ = '1.0'
+__maintainer__ = 'Aleksandar Anžel'
+__email__ = 'aleksandar.anzel@uni-marburg.de'
+__status__ = 'Dev'
 
 
 def create_sidebar_and_main():

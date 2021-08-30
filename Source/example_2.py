@@ -4,6 +4,16 @@ import pandas as pd
 import common
 
 
+__author__ = 'Aleksandar Anžel'
+__copyright__ = ''
+__credits__ = ['Aleksandar Anžel', 'Georges Hattab']
+__license__ = 'GNU General Public License v3.0'
+__version__ = '1.0'
+__maintainer__ = 'Aleksandar Anžel'
+__email__ = 'aleksandar.anzel@uni-marburg.de'
+__status__ = 'Dev'
+
+
 path_example_2_root_data = os.path.join('..', 'Data', 'cached', 'example_2')
 path_example_2_transcriptomics = os.path.join(path_example_2_root_data,
                                               'transcriptomics')

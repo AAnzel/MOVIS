@@ -17,6 +17,17 @@ from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from scipy.spatial.distance import jaccard, pdist, squareform
 
+
+__author__ = 'Aleksandar Anžel'
+__copyright__ = ''
+__credits__ = ['Aleksandar Anžel', 'Georges Hattab']
+__license__ = 'GNU General Public License v3.0'
+__version__ = '1.0'
+__maintainer__ = 'Aleksandar Anžel'
+__email__ = 'aleksandar.anzel@uni-marburg.de'
+__status__ = 'Dev'
+
+
 SEED = 42
 MAX_ROWS = 15000
 EPOCHS = 10

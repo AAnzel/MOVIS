@@ -6,6 +6,16 @@ import streamlit as st
 import pandas as pd
 
 
+__author__ = 'Aleksandar Anžel'
+__copyright__ = ''
+__credits__ = ['Aleksandar Anžel', 'Georges Hattab']
+__license__ = 'GNU General Public License v3.0'
+__version__ = '1.0'
+__maintainer__ = 'Aleksandar Anžel'
+__email__ = 'aleksandar.anzel@uni-marburg.de'
+__status__ = 'Dev'
+
+
 type_list_csv = ['csv', 'tsv']
 type_list_zip = []
 for i in shutil.get_unpack_formats():
