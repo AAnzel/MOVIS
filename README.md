@@ -95,7 +95,7 @@ The easiest way to install the tool is to use our latest Docker image:
 
 `docker pull aanzel/movis:latest`
 
-`docker run --publish 8501 --detach --name movis aanzel/movis:latest`
+`docker run --publish 8501:8501 --detach --name movis aanzel/movis:latest`
 
 
 You can start using the tool by opening a web browser and typing in [http://localhost:8501/](http://localhost:8501/) as the address. If you run the docker container, you have to use the IP address or hostname instead of localhost.
