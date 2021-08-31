@@ -237,12 +237,12 @@ def upload_multiple(key_suffix):
     )
 
     if key_suffix == 'Genomics':
-        if selected_data_set_type == 'FASTA':
+        if selected_data_set_type == 'Raw FASTA files':
 
             label_text = upload_text_zip_fasta[key_suffix]
             help_text = upload_help_zip_fasta[key_suffix]
 
-        elif selected_data_set_type == 'KEGG':
+        elif selected_data_set_type == 'KEGG annotation files':
 
             label_text = upload_text_zip_kegg[key_suffix]
             help_text = upload_help_zip_kegg[key_suffix]
@@ -256,7 +256,7 @@ def upload_multiple(key_suffix):
             help=help_text, key='Upload_file_' + key_suffix)
 
     elif key_suffix == 'Proteomics':
-        if selected_data_set_type == 'FASTA':
+        if selected_data_set_type == 'Raw FASTA files':
             imported_file = st.file_uploader(
                 upload_text_zip_fasta[key_suffix], type=type_list_zip,
                 accept_multiple_files=False,

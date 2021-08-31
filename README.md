@@ -34,7 +34,7 @@ Thanks to recent advances in sequencing and computational technologies, many res
 Here we present MOVIS, a modular time-series multi-omics exploration tool with a user-friendly web interface that integrates, analyzes, and visualizes different time-series omics data sets simultaneously. The resulting visualizations are task-specific, reproducible, and publication-ready. MOVIS is built on open-source software and is easily extendable to accommodate different analytical tasks.
 
 >**Availability**:
-We provide MOVIS as a web service at INSERTURL. Source code, help and documentation can be found at https://github.com/AAnzel/MOVIS.
+We provide MOVIS as a web service at [https://movis.mathematik.uni-marburg.de/](https://movis.mathematik.uni-marburg.de/). Source code, help and documentation can be found at [https://github.com/AAnzel/MOVIS](https://github.com/AAnzel/MOVIS).
 
 >**Contact**: [aleksandar.anzel@uni-marburg.de](mailto:aleksandar.anzel@uni-marburg.de)
 
