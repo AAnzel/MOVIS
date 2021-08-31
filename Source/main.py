@@ -92,6 +92,15 @@ def main():
                        page_icon=os.path.join('images',
                                               'movis_logo_transparent.png'))
 
+    # TODO: unsafe_allow_html might be removed in the future and replaced
+    # with a proper solution. Beware
+    st.markdown('''
+                    <style>
+                    #MainMenu {visibility: hidden;}
+                    footer {visibility: hidden;}
+                    </style>
+                ''', unsafe_allow_html=True)
+
     create_sidebar_and_main()
 
     return None
