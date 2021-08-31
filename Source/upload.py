@@ -47,23 +47,28 @@ def remove_cached_data():
         path_omic = path_uploaded_dict[omic]
 
         for file_name in os.listdir(path_omic):
-            file_path = os.path.join(path_omic, file_name)
-
-            # Check if file is older than 1h, and if yes, delete it
-            if os.stat(file_path).st_mtime < time_limit:
-                try:
-                    if os.path.isfile(file_path) or os.path.islink(file_path):
-                        os.unlink(file_path)
-                    elif os.path.isdir(file_path):
-                        shutil.rmtree(file_path)
-                except OSError as e:
-                    print('Failed to delete ' + file_path + '. Reason: ' + e)
-
-                print('Successfully removed everything from ' + omic +
-                      ' data set')
-
+            if 'gitkeep' in file_name:
+                continue
             else:
-                pass
+                file_path = os.path.join(path_omic, file_name)
+
+                # Check if file is older than 1h, and if yes, delete it
+                if os.stat(file_path).st_mtime < time_limit:
+                    try:
+                        if os.path.isfile(file_path) or\
+                                os.path.islink(file_path):
+                            os.unlink(file_path)
+                        elif os.path.isdir(file_path):
+                            shutil.rmtree(file_path)
+                    except OSError as e:
+                        print(
+                            'Failed to delete ' + file_path + '. Reason: ' + e)
+
+                    print('Successfully removed everything from ' + omic +
+                          ' data set')
+
+                else:
+                    pass
 
     return None
 
