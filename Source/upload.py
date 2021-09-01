@@ -178,15 +178,21 @@ def upload_multiple(key_suffix):
     upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only FASTA (.fa) files. Possible file names are
-                       given as help, on the right.''',
+                       given as help, on the right. The maximum size is 50MB
+                       for the web version of MOVIS, 1TB for the docker
+                       version of MOVIS.''',
         'Proteomics': '''Upload your archive here. Archive should
                          contain only FASTA (.faa) files. Possible file names
-                         are given as help, on the right.'''}
+                         are given as help, on the right. The maximum size is
+                         50MB for the web version of MOVIS, 1TB for the docker
+                         version of MOVIS.'''}
 
     upload_text_zip_kegg = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only KO besthits (.besthits) files. Possible
-                       file names are given as help, on the right.'''}
+                       file names are given as help, on the right.
+                       The maximum size is 50MB for the web version of MOVIS,
+                       1TB for the docker version of MOVIS.'''}
 
     upload_help_zip_fasta = {
         'Genomics': '''File names can be given in two formats:
@@ -219,7 +225,9 @@ def upload_multiple(key_suffix):
     upload_text_zip_bins = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only annotation (.gff) files. Possible file
-                       names are given as help, on the right.'''}
+                       names are given as help, on the right. The maximum size
+                       is 50MB for the web version of MOVIS, 1TB for the docker
+                       version of MOVIS.'''}
 
     upload_help_zip_bins = {
         'Genomics': '''File names can be given in two formats:
