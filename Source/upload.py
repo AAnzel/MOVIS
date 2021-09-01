@@ -75,13 +75,19 @@ def remove_cached_data():
 
 def upload_csv(key_suffix):
     upload_text_csv = {
-        'Metabolomics': '''Upload your data set here. Maximum size is 200MB''',
-        'Proteomics': '''Upload your data set here. Maximum size is 200MB''',
-        'Physico-chemical': '''Upload your data set here. Maximum size is
-                               200MB''',
-        'Transcriptomics': '''Upload one or more data sets here. Maximum size
-                              is 200MB. Data sets must have exactly the same
-                              features(columns)'''}
+        'Metabolomics': '''Upload your data set here. The maximum size is 50MB
+                           for the web version of MOVIS, 1TB for the docker
+                           version of MOVIS.''',
+        'Proteomics': '''Upload your data set here. The maximum size is 50MB
+                         for the web version of MOVIS, 1TB for the docker
+                         version of MOVIS.''',
+        'Physico-chemical': '''Upload your data set here. The maximum size is
+                               50MB for the web version of MOVIS, 1TB for the
+                               docker version of MOVIS.''',
+        'Transcriptomics': '''Upload your data set here. The maximum size is
+                              50MB for the web version of MOVIS, 1TB for the
+                              docker version of MOVIS. Data sets must have
+                              exactly the same features (columns).'''}
 
     imported_files = []
 

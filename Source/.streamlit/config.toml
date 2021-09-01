@@ -1,7 +1,10 @@
 [browser]
 gatherUsageStats = false
 
+[server]
+maxUploadSize = 1000000
+
 
 [theme]
-base="light"
-primaryColor="#1F77B4"
+base = "light"
+primaryColor = "#1F77B4"
