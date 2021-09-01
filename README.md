@@ -91,15 +91,30 @@ It is stored at [Data/cached/example_2/](./Data/cached/example_2) in a raw forma
 Check out our [Wiki page](https://github.com/AAnzel/MOVIS/wiki/0.-Home) for detailed information about MOVIS and how to use it.
 
 ## Installation & Running
+### Stable
 The easiest way to install the tool is to use our latest Docker image:
 
-`docker pull aanzel/movis:latest`
-
-`docker run --publish 8501:8501 --detach --name movis aanzel/movis:latest`
+```
+docker pull aanzel/movis:latest
+docker run --publish 8501:8501 --detach --name movis aanzel/movis:latest
+```
 
 
 You can start using the tool by opening a web browser and typing in [http://localhost:8501/](http://localhost:8501/) as the address. If you run the docker container, you have to use the IP address or hostname instead of localhost.
 
+### Unstable
+*Caution! Use at your own risk!*
+
+You could also clone this repository, build a docker container yourself, and run it locally. This is not recommended as we might introduce unstable features that might not end in the next release of MOVIS. Below is a sequence of instructions (for Linux-based systems) to run the **unstable** version of MOVIS:
+
+```
+git clone https://github.com/AAnzel/MOVIS.git
+cd MOVIS
+docker build -t movis-local:unstable .
+docker run --publish 8501:8501 --detach --name movis movis-local:unstable
+```
+
+You can start using the tool by opening a web browser and typing in [http://localhost:8501/](http://localhost:8501/) as the address. If you run the docker container, you have to use the IP address or hostname instead of localhost.
 
 ## License
 
