@@ -842,6 +842,7 @@ def import_kegg_and_create_df(end, path_all_keggs):
     kegg_files.sort()
 
     kegg_data_list = []
+    important_columns = ["Gene", "ID", "maxScore", "hitNumber"]
 
     # This was done so that I could work with first 100 files only. Otherwise,
     # I should just remove: i, and enumerate
@@ -856,6 +857,14 @@ def import_kegg_and_create_df(end, path_all_keggs):
             tmp_df = pd.read_csv(
                 os.path.join(path_all_keggs, kegg_file_name),
                 delimiter="\t")
+
+            if not all(i in tmp_df.columns.tolist()
+                       for i in important_columns):
+                st.error('''
+                            Your KEGG file header must contain the following
+                            column names: ''' + important_columns)
+                st.stop()
+
             tmp_df["Gene"] = tmp_df["Gene"].apply(
                 lambda x: str(x).split("_PROKKA")[0])
             tmp_df["ID"] = tmp_df["ID"].apply(lambda x: str(x).split(":")[1])

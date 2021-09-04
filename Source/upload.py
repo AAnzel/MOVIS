@@ -148,9 +148,7 @@ def upload_csv(key_suffix):
                     imported_files[i],
                     delimiter=delimiter_dict[delimiter],
                     low_memory=False)
-                # This should be used if one wants to generate example 1
-                # phy_che data set. First
-                # df = common.example_1_fix_double_header(df)
+
                 df.dropna(inplace=True)
                 df.reset_index(inplace=True, drop=True)
                 df = common.fix_dataframe_columns(df)
@@ -174,7 +172,6 @@ def upload_csv(key_suffix):
 
 
 def upload_multiple(key_suffix):
-    # TODO: Check text messages and change where neccessary
     upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only FASTA (.fa) files. Possible file names are
@@ -239,7 +236,6 @@ def upload_multiple(key_suffix):
                        You should use either the first or the second option,
                        mixing name options is not allowed.'''}
 
-    # TODO: Change for transcriptomics and add more type options
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
