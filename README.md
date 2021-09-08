@@ -38,9 +38,6 @@ We provide MOVIS as a web service at [https://movis.mathematik.uni-marburg.de/](
 
 >**Contact**: [aleksandar.anzel@uni-marburg.de](mailto:aleksandar.anzel@uni-marburg.de)
 
->**Supplementary information**: Supplementary data are available at [Bioinformatics]()
-online.
-
 **Paper image placeholder**
 
 ## Dependancy
