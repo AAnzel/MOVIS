@@ -15,8 +15,7 @@
 
 This tool is created for the following paper:
 
-**MOVIS: A Multi-Omics Software Solution for Multi-modal Time-Series Clustering, Embedding, and Visualizing Tasks**
-Aleksandar Anžel, Dominik Heider, and Georges Hattab
+***"MOVIS: A Multi-Omics Software Solution for Multi-modal Time-Series Clustering, Embedding, and Visualizing Tasks"*** by Aleksandar Anžel, Dominik Heider, and Georges Hattab
 
 **Paper badge placeholder, link to the PDF placeholder**
 
