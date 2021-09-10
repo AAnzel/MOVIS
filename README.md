@@ -1,5 +1,5 @@
 ![movis_logo_banner](./Source/images/movis_logo_banner.png)
-[![Build status](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml/badge.svg)](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml)![Docker Automated build](https://img.shields.io/docker/automated/aanzel/movis)
+[![Build status](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml/badge.svg)](https://github.com/AAnzel/MOVIS/actions/workflows/main.yml)
 ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/aanzel/movis)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/aanzel/movis)
 ![GitHub issues](https://img.shields.io/github/issues-raw/AAnzel/MOVIS)
