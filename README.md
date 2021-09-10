@@ -28,13 +28,13 @@ Please cite the paper as:
 Abstract:
 
 > **Motivation**:
-Thanks to recent advances in sequencing and computational technologies, many researchers with biological and/or medical backgrounds are now producing multiple data sets with an embedded temporal dimension. Motivated by the exploration of these time-series data to uncover anomalies, find patterns and gain insights from the data, this step has remained a complex challenge that often requires expertise in computer science and bioinformatics.
+Thanks to recent advances in sequencing and computational technologies, many researchers with biological and/or medical backgrounds are now producing multiple data sets with an embedded temporal dimension. Motivated by the exploration of these time-series data to uncover anomalies, find patterns and gain insights from the data, this process has remained a complex challenge that often requires expertise in computer science and bioinformatics.
 
 >**Results**:
 Here we present MOVIS, a modular time-series multi-omics exploration tool with a user-friendly web interface that integrates, analyzes, and visualizes different time-series omics data sets simultaneously. The resulting visualizations are task-specific, reproducible, and publication-ready. MOVIS is built on open-source software and is easily extendable to accommodate different analytical tasks.
 
 >**Availability**:
-We provide MOVIS as a web service at [https://movis.mathematik.uni-marburg.de/](https://movis.mathematik.uni-marburg.de/). Source code, help and documentation can be found at [https://github.com/AAnzel/MOVIS](https://github.com/AAnzel/MOVIS).
+We provide MOVIS as a web service at [https://movis.mathematik.uni-marburg.de/](https://movis.mathematik.uni-marburg.de/) and as a Docker container at [https://hub.docker.com/r/aanzel/movis](https://hub.docker.com/r/aanzel/movis). Source code, help, and documentation can be found at [https://github.com/AAnzel/MOVIS](https://github.com/AAnzel/MOVIS).
 
 >**Contact**: [aleksandar.anzel@uni-marburg.de](mailto:aleksandar.anzel@uni-marburg.de)
 
