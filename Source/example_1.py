@@ -53,11 +53,11 @@ def upload_multiple(key_suffix):
     )
 
     if key_suffix == 'Genomics':
-        if selected_data_set_type == 'FASTA':
+        if selected_data_set_type == 'Raw FASTA files':
 
             return_path = path_example_1_genomics_fasta
 
-        # elif selected_data_set_type == 'KEGG':
+        # elif selected_data_set_type == 'KEGG annotation files':
         #     return_path = path_example_1_genomics_kegg
 
         else:
