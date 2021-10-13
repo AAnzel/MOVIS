@@ -76,7 +76,7 @@ def example_2_transcriptomics():
 
 def create_main_example_2():
 
-    col_1, col_2 = st.beta_columns([1, 2])
+    col_1, col_2 = st.columns([1, 2])
 
     col_1.info('''
             This data set comes from the following paper:
@@ -102,15 +102,14 @@ def create_main_example_2():
 
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    with st.beta_expander('Show/hide data sets and related info',
-                          expanded=True):
+    with st.expander('Show/hide data sets and related info', expanded=True):
         for i in choose_omics:
             if i == 'Transcriptomics':
                 charts += example_2_transcriptomics()
             else:
                 pass
 
-    with st.beta_expander('Show/hide visualizations', expanded=True):
+    with st.expander('Show/hide visualizations', expanded=True):
         for i in charts:
             type_of_chart = type(i[0])
 

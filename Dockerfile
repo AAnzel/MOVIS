@@ -15,7 +15,6 @@ RUN /opt/conda/bin/conda install --yes \
 RUN /opt/conda/bin/conda config --add channels conda-forge
 
 RUN /opt/conda/bin/conda install --yes \
-        streamlit==0.81.1 \
         altair==4.1.0 \
         biopython==1.78 \
         gensim==4.0.1
@@ -25,6 +24,8 @@ RUN /opt/conda/bin/conda clean --all --yes
 RUN find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete
+
+RUN pip install streamlit==1.0.0
 
 COPY . .
 

@@ -676,11 +676,11 @@ def show_data_set(df):
         st.dataframe(df.head(100))
 
         try:
-            tmp_df = df.describe(datetime_is_numeric=True)
+            tmp_df = df.describe()
             if len(tmp_df.columns.to_list()) > 1:
                 st.markdown('Summary statistics')
-                st.dataframe(df.describe(datetime_is_numeric=True))
-        except TypeError:
+                st.dataframe(df.describe())
+        except TypeError or ValueError:
             pass
 
     return None
@@ -1128,9 +1128,14 @@ def find_temporal_feature(df):
         return None, None
 
 
-def modify_data_set(df, temporal_column, feature_list, key_suffix):
+def modify_data_set(orig_df, temporal_column, feature_list, key_suffix):
 
-    time_to_remove_text = st.text_input(
+    # Creating a copy of the original data frame, since we don't want to lose
+    # it or modify it
+    df = orig_df.copy(deep=True)
+
+    time_input_text_container = st.empty()
+    time_to_remove_text = time_input_text_container.text_input(
         'Insert the time series interval you want to keep. Use ISO 8601 format:\
          YYYY-MM-DD', value='', key='Row_remove_' + key_suffix,
         help='Example: 2011-03-21, 2012-05-03')
@@ -1142,6 +1147,10 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
             df.drop(df[(df[temporal_column] < time_to_remove[0]) |
                        (df[temporal_column] > time_to_remove[1])].index,
                     inplace=True)
+            time_input_text_container.empty()
+            st.info('Successfully kept ' + time_to_remove_text +
+                    ' time frame!')
+
         except ValueError:
             st.error('Wrong date input')
             st.stop()
@@ -1160,7 +1169,8 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
             feature_list =\
                 [i for i in feature_list if i not in columns_to_remove]
 
-        rows_to_remove_text = st.text_input(
+        rows_input_text_container = st.empty()
+        rows_to_remove_text = rows_input_text_container.text_input(
             'Insert row numbers to remove, seperated by comma. See help (right)\
             for example.', value='', key='Row_remove_' + key_suffix,
             help='Example: 42 or 2, 3, 15, 55')
@@ -1172,9 +1182,16 @@ def modify_data_set(df, temporal_column, feature_list, key_suffix):
             if any(not row.isnumeric() for row in rows_to_remove):
                 st.error('Wrong number input')
                 st.stop()
-
-            rows_to_remove = [int(i) for i in rows_to_remove_text.split(',')]
-            df.drop(rows_to_remove, axis=0, inplace=True)
+            try:
+                rows_to_remove = [int(i) for i in
+                                  rows_to_remove_text.split(',')]
+                df.drop(rows_to_remove, axis=0, inplace=True)
+                rows_input_text_container.empty()
+                st.info('Successfully removed ' + rows_to_remove_text +
+                        ' rows!')
+            except ValueError:
+                st.error('Wrong row input')
+                st.stop()
 
     df.dropna(inplace=True)
     df.reset_index(inplace=True, drop=True)

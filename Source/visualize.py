@@ -102,15 +102,23 @@ def time_feature(data, selected_column, temporal_column, target_feature):
                         alt.Color(target_feature, type='nominal'),
                         alt.Tooltip([temporal_column, selected_column]))
         else:
+            # TODO: https://altair-viz.github.io/gallery/select_mark_area.html
+            # brush = alt.selection_interval(encodings=['x'])
+            # color=alt.condition(brush, alt.value('#4c78a8'),
+            #                                alt.value('lightgray')),
+            #            opacity=alt.condition(brush, alt.value(1.0),
+            #                                  alt.value(0.2))
+            #            ).add_selection(brush)
             chart = alt.Chart(
                 data,
                 title=selected_column + ' through time').mark_line().encode(
                         alt.X(temporal_column, type='temporal',
                               scale=alt.Scale(nice=True)),
                         alt.Y(selected_column, type='quantitative'),
-                        alt.Tooltip([temporal_column, selected_column]))
+                        alt.Tooltip([temporal_column, selected_column])
+                        ).interactive()
 
-    return chart.interactive()
+    return chart
 
 
 def two_features(data, feature_1, feature_2, temporal_feature):
@@ -225,9 +233,7 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
 
     brush = alt.selection_interval()
 
-    chart = alt.Chart(
-        data, title='Scatter matrix chart of selected features').mark_circle(
-        ).encode(
+    chart = alt.Chart(data).mark_circle().encode(
         alt.X(alt.repeat("column"), type='quantitative'),
         alt.Y(alt.repeat("row"), type='quantitative'),
         alt.Tooltip(list_of_features + [target_feature, temporal_feature]),
@@ -239,7 +245,8 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
         height=150
     ).repeat(
         row=list_of_features,
-        column=list_of_features
+        column=list_of_features,
+        title='Scatter matrix chart of selected features'
     ).add_selection(brush)
 
     return chart
@@ -386,7 +393,7 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
         )
     # .add_selection(select_time).transform_filter(select_time)
 
-    return chart.interactive()
+    return chart
 
 
 def visualize_seasonal_clusters(data, temporal_column):

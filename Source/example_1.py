@@ -144,7 +144,7 @@ def example_1_phy_che():
 
 def create_main_example_1():
 
-    col_1, col_2 = st.beta_columns([1, 2])
+    col_1, col_2 = st.columns([1, 2])
 
     col_1.info('''
             This data set comes from the following paper:
@@ -175,10 +175,9 @@ def create_main_example_1():
 
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    with st.beta_expander('Show/hide data sets and related info',
-                          expanded=True):
+    with st.expander('Show/hide data sets and related info', expanded=True):
         if num_of_columns >= 2:
-            column_list = st.beta_columns(num_of_columns)
+            column_list = st.columns(num_of_columns)
             curr_pos = 0
 
             for i in choose_omics:
@@ -210,7 +209,7 @@ def create_main_example_1():
                 else:
                     charts += example_1_phy_che()
 
-    with st.beta_expander('Show/hide visualizations', expanded=True):
+    with st.expander('Show/hide visualizations', expanded=True):
         for i in charts:
             type_of_chart = type(i[0])
 

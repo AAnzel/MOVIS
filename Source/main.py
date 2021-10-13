@@ -20,7 +20,7 @@ __status__ = 'Dev'
 
 def create_sidebar_and_main():
 
-    tmp_col_1, tmp_col_2, tmp_col_3, tmp_col_4, tmp_col_5 = st.beta_columns(5)
+    tmp_col_1, tmp_col_2, tmp_col_3, tmp_col_4, tmp_col_5 = st.columns(5)
     tmp_col_3.title('MOVIS')
     st.markdown(' ')
     st.markdown(' ')
@@ -31,7 +31,7 @@ def create_sidebar_and_main():
 
     # TODO: Uncomment this after publication
     # We need 5 columns so that we have nicely aligned images
-    # col_1, col_2, col_3, col_4, col_5 = st.sidebar.beta_columns([1, 2, 1,
+    # col_1, col_2, col_3, col_4, col_5 = st.sidebar.columns([1, 2, 1,
     #                                                             2, 1])
     # col_2.image(os.path.join('images', 'GitHub-Mark-120px-plus.png'),
     #             width=52)
@@ -39,7 +39,7 @@ def create_sidebar_and_main():
     # col_4.markdown('Paper doi with journal logo')
 
     st.sidebar.markdown('---')
-    col_1, col_2 = st.sidebar.beta_columns([3, 1])
+    col_1, col_2 = st.sidebar.columns([3, 1])
     col_2.image(os.path.join('images', 'GitHub-Mark-120px-plus.png'), width=54)
     col_2.markdown('[GitHub](https://github.com/AAnzel/MOVIS)')
     col_1.markdown('''
@@ -63,7 +63,7 @@ def create_sidebar_and_main():
 
         **Feature request**: [propose here](https://github.com/AAnzel/MOVIS/issues/new?assignees=AAnzel&labels=enhancement&template=feature_request.md&title=)
 
-        **Documentation**: [see here](https://github.com/AAnzel/MOVIS/wiki/0.-Home)
+        **Documentation**: [see here](https://github.com/AAnzel/MOVIS/wiki)
 
         ---
         ''') # noqa
