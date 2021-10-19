@@ -109,14 +109,53 @@ def time_feature(data, selected_column, temporal_column, target_feature):
             #            opacity=alt.condition(brush, alt.value(1.0),
             #                                  alt.value(0.2))
             #            ).add_selection(brush)
-            chart = alt.Chart(
-                data,
-                title=selected_column + ' through time').mark_line().encode(
-                        alt.X(temporal_column, type='temporal',
-                              scale=alt.Scale(nice=True)),
-                        alt.Y(selected_column, type='quantitative'),
-                        alt.Tooltip([temporal_column, selected_column])
-                        ).interactive()
+
+            # Creating a selection that chooses the nearest point and selects
+            # it based on x-value
+            nearest = alt.selection(
+                type='single', nearest=True, on='mouseover',
+                fields=[temporal_column], empty='none')
+
+            # The line part of the chart
+            line = alt.Chart().mark_line(interpolate='basis').encode(
+                alt.X(temporal_column, type='temporal',
+                      scale=alt.Scale(nice=True)),
+                alt.Y(selected_column, type='quantitative'),
+            )
+
+            # Transparent selectors across the chart. This is what tells us
+            # the x-value of the cursor
+            selectors = alt.Chart().mark_point().encode(
+                alt.X(temporal_column, type='temporal'),
+                opacity=alt.value(0),
+            ).add_selection(
+                nearest
+            )
+
+            # Draw points on the line, and highlight based on selection
+            points = line.mark_point().encode(
+                opacity=alt.condition(nearest, alt.value(1), alt.value(0))
+            )
+
+            # Draw text labels near the points, and highlight based on
+            # selection
+            text = line.mark_text(
+                align='left', dx=10, dy=15, stroke='#000000',
+                fill='#ffffff', filled=False, size=12).encode(
+                    text=alt.condition(nearest, selected_column + ':Q',
+                                       alt.value(' '))
+            )
+
+            # Draw a rule at the location of the selection
+            rules = alt.Chart().mark_rule(color='gray').encode(
+                alt.X(temporal_column, type='temporal'),
+            ).transform_filter(
+                nearest
+            )
+
+            chart = alt.layer(
+                line, selectors, points, rules, text, data=data,
+                title=selected_column + ' through time')
 
     return chart
 
