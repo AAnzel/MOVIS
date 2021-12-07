@@ -10,6 +10,7 @@ RUN /opt/conda/bin/conda install --yes \
         scikit-learn==0.24.2 \
         scipy==1.6.2 \
         protobuf==3.14.0 \
+        python-Levenshtein==0.12.2 \
         nomkl
 
 RUN /opt/conda/bin/conda config --add channels conda-forge
