@@ -32,6 +32,7 @@ SEED = 42
 MAX_ROWS = 15000
 EPOCHS = 10
 NUM_OF_WORKERS = os.cpu_count() if os.cpu_count() is not None else 2
+VECTOR_SIZE = 100
 EX_1 = 1
 EX_2 = 2
 random.seed(SEED)
@@ -422,7 +423,7 @@ def import_mags_and_build_model(end, path_fasta):
                     print("Building w2v model")
                     # We build our model on the first MAG
                     w2v_model = Word2Vec(
-                        sentences=one_mag, vector_size=100,
+                        sentences=one_mag, vector_size=VECTOR_SIZE,
                         workers=NUM_OF_WORKERS, seed=SEED)
 
                 # Else we just expand its vocabulary
@@ -1017,8 +1018,10 @@ def import_archive(imported_file, extract_folder_path):
         if os.path.exists(return_path):
             for tmp_file in os.listdir(return_path):
                 os.remove(os.path.join(return_path, tmp_file))
+        else:
+            os.mkdir(return_path)
 
-        shutil.unpack_archive(tmp_file_path, extract_dir=extract_folder_path)
+        shutil.unpack_archive(tmp_file_path, extract_dir=return_path)
         return return_path
 
     except ValueError:
@@ -1226,7 +1229,9 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
 
     list_of_vectors = vectorize_mags(
         w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
-    df = pd.DataFrame(list_of_vectors)
+    
+    column_names = ['Dimension ' + str(i) for i in range(VECTOR_SIZE)]
+    df = pd.DataFrame(list_of_vectors, columns=column_names)
     list_of_dates = create_temporal_column(
         fasta_files, None, None, 'TIMESTAMP')
     df.insert(0, 'DateTime', list_of_dates)
@@ -1381,7 +1386,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(VECTORIZED_DATA_SET_PATH)
 
         else:
-            with st.spinner('Vectorizing FASTA files using W2V.',
+            with st.spinner('Vectorizing FASTA files using W2V. ' +
                             'This might take some time.'):
                 df = work_with_fasta(
                     data_set_type, folder_path, key_suffix)
@@ -1408,7 +1413,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(KEGG_DATA_SET_PATH)
 
         else:
-            with st.spinner('Creating KO matrix',
+            with st.spinner('Creating KO matrix. ' +
                             'This might take some time.'):
                 df = work_with_kegg(data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, KEGG_DATA_SET_PATH)
@@ -1434,7 +1439,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(BINS_DATA_SET_PATH)
 
         else:
-            with st.spinner('Creating BINS data frame.',
+            with st.spinner('Creating BINS data frame. ' +
                             'This might take some time.'):
                 df = work_with_bins(data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, BINS_DATA_SET_PATH)
@@ -1472,7 +1477,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(CALCULATED_NOW_DATA_SET_PATH)
 
         else:
-            with st.spinner('Calculating additional properties.'
+            with st.spinner('Calculating additional properties. ' +
                             'This might take some time.'):
                 df = work_calculate_additional(
                     data_set_type, folder_path, key_suffix)
