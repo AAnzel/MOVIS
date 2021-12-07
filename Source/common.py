@@ -1380,7 +1380,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(VECTORIZED_DATA_SET_PATH)
 
         else:
-            with st.spinner('Vectorizing FASTA files using W2V...'):
+            with st.spinner('Vectorizing FASTA files using W2V.',
+                            'This might take some time.'):
                 df = work_with_fasta(
                     data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, VECTORIZED_DATA_SET_PATH)
@@ -1406,7 +1407,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(KEGG_DATA_SET_PATH)
 
         else:
-            with st.spinner('Creating KO matrix...'):
+            with st.spinner('Creating KO matrix',
+                            'This might take some time.'):
                 df = work_with_kegg(data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, KEGG_DATA_SET_PATH)
 
@@ -1431,7 +1433,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(BINS_DATA_SET_PATH)
 
         else:
-            with st.spinner('Creating BINS data frame...'):
+            with st.spinner('Creating BINS data frame.',
+                            'This might take some time.'):
                 df = work_with_bins(data_set_type, folder_path, key_suffix)
                 cache_dataframe(df, BINS_DATA_SET_PATH)
 
@@ -1468,7 +1471,8 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
             df = get_cached_dataframe(CALCULATED_NOW_DATA_SET_PATH)
 
         else:
-            with st.spinner('Calculating additional properties...'):
+            with st.spinner('Calculating additional properties.'
+                            'This might take some time.'):
                 df = work_calculate_additional(
                     data_set_type, folder_path, key_suffix)
 
