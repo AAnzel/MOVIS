@@ -689,8 +689,9 @@ def show_data_set(df):
 def show_calculated_data_set(df, text_info):
     with st.spinner('Calculating features and showing the data set'):
         if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
-            st.markdown('First 50 entries and first 8 features (columns). '
-                        + '**' + text_info + '**')
+            st.markdown('**' + text_info + '** ' + 
+                        'First 50 entries and first 8 features (columns). ' +
+                        'Each column represents one out of 100 dimensions.')
             st.dataframe(df.iloc[:50, :8])
 
             # TODO: Uncomment pd.describe when the bug is fixed in Pandas
@@ -699,7 +700,7 @@ def show_calculated_data_set(df, text_info):
             # st.markdown('Summary statistics')
             # st.dataframe(df.describe(datetime_is_numeric=True))
         else:
-            st.markdown('First 100 entries ' + '**' + text_info + '**')
+            st.markdown('**' + text_info + '** + ''First 100 entries.')
             st.dataframe(df.head(100))
             # st.markdown('Summary statistics')
             # st.dataframe(df.describe(datetime_is_numeric=True))
