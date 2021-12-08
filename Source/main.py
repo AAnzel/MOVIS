@@ -98,7 +98,11 @@ def main():
                     <style>
                     #MainMenu {visibility: hidden;}
                     footer {visibility: hidden;}
+                    details {
+                                display: None;
+                            }
                     </style>
+
                 ''', unsafe_allow_html=True)
 
     create_sidebar_and_main()
