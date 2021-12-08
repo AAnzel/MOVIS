@@ -61,8 +61,8 @@ def remove_cached_data():
                         elif os.path.isdir(file_path):
                             shutil.rmtree(file_path)
                     except OSError as e:
-                        print(
-                            'Failed to delete ' + file_path + '. Reason: ' + e)
+                        print('Failed to delete ' + file_path + '. Reason: '
+                              + e)
 
                     print('Successfully removed everything from ' + omic +
                           ' data set')
@@ -74,33 +74,38 @@ def remove_cached_data():
 
 
 def upload_csv(key_suffix):
-    upload_text_csv = {
-        'Metabolomics': '''Upload your data set here. The maximum size is 50MB
+    
+    upload_csv_label_text = '''Upload your data set here. The maximum size is 50MB
                            for the web version of MOVIS, 1TB for the docker
-                           version of MOVIS.''',
-        'Proteomics': '''Upload your data set here. The maximum size is 50MB
-                         for the web version of MOVIS, 1TB for the docker
-                         version of MOVIS.''',
-        'Physico-chemical': '''Upload your data set here. The maximum size is
-                               50MB for the web version of MOVIS, 1TB for the
-                               docker version of MOVIS.''',
-        'Transcriptomics': '''Upload your data set here. The maximum size is
-                              50MB for the web version of MOVIS, 1TB for the
-                              docker version of MOVIS. Data sets must have
-                              exactly the same features (columns).'''}
+                           version of MOVIS.'''
+    upload_csv_text_general = '''Tabular data sets must have one or two temporal
+                           columns named as one of the following: DateTime,
+                           Date, Time, Hour, Minute. If there are two columns,
+                           it is expected they have different names, and MOVIS
+                           will merge them into one column named DateTime. '''
+    upload_csv_text_specific = {
+        'Metabolomics': '',
+        'Proteomics': '',
+        'Physico-chemical': '',
+        'Transcriptomics': '''**Data sets must have exactly the same names of
+                              features (columns).**'''}
+
+    with st.expander('Show data format information'):
+            st.info(upload_csv_text_general +
+                    upload_csv_text_specific[key_suffix])
 
     imported_files = []
 
     if key_suffix == 'Transcriptomics':
         # This one returns a list because of the accept_multiple_files=True
         imported_files = st.file_uploader(
-            upload_text_csv[key_suffix], type=type_list_csv,
+            upload_csv_label_text, type=type_list_csv,
             accept_multiple_files=True, key='Upload_file_multi' + key_suffix)
 
     else:
         # This one returns a file, so it has to be appended
         imported_files.append(st.file_uploader(
-            upload_text_csv[key_suffix], type=type_list_csv,
+            upload_csv_label_text, type=type_list_csv,
             accept_multiple_files=False,
             key='Upload_file_single' + key_suffix))
 
@@ -175,45 +180,51 @@ def upload_multiple(key_suffix):
     upload_text_zip_fasta = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only FASTA (.fa) files. Possible file names are
-                       given as help, on the right. The maximum size is 50MB
+                       given as help, above. The maximum size is 50MB
                        for the web version of MOVIS, 1TB for the docker
                        version of MOVIS.''',
         'Proteomics': '''Upload your archive here. Archive should
                          contain only FASTA (.faa) files. Possible file names
-                         are given as help, on the right. The maximum size is
+                         are given as help, above. The maximum size is
                          50MB for the web version of MOVIS, 1TB for the docker
                          version of MOVIS.'''}
 
     upload_text_zip_kegg = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only KO besthits (.besthits) files. Possible
-                       file names are given as help, on the right.
+                       file names are given as help, above.
                        The maximum size is 50MB for the web version of MOVIS,
                        1TB for the docker version of MOVIS.'''}
 
     upload_help_zip_fasta = {
         'Genomics': '''File names can be given in two formats:
+
                        1. D03.fa for FASTA file collected on the third day, or
                        W03.fa for FASTA file collected on the third week.
                        You will be given an option to select the start date.
+                       
                        2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
                        You should use either the first or the second option,
                        mixing name options is not allowed.''',
         'Proteomics': '''File names can be given in two formats:
+
                          1. D03.fa[a] for FASTA file collected on the third
                          day, or W03.fa[a] for FASTA file collected the on
                          third week. You will be given an option to select the
-                         start date. 2. 2019-03-15.fa[a] for FASTA file
-                         collected on 15.03.2019. You should use either the
-                         first or the second option, mixing name options is not
-                         allowed.'''}
+                         start date.
+                         
+                         2. 2019-03-15.fa[a] for FASTA file collected on
+                         15.03.2019. You should use either the first or the
+                         second option, mixing name options is not allowed.'''}
 
     upload_help_zip_kegg = {
         'Genomics': '''File names can be given in two formats:
+                       
                        1. D03.KOs.besthits for FASTA file collected on the
                        third day, or W03.KOs.besthits for FASTA file collected
                        on the third week. You will be given an option to select
                        the start date.
+
                        2. 2019-03-15.KOs.besthits for FASTA file collected on
                        15.03.2019. You should use either the first or the
                        second option, mixing name options is not allowed.
@@ -222,16 +233,18 @@ def upload_multiple(key_suffix):
     upload_text_zip_bins = {
         'Genomics': '''Upload your archive here. Archive should
                        contain only annotation (.gff) files. Possible file
-                       names are given as help, on the right. The maximum size
+                       names are given as help, above. The maximum size
                        is 50MB for the web version of MOVIS, 1TB for the docker
                        version of MOVIS.'''}
 
     upload_help_zip_bins = {
         'Genomics': '''File names can be given in two formats:
+
                        1. D03.gff for samples collected on the
                        third day, or W03.gff for samples collected
                        on the third week. You will be given an option to select
                        the start date.
+
                        2. 2019-03-15.gff for samples collected on 15.03.2019.
                        You should use either the first or the second option,
                        mixing name options is not allowed.'''}
@@ -266,17 +279,21 @@ def upload_multiple(key_suffix):
             label_text = upload_text_zip_bins[key_suffix]
             help_text = upload_help_zip_bins[key_suffix]
 
+        with st.expander('Show data format information'):
+            st.info(help_text)
+
         imported_file = st.file_uploader(
             label_text, type=type_list_zip, accept_multiple_files=False,
-            help=help_text, key='Upload_file_' + key_suffix)
+            key='Upload_file_' + key_suffix)
 
     elif key_suffix == 'Proteomics':
         if selected_data_set_type == 'Raw FASTA files':
+            with st.expander('Show data format information'):
+                st.info(upload_help_zip_fasta[key_suffix])
+
             imported_file = st.file_uploader(
                 upload_text_zip_fasta[key_suffix], type=type_list_zip,
-                accept_multiple_files=False,
-                help=upload_help_zip_fasta[key_suffix],
-                key='Upload_file_' + key_suffix)
+                accept_multiple_files=False, key='Upload_file_' + key_suffix)
 
         else:
             return (upload_csv(key_suffix),
