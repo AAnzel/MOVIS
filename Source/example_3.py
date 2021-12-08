@@ -45,37 +45,13 @@ def create_main_example_3():
 
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    # with st.expander('Show/hide data sets and related info',
-    #                       expanded=True):
-    #     if num_of_columns >= 2:
-    #         column_list = st.columns(num_of_columns)
-    #         curr_pos = 0
+    for i in charts:
+        type_of_chart = type(i[0])
 
-    #         for i in choose_omics:
-    #             if i == 'Proteomics':
-    #                 with column_list[curr_pos]:
-    #                     curr_pos += 1
-    #                     charts += example_3_proteomics()
-    #             else:
-    #                 with column_list[curr_pos]:
-    #                     curr_pos += 1
-    #                     charts += example_3_metabolomics()
-
-    #     else:
-    #         for i in choose_omics:
-    #             if i == 'Proteomics':
-    #                 charts += example_3_proteomics()
-    #             else:
-    #                 charts += example_3_metabolomics()
-
-    with st.expander('Show/hide visualizations', expanded=True):
-        for i in charts:
-            type_of_chart = type(i[0])
-
-            with st.spinner('Visualizing...'):
-                if 'altair' in str(type_of_chart):
-                    st.altair_chart(i[0], use_container_width=True)
-                else:
-                    pass
+        with st.spinner('Visualizing...'):
+            if 'altair' in str(type_of_chart):
+                st.altair_chart(i[0], use_container_width=True)
+            else:
+                pass
 
     return None

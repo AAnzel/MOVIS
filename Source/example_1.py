@@ -175,48 +175,46 @@ def create_main_example_1():
 
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
-    with st.expander('Show/hide data sets and related info', expanded=True):
-        if num_of_columns >= 2:
-            column_list = st.columns(num_of_columns)
-            curr_pos = 0
+    if num_of_columns >= 2:
+        column_list = st.columns(num_of_columns)
+        curr_pos = 0
 
-            for i in choose_omics:
-                if i == 'Genomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        charts += example_1_genomics()
-                elif i == 'Metabolomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        charts += example_1_metabolomics()
-                elif i == 'Proteomics':
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        charts += example_1_proteomics()
-                else:
-                    with column_list[curr_pos]:
-                        curr_pos += 1
-                        charts += example_1_phy_che()
-
-        else:
-            for i in choose_omics:
-                if i == 'Genomics':
+        for i in choose_omics:
+            if i == 'Genomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
                     charts += example_1_genomics()
-                elif i == 'Metabolomics':
+            elif i == 'Metabolomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
                     charts += example_1_metabolomics()
-                elif i == 'Proteomics':
+            elif i == 'Proteomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
                     charts += example_1_proteomics()
-                else:
+            else:
+                with column_list[curr_pos]:
+                    curr_pos += 1
                     charts += example_1_phy_che()
 
-    with st.expander('Show/hide visualizations', expanded=True):
-        for i in charts:
-            type_of_chart = type(i[0])
+    else:
+        for i in choose_omics:
+            if i == 'Genomics':
+                charts += example_1_genomics()
+            elif i == 'Metabolomics':
+                charts += example_1_metabolomics()
+            elif i == 'Proteomics':
+                charts += example_1_proteomics()
+            else:
+                charts += example_1_phy_che()
 
-            with st.spinner('Visualizing...'):
-                if 'altair' in str(type_of_chart):
-                    st.altair_chart(i[0], use_container_width=True)
-                else:
-                    pass
+    for i in charts:
+        type_of_chart = type(i[0])
+
+        with st.spinner('Visualizing...'):
+            if 'altair' in str(type_of_chart):
+                st.altair_chart(i[0], use_container_width=True)
+            else:
+                pass
 
     return None
