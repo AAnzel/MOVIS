@@ -701,7 +701,7 @@ def show_calculated_data_set(df, text_info):
             # st.markdown('Summary statistics')
             # st.dataframe(df.describe(datetime_is_numeric=True))
         else:
-            st.markdown('**' + text_info + '** + ''First 100 entries.')
+            st.markdown('**' + text_info + '**' + ' First 100 entries.')
             st.dataframe(df.head(100))
             # st.markdown('Summary statistics')
             # st.dataframe(df.describe(datetime_is_numeric=True))
