@@ -6,6 +6,7 @@ import visualize
 import pandas as pd
 import numpy as np
 import altair as alt
+import altair_saver
 import datetime as dt
 import streamlit as st
 from tempfile import NamedTemporaryFile
@@ -16,8 +17,6 @@ from sklearn import metrics
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from scipy.spatial.distance import jaccard, pdist, squareform
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
 
 
 __author__ = 'Aleksandar Anžel'
@@ -44,19 +43,49 @@ np.random.seed(SEED)
 alt.data_transformers.enable("default", max_rows=MAX_ROWS)
 
 
+# Issue: https://github.com/altair-viz/altair/issues/2398
+def fix_float64_error(df):
+
+    for column in df.select_dtypes(include=[np.float]).columns:
+        df[column] = df[column].astype(np.float32)
+
+    return df
+
 
 # Functions below are shared among different omics.
-def save_chart(chart, folder_path):
+def save_chart(chart, folder_path, key):
 
-    file_path = os.path.join(folder_path, 'result')
-    chart.save(file_path + '.png')
-    chart.save(file_path + '.svg')
-    drawing = svg2rlg(file_path + '.svg')
-    renderPDF.drawToFile(drawing, file_path + '.pdf')
+    charts_folder_path = os.path.join(folder_path)
 
-    # TODO: Create an archive, get the archive path and use it below
+    for file_name in os.listdir(charts_folder_path):
+        if 'gitkeep' in file_name:
+            continue
+        else:
+            old_chart_path = os.path.join(charts_folder_path, file_name)
+            try:
+                if os.path.isfile(old_chart_path) or\
+                        os.path.islink(old_chart_path):
+                    os.unlink(old_chart_path)
+                elif os.path.isdir(old_chart_path):
+                    shutil.rmtree(old_chart_path)
+            except OSError as e:
+                print('Failed to delete ' + old_chart_path + '. Reason: ' + e)
 
-    with open(zipped_file_path, 'rb') as zipped_file:
+            print('Successfully removed everything from ' + charts_folder_path
+                  + ' data set')
+
+    results_folder_path = os.path.join(charts_folder_path, 'results_' + key)
+    os.mkdir(results_folder_path)
+    
+    chart_file_path = os.path.join(results_folder_path, 'chart')
+    chart.save(chart_file_path + '.json')
+    for extension in ['.png', '.svg', '.pdf']:
+        altair_saver.save(chart, chart_file_path + extension)
+    
+    zipped_file_path = os.path.join(charts_folder_path, 'chart_zipped')
+    shutil.make_archive(zipped_file_path, 'zip', results_folder_path)
+
+    with open(zipped_file_path + '.zip', 'rb') as zipped_file:
         st.download_button(label='Download visualization', data=zipped_file,
                            file_name='movis_visualization.zip',
                            mime='application/zip')
@@ -566,7 +595,9 @@ def cache_dataframe(dataframe, folder_path):
 
 @st.cache(show_spinner=False, allow_output_mutation=True)
 def get_cached_dataframe(folder_path):
-    return pd.read_pickle(folder_path).convert_dtypes()
+    tmp_df = pd.read_pickle(folder_path).convert_dtypes()
+    tmp_df = fix_float64_error(tmp_df)
+    return tmp_df
 
 
 def fix_dataframe_columns(dataframe):
@@ -1136,6 +1167,7 @@ def find_temporal_feature(df):
         df[feature_list] = df[feature_list].apply(
             pd.to_numeric, errors='ignore')
         df = df.convert_dtypes()
+        df = fix_float64_error(df)
 
         return temporal_feature, feature_list
 
@@ -1215,6 +1247,7 @@ def modify_data_set(orig_df, temporal_column, feature_list, key_suffix):
     df[feature_list] = df[feature_list].apply(
         pd.to_numeric, args=('ignore',))
     df = df.convert_dtypes()
+    df = fix_float64_error(df)
 
     return df, feature_list
 

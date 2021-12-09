@@ -465,7 +465,7 @@ def create_main_upload():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
-                common.save_chart(i[0], path_uploaded_viz)
+                common.save_chart(i[0], path_uploaded_viz, i[1])
             else:
                 pass
 

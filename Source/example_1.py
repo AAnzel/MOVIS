@@ -216,7 +216,7 @@ def create_main_example_1():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
-                common.save_chart(i[0], path_example_1_viz)
+                common.save_chart(i[0], path_example_1_viz, i[1])
             else:
                 pass
 
