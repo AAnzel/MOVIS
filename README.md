@@ -46,6 +46,7 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |Library|Version|
 |---|---|
 |altair|4.1.0|
+|altair_saver|0.5.0|
 |biopython|1.78|
 |gensim|4.0.1|
 |numpy|1.20.3|
@@ -55,8 +56,6 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |streamlit|0.81.1|
 |protobuf|3.14.0|
 |python-Levenshtein|0.12.2|
-|reportlab|3.5.67|
-|svglib|1.1.0|
 
 
 ## Data

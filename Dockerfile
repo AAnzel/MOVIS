@@ -11,7 +11,6 @@ RUN /opt/conda/bin/conda install --yes \
         scipy==1.6.2 \
         protobuf==3.14.0 \
         python-Levenshtein==0.12.2 \
-        reportlab==3.5.67 \
         nomkl
 
 RUN /opt/conda/bin/conda config --add channels conda-forge
@@ -20,7 +19,7 @@ RUN /opt/conda/bin/conda install --yes \
         altair==4.1.0 \
         biopython==1.78 \
         gensim==4.0.1 \
-        svglib==1.1.0
+        altair_saver==0.5.0
 
 RUN /opt/conda/bin/conda clean --all --yes
 
