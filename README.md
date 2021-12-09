@@ -53,6 +53,10 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |scikit-learn|0.24.2|
 |scipy|1.6.2|
 |streamlit|0.81.1|
+|protobuf|3.14.0|
+|python-Levenshtein|0.12.2|
+|reportlab|3.5.67|
+|svglib|1.1.0|
 
 
 ## Data
