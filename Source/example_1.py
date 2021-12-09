@@ -24,6 +24,8 @@ path_example_1_metabolomics = os.path.join(
     path_example_1_root_data, 'metabolomics')
 path_example_1_phy_che = os.path.join(
     path_example_1_root_data, 'phy_che')
+path_example_1_viz = os.path.join(
+    path_example_1_root_data, 'visualizations')
 
 path_example_1_genomics_fasta = os.path.join(
     path_example_1_genomics, 'rmags_filtered')
@@ -214,6 +216,7 @@ def create_main_example_1():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
+                common.save_chart(i[0], path_example_1_viz)
             else:
                 pass
 

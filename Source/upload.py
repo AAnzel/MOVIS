@@ -27,6 +27,7 @@ path_uploaded_proteomics = os.path.join(path_uploaded, 'proteomics')
 path_uploaded_transcriptomics = os.path.join(path_uploaded, 'transcriptomics')
 path_uploaded_metabolomics = os.path.join(path_uploaded, 'metabolomics')
 path_uploaded_phy_che = os.path.join(path_uploaded, 'phy_che')
+path_uploaded_viz = os.path.join(path_uploaded, 'visualizations')
 
 path_uploaded_dict = {
     'Genomics': path_uploaded_genomics,
@@ -464,6 +465,7 @@ def create_main_upload():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
+                common.save_chart(i[0], path_uploaded_viz)
             else:
                 pass
 

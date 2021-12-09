@@ -48,6 +48,8 @@ path_example_2_transcriptomics_pov_3 = os.path.join(
 path_example_2_transcriptomics_final = os.path.join(
     path_example_2_transcriptomics, 'Final.csv')
 
+path_example_2_viz = os.path.join(
+    path_example_2_root_data, 'visualizations')
 
 def upload_intro(folder_path, key_suffix):
     df = None
@@ -114,6 +116,7 @@ def create_main_example_2():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
+                common.save_chart(i[0], path_example_2_viz)
             else:
                 pass
 

@@ -16,6 +16,8 @@ from sklearn import metrics
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from scipy.spatial.distance import jaccard, pdist, squareform
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF
 
 
 __author__ = 'Aleksandar Anžel'
@@ -42,13 +44,24 @@ np.random.seed(SEED)
 alt.data_transformers.enable("default", max_rows=MAX_ROWS)
 
 
-# Functions below are shared among different omics Function that saves charts
-# from list_of_charts with names from list_of_names
-def save_charts(list_of_chart, list_of_names, folder_path):
 
-    for chart, name in zip(list_of_chart, list_of_names):
-        # altair_saver.save(chart, os.path.join (folder_path, name))
-        chart.save(os.path.join(folder_path, name))
+# Functions below are shared among different omics.
+def save_chart(chart, folder_path):
+
+    file_path = os.path.join(folder_path, 'result')
+    chart.save(file_path + '.png')
+    chart.save(file_path + '.svg')
+    drawing = svg2rlg(file_path + '.svg')
+    renderPDF.drawToFile(drawing, file_path + '.pdf')
+
+    # TODO: Create an archive, get the archive path and use it below
+
+    with open(zipped_file_path, 'rb') as zipped_file:
+        st.download_button(label='Download visualization', data=zipped_file,
+                           file_name='movis_visualization.zip',
+                           mime='application/zip')
+
+    return None
 
 
 # This function creates new dataframe with column that represent season
