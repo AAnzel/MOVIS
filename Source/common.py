@@ -1276,7 +1276,7 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
     list_of_vectors = vectorize_mags(
         w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
     
-    column_names = ['Dimension ' + str(i) for i in range(VECTOR_SIZE)]
+    column_names = ['dim ' + str(i) for i in range(VECTOR_SIZE)]
     df = pd.DataFrame(list_of_vectors, columns=column_names)
     list_of_dates = create_temporal_column(
         fasta_files, None, None, 'TIMESTAMP')
