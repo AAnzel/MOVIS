@@ -1351,11 +1351,11 @@ def work_calculate_additional(data_set_type, folder_path, key_suffix):
     fasta_files.sort()
     num_of_fasta_files = len(fasta_files)
 
-    if key_suffix == 'Proteomics':
+    if key_suffix in ['Proteomics', 'Metaproteomics']:
         df = calculate_proteomics_properties(
             path_proteomics=folder_path, end=num_of_fasta_files)
 
-    elif key_suffix == 'Genomics':
+    elif key_suffix in ['Genomics', 'Metagenomics']:
         df = calculate_genomics_properties(
             path_fasta=folder_path, end=num_of_fasta_files)
 
@@ -1372,7 +1372,7 @@ def work_with_csv(df, folder_path, key_suffix):
         return []
 
     # In this case we have a list of dfs
-    if key_suffix == 'Transcriptomics':
+    if key_suffix in ['Transcriptomics', 'Metatranscriptomics']:
         show_calculated_data_set(df, 'Concatenated transcriptomics data sets')
     else:
         show_data_set(df)
@@ -1397,7 +1397,7 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
         create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
 
         if data_set_type == 'FASTA' and key_suffix in\
-                ['Proteomics', 'Genomics']:
+                ['Proteomics', 'Genomics', 'Metaproteomics', 'Metagenomics']:
             # Calculating additional physico-chemical properties
             additional_check = st.checkbox(
                 'Calculate additional physico-chemical properties?',
