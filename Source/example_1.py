@@ -42,10 +42,10 @@ def upload_multiple(key_suffix):
     # TODO: Add KEGG data set, since it is not yet ready for production
     # 'KEGG annotation files': 'KEGG',
     available_data_set_types = {
-        'Genomics': {
+        'Metagenomics': {
             'Raw FASTA files': 'FASTA',
             'BINS annotation files': 'BINS'},
-        'Proteomics': {
+        'Metaproteomics': {
             'Raw FASTA files': 'FASTA'}
     }
 
@@ -54,7 +54,7 @@ def upload_multiple(key_suffix):
         list(available_data_set_types[key_suffix].keys())
     )
 
-    if key_suffix == 'Genomics':
+    if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
 
             return_path = path_example_1_genomics_fasta
@@ -65,7 +65,7 @@ def upload_multiple(key_suffix):
         else:
             return_path = path_example_1_genomics_bins
 
-    elif key_suffix == 'Proteomics':
+    elif key_suffix == 'Metaproteomics':
         return_path = path_example_1_proteomics_fasta
 
     else:
@@ -105,7 +105,7 @@ def upload_intro(folder_path, key_suffix):
 
 
 def example_1_genomics():
-    key_suffix = 'Genomics'
+    key_suffix = 'Metagenomics'
     cache_folder_path = path_example_1_genomics
 
     folder_path_or_df, data_set_type = upload_intro(
@@ -116,7 +116,7 @@ def example_1_genomics():
 
 
 def example_1_proteomics():
-    key_suffix = 'Proteomics'
+    key_suffix = 'Metaproteomics'
     cache_folder_path = path_example_1_proteomics
 
     folder_path_or_df, data_set_type = upload_intro(
@@ -168,7 +168,7 @@ def create_main_example_1():
     col_2.map(pd.DataFrame({'lat': [49.513414], 'lon': [6.017925]}),
               zoom=8, use_container_width=True)
 
-    example_1_omics_list = ['Genomics', 'Metabolomics', 'Proteomics',
+    example_1_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
                             'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of data set do you want to see?', example_1_omics_list)
@@ -182,7 +182,7 @@ def create_main_example_1():
         curr_pos = 0
 
         for i in choose_omics:
-            if i == 'Genomics':
+            if i == 'Metagenomics':
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += example_1_genomics()
@@ -190,7 +190,7 @@ def create_main_example_1():
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += example_1_metabolomics()
-            elif i == 'Proteomics':
+            elif i == 'Metaproteomics':
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += example_1_proteomics()
@@ -201,11 +201,11 @@ def create_main_example_1():
 
     else:
         for i in choose_omics:
-            if i == 'Genomics':
+            if i == 'Metagenomics':
                 charts += example_1_genomics()
             elif i == 'Metabolomics':
                 charts += example_1_metabolomics()
-            elif i == 'Proteomics':
+            elif i == 'Metaproteomics':
                 charts += example_1_proteomics()
             else:
                 charts += example_1_phy_che()
