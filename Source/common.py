@@ -52,27 +52,31 @@ def fix_float64_error(df):
     return df
 
 
+def remove_everthing_from_dir(path_dir):
+    for file_name in os.listdir(path_dir):
+        if 'gitkeep' in file_name:
+            continue
+        else:
+            file_path = os.path.join(path_dir, file_name)
+            try:
+                if os.path.isfile(file_path) or\
+                        os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except OSError as e:
+                print('Failed to delete ' + file_path + '. Reason: ' + e)
+
+    print('Successfully removed everything from ' + path_dir)
+
+    return None
+
+
 # Functions below are shared among different omics.
 def save_chart(chart, folder_path, key):
 
     charts_folder_path = os.path.join(folder_path)
-
-    for file_name in os.listdir(charts_folder_path):
-        if 'gitkeep' in file_name:
-            continue
-        else:
-            old_chart_path = os.path.join(charts_folder_path, file_name)
-            try:
-                if os.path.isfile(old_chart_path) or\
-                        os.path.islink(old_chart_path):
-                    os.unlink(old_chart_path)
-                elif os.path.isdir(old_chart_path):
-                    shutil.rmtree(old_chart_path)
-            except OSError as e:
-                print('Failed to delete ' + old_chart_path + '. Reason: ' + e)
-
-            print('Successfully removed everything from ' + charts_folder_path
-                  + ' data set')
+    remove_everthing_from_dir(charts_folder_path)
 
     results_folder_path = os.path.join(charts_folder_path, 'results_' + key)
     os.mkdir(results_folder_path)
@@ -593,7 +597,6 @@ def cache_dataframe(dataframe, folder_path):
     return None
 
 
-@st.cache(show_spinner=False, allow_output_mutation=True)
 def get_cached_dataframe(folder_path):
     tmp_df = pd.read_pickle(folder_path).convert_dtypes()
     tmp_df = fix_float64_error(tmp_df)
@@ -682,12 +685,13 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
 
     # I will first remove every FASTA file that doesn't start with 'D'
     files_list_old = os.listdir(unpack_archive_path)
+    files_list_old.sort()
     files_list_new = [i for i in files_list_old if i.startswith('D')
                       or i.startswith('W')]
     files_list_remove = [i for i in files_list_old if i not in files_list_new]
 
     for i in files_list_remove:
-        os.remove(os.path.join(unpack_archive_path, i))
+        os.unlink(os.path.join(unpack_archive_path, i))
 
     # Sorting files and fixing the name. Originally they start with D but
     # represent weeks, so I will replace D with W
@@ -698,8 +702,6 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
     files_list_pass = [i.split('_')[0] + '.' + imported_file_extension
                        for i in files_list_pass]
 
-    files_list_pass.sort()
-
     list_of_dates = create_temporal_column(
         files_list_pass, start_date, len(files_list_pass),
         files_list_pass[0][0])
@@ -707,7 +709,7 @@ def example_1_fix_archive_file_names(start_date, unpack_archive_path):
     list_of_new_names = [i.strftime('%Y-%m-%d') for i in list_of_dates]
 
     for i in range(len(files_list_pass)):
-        os.rename(
+        os.replace(
             os.path.join(unpack_archive_path, files_list_new[i]),
             os.path.join(unpack_archive_path,
                          list_of_new_names[i] + '.' + imported_file_extension))
@@ -735,8 +737,7 @@ def show_calculated_data_set(df, text_info):
     with st.spinner('Calculating features and showing the data set'):
         if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
             st.markdown('**' + text_info + '** ' + 
-                        'First 50 entries and first 8 features (columns). ' +
-                        'Each column represents one out of 100 dimensions.')
+                        'First 50 entries and first 8 features (columns). ')
             st.dataframe(df.iloc[:50, :8])
 
             # TODO: Uncomment pd.describe when the bug is fixed in Pandas
@@ -963,6 +964,7 @@ def create_annotated_data_set(end, path_bins):
 
     result_df.drop(sorted_columns[10:], axis=1, inplace=True)
     result_df['Other'] = other_series
+    result_df.reset_index(inplace=True, drop=True)
 
     print("Finished importing")
 
@@ -1020,7 +1022,7 @@ def fix_archive_file_names(start_date, unpack_archive_path):
     files_list_remove = [i for i in files_list_old if i not in files_list_new]
 
     for i in files_list_remove:
-        os.remove(os.path.join(unpack_archive_path, i))
+        os.unlink(os.path.join(unpack_archive_path, i))
 
     files_list_new.sort()
 
@@ -1041,7 +1043,6 @@ def fix_archive_file_names(start_date, unpack_archive_path):
     return None
 
 
-@st.cache(show_spinner=False, suppress_st_warning=True)
 def import_archive(imported_file, extract_folder_path):
 
     # Creating the file from BytesIO stream
@@ -1060,8 +1061,7 @@ def import_archive(imported_file, extract_folder_path):
             extract_folder_path, return_file_name_no_ext)
 
         if os.path.exists(return_path):
-            for tmp_file in os.listdir(return_path):
-                os.remove(os.path.join(return_path, tmp_file))
+            remove_everthing_from_dir(return_path)
         else:
             os.mkdir(return_path)
 
@@ -1073,20 +1073,22 @@ def import_archive(imported_file, extract_folder_path):
         return None
 
     finally:
-        st.success('Data set succesfully uploaded')
-        os.remove(tmp_file_path)
+        st.success('Data set successfully uploaded')
+        os.unlink(tmp_file_path)
 
 
 # This function changes all file names of 'D' or 'W' type into timestamp type
 # This is done in place for the unpacked uploaded directory
 def create_zip_temporality(folder_path, file_name_type, key_suffix):
-
+    recache = False
     if file_name_type in ['D', 'W']:
         start_date = st.date_input(
             'Insert start date for your data set:',
             dt.datetime.strptime("2011-03-21", "%Y-%m-%d"),
             key='Date_input_' + key_suffix)
 
+        if start_date != dt.datetime.strptime("2011-03-21", "%Y-%m-%d"):
+            recache = True
         # This is only needed for example 1 data set
         # TODO: Change this for production data sets
         # BUG: Change this for production data sets
@@ -1106,7 +1108,7 @@ def create_zip_temporality(folder_path, file_name_type, key_suffix):
                    or "W", or be of a timestamp type (%Y-%m-%d.fa[a])''')
             st.stop()
 
-    return None
+    return recache
 
 
 def find_temporal_feature(df):
@@ -1252,7 +1254,6 @@ def modify_data_set(orig_df, temporal_column, feature_list, key_suffix):
     return df, feature_list
 
 
-@st.cache(show_spinner=False)
 def work_with_fasta(data_set_type, folder_path, key_suffix):
 
     # TODO: Allow user to change number of epochs for training
@@ -1285,7 +1286,6 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
     return df
 
 
-@st.cache(show_spinner=False)
 def work_with_kegg(data_set_type, folder_path, key_suffix):
 
     besthits_files = os.listdir(folder_path)
@@ -1297,7 +1297,6 @@ def work_with_kegg(data_set_type, folder_path, key_suffix):
     return df
 
 
-@st.cache(show_spinner=False)
 def work_with_bins(data_set_type, folder_path, key_suffix):
 
     gff_files = os.listdir(folder_path)
@@ -1316,7 +1315,6 @@ def work_with_bins(data_set_type, folder_path, key_suffix):
 
 # This function binds multiple data frames into one
 def work_with_multi_transcriptomics(df_list, selected_df_names):
-
     if df_list is None:
         return None
 
@@ -1344,7 +1342,6 @@ def work_with_multi_transcriptomics(df_list, selected_df_names):
     return df
 
 
-@st.cache(show_spinner=False)
 def work_calculate_additional(data_set_type, folder_path, key_suffix):
 
     fasta_files = os.listdir(folder_path)
@@ -1378,7 +1375,7 @@ def work_with_csv(df, folder_path, key_suffix):
         show_data_set(df)
 
     chosen_charts = work_with_data_set(
-        df, 'Calculated', folder_path, key_suffix)
+        df, 'Calculated', folder_path, False, key_suffix)
 
     return chosen_charts
 
@@ -1394,7 +1391,8 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
     # IMPORTANT: Do not run KEGG, it takes too much RAM
     if data_set_type in ['FASTA', 'KEGG', 'BINS']:
         file_name_type = show_folder_structure(folder_path_or_df)
-        create_zip_temporality(folder_path_or_df, file_name_type, key_suffix)
+        recache = create_zip_temporality(
+            folder_path_or_df, file_name_type, key_suffix)
 
         if data_set_type == 'FASTA' and key_suffix in\
                 ['Proteomics', 'Genomics', 'Metaproteomics', 'Metagenomics']:
@@ -1405,21 +1403,23 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
 
             if additional_check:
                 chosen_charts = work_with_data_set(
-                    None, 'Calculate_now', folder_path_or_df, key_suffix)
+                    None, 'Calculate_now', folder_path_or_df, recache,
+                    key_suffix)
                 st.markdown('---')
 
         chosen_charts += work_with_data_set(
-            None, data_set_type, folder_path_or_df, key_suffix)
+            None, data_set_type, folder_path_or_df, recache, key_suffix)
 
     else:
         show_data_set(folder_path_or_df)
         chosen_charts += work_with_data_set(
-            folder_path_or_df, 'Calculated', cache_folder_path, key_suffix)
+            folder_path_or_df, 'Calculated', cache_folder_path, recache,
+            key_suffix)
 
     return chosen_charts
 
 
-def work_with_data_set(df, data_set_type, folder_path, key_suffix):
+def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
 
     chosen_charts = []
 
@@ -1428,7 +1428,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         VECTORIZED_DATA_SET_PATH = os.path.join(
             os.path.split(folder_path)[0], VECTORIZED_DATA_SET_NAME)
 
-        if os.path.exists(VECTORIZED_DATA_SET_PATH):
+        if recache is False and os.path.exists(VECTORIZED_DATA_SET_PATH):
             df = get_cached_dataframe(VECTORIZED_DATA_SET_PATH)
 
         else:
@@ -1455,7 +1455,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         KEGG_DATA_SET_PATH = os.path.join(
             os.path.split(folder_path)[0], KEGG_DATA_SET_NAME)
 
-        if os.path.exists(KEGG_DATA_SET_PATH):
+        if recache is False and os.path.exists(KEGG_DATA_SET_PATH):
             df = get_cached_dataframe(KEGG_DATA_SET_PATH)
 
         else:
@@ -1481,7 +1481,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         BINS_DATA_SET_PATH = os.path.join(
             os.path.split(folder_path)[0], BINS_DATA_SET_NAME)
 
-        if os.path.exists(BINS_DATA_SET_PATH):
+        if recache is False and os.path.exists(BINS_DATA_SET_PATH):
             df = get_cached_dataframe(BINS_DATA_SET_PATH)
 
         else:
@@ -1519,7 +1519,7 @@ def work_with_data_set(df, data_set_type, folder_path, key_suffix):
         CALCULATED_NOW_DATA_SET_PATH = os.path.join(
             os.path.split(folder_path)[0], CALCULATED_NOW_DATA_SET_NAME)
 
-        if os.path.exists(CALCULATED_NOW_DATA_SET_PATH):
+        if recache is False and os.path.exists(CALCULATED_NOW_DATA_SET_PATH):
             df = get_cached_dataframe(CALCULATED_NOW_DATA_SET_PATH)
 
         else:
