@@ -291,7 +291,7 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
     return chart
 
 
-def heatmap(data):
+def numerical_heatmap(data):
 
     new_data = data.copy()
     new_data = data.select_dtypes(include=np.number)
@@ -323,6 +323,28 @@ def heatmap(data):
 
     # This returns only lower triangle
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
+
+
+# TODO: Needs work
+def time_heatmap(data, target_feature, temporal_feature):
+
+    selected_column_type = str(data[target_feature].dtype)
+
+    if selected_column_type == 'string':
+        color_type = 'nominal'
+    else:
+        color_type = 'quantitative'
+
+    chart = alt.Chart(
+        data,
+        title=target_feature + ' counts through time').mark_rect().encode(
+                alt.X(temporal_feature, type='temporal',
+                        scale=alt.Scale(nice=True)),
+                alt.Y(target_feature, type=color_type),
+                alt.Color('count(' + target_feature + '):Q'),
+                alt.Tooltip([temporal_feature, 'count(' + target_feature + ')']))
+
+    return chart.interactive()
 
 
 def top_10_time(data, list_of_features, temporal_column):

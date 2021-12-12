@@ -1557,8 +1557,9 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
     else:
         visualizations = st.multiselect('Choose your visualization',
         options=['Feature through time', 'Two features plot',
-        'Scatter-plot matrix', 'Multiple features parallel chart', 'Heatmap',
-        'Top 10 share through time'], key='vis_data_' + key_suffix)
+        'Scatter-plot matrix', 'Multiple features parallel chart',
+        'Numerical heatmap', 'Top 10 share through time'],
+        key='vis_data_' + key_suffix)
 
     for i in visualizations:
         # I have to check which clustering method was used and visualize it
@@ -1667,14 +1668,21 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             #    use_container_width=True)
             #
 
-        elif i == 'Heatmap':
-            chosen_charts.append((visualize.heatmap(df), i + '_' + key_suffix))
+        elif i == 'Numerical heatmap':
+            chosen_charts.append((
+                visualize.numerical_heatmap(df), i + '_' + key_suffix))
+        
+        elif i == 'Time heatmap' and temporal_feature is not None:
+            feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
+                                     key=i + '_' + key_suffix + '1. feature')
+            chosen_charts.append((
+                visualize.time_heatmap(df, feature_1, temporal_feature),
+                i + '_' + key_suffix))
 
         elif i == 'Top 10 share through time' and temporal_feature is not None:
             chosen_charts.append((visualize.top_10_time(df, feature_list,
                                                         temporal_feature),
                                   i + '_' + key_suffix))
-
         else:
             pass
 
