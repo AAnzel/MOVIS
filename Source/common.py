@@ -757,7 +757,7 @@ def show_calculated_data_set(df, text_info):
 def show_clustering_info(df, key_suffix):
 
     clustering_methods = st.multiselect(
-        'Choose clustering method:', ['K-Means', 'OPTICS'],
+        'Choose clustering method:', options=['K-Means', 'OPTICS'],
         key='choose_clus' + key_suffix
         )
 
@@ -1212,7 +1212,7 @@ def modify_data_set(orig_df, temporal_column, feature_list, key_suffix):
 
     if filter_checkbox:
         columns_to_remove = st.multiselect(
-            'Select columns to remove', feature_list,
+            'Select columns to remove', options=feature_list,
             key='Col_remove_' + key_suffix)
 
         if len(columns_to_remove) != 0:
@@ -1547,22 +1547,18 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     chosen_charts = []
+    feature_list = list(feature_list)
 
     if key_suffix.startswith('Cluster'):
-        visualizations = st.multiselect('Choose your visualization',
-                                        ['PCA visualization',
-                                         'MDS visualization',
-                                         't-SNE visualization'],
-                                        key='vis_data_' + key_suffix)
+        visualizations = st.multiselect(
+            'Choose your visualization', options=['PCA visualization',
+            'MDS visualization', 't-SNE visualization'],
+            key='vis_data_' + key_suffix)
     else:
         visualizations = st.multiselect('Choose your visualization',
-                                        ['Feature through time',
-                                         'Two features scatter-plot',
-                                         'Scatter-plot matrix',
-                                         'Multiple features parallel chart',
-                                         'Heatmap',
-                                         'Top 10 share through time'],
-                                        key='vis_data_' + key_suffix)
+        options=['Feature through time', 'Two features plot',
+        'Scatter-plot matrix', 'Multiple features parallel chart', 'Heatmap',
+        'Top 10 share through time'], key='vis_data_' + key_suffix)
 
     for i in visualizations:
         # I have to check which clustering method was used and visualize it
@@ -1586,25 +1582,22 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_features = st.multiselect(
-                i + ': select features to visualize', feature_list)
+                i + ': select features to visualize', options=feature_list)
 
             encode_feature_color = st.checkbox(
                 'Encode one nominal feature with color?',
                 key=i + '_' + key_suffix + 'color checkbox')
 
             if encode_feature_color:
-                for j in selected_features:
-                    feature_list.remove(j)
+                color_feature_list = [feature for feature in feature_list
+                                      if feature not in selected_features]
                 target_feature = st.selectbox(
-                    i + ': select target feature', feature_list)
+                    i + ': select target feature', color_feature_list)
 
-                if target_feature in feature_list:
-                    feature_list.remove(target_feature)
-
-                for j in selected_features:
+                for one_feature in selected_features:
                     chosen_charts.append(
                         (visualize.time_feature(
-                            df, j, temporal_feature, target_feature),
+                            df, one_feature, temporal_feature, target_feature),
                          i + '_' + key_suffix))
             else:
                 for j in selected_features:
@@ -1613,18 +1606,18 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                             df, j, temporal_feature, None),
                          i + '_' + key_suffix))
 
-        elif i == 'Two features scatter-plot':
+        elif i == 'Two features plot':
             feature_1 = None
             feature_2 = None
 
             feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
                                      key=i + '_' + key_suffix + '1. feature')
 
-            if feature_1 in feature_list:
-                feature_list.remove(feature_1)
+            new_feature_list = [i for i in feature_list if i != feature_1]
 
-            feature_2 = st.selectbox(i + ': select 2. feature', feature_list,
-                                     key=i + '_' + key_suffix + '2. feature')
+            feature_2 = st.selectbox(
+                i + ': select 2. feature', new_feature_list,
+                key=i + '_' + key_suffix + '2. feature')
 
             if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append(
@@ -1637,7 +1630,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 i + ': select target feature for color', feature_list)
 
             list_of_features = st.multiselect(
-                i + ': choose at least 2 features', feature_list)
+                i + ': choose at least 2 features', options=feature_list)
 
             if len(list_of_features) >= 2:
                 list_of_features.append(target_feature)
@@ -1659,7 +1652,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                     index=len(feature_list))
 
             list_of_features = st.multiselect(
-                i + ': choose at least 2 features', feature_list)
+                i + ': choose at least 2 features', options=feature_list)
 
             if len(list_of_features) >= 2:
                 list_of_features.append(target_feature)
