@@ -80,12 +80,12 @@ def save_chart(chart, folder_path, key):
 
     results_folder_path = os.path.join(charts_folder_path, 'results_' + key)
     os.mkdir(results_folder_path)
-    
+
     chart_file_path = os.path.join(results_folder_path, 'chart')
     chart.save(chart_file_path + '.json')
     for extension in ['.png', '.svg', '.pdf']:
         altair_saver.save(chart, chart_file_path + extension)
-    
+
     zipped_file_path = os.path.join(charts_folder_path, 'chart_zipped')
     shutil.make_archive(zipped_file_path, 'zip', results_folder_path)
 
@@ -736,7 +736,7 @@ def show_data_set(df):
 def show_calculated_data_set(df, text_info):
     with st.spinner('Calculating features and showing the data set'):
         if len(df.columns.to_list()) > 50 or len(df.columns.to_list()) == 1:
-            st.markdown('**' + text_info + '** ' + 
+            st.markdown('**' + text_info + '** ' +
                         'First 50 entries and first 8 features (columns). ')
             st.dataframe(df.iloc[:50, :8])
 
@@ -1276,7 +1276,7 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
 
     list_of_vectors = vectorize_mags(
         w2v_model, path_fasta=folder_path, end=num_of_fasta_files)
-    
+
     column_names = ['dim ' + str(i) for i in range(VECTOR_SIZE)]
     df = pd.DataFrame(list_of_vectors, columns=column_names)
     list_of_dates = create_temporal_column(
@@ -1551,15 +1551,16 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     if key_suffix.startswith('Cluster'):
         visualizations = st.multiselect(
-            'Choose your visualization', options=['PCA visualization',
-            'MDS visualization', 't-SNE visualization'],
-            key='vis_data_' + key_suffix)
+            'Choose your visualization',
+            options=['PCA visualization', 'MDS visualization',
+                     't-SNE visualization'], key='vis_data_' + key_suffix)
     else:
-        visualizations = st.multiselect('Choose your visualization',
-        options=['Feature through time', 'Two features plot',
-        'Scatter-plot matrix', 'Multiple features parallel chart',
-        'Numerical heatmap', 'Top 10 share through time'],
-        key='vis_data_' + key_suffix)
+        visualizations = st.multiselect(
+            'Choose your visualization',
+            options=['Feature through time', 'Two features plot',
+                     'Scatter-plot matrix', 'Multiple features parallel chart',
+                     'Numerical heatmap', 'Top 10 share through time'],
+            key='vis_data_' + key_suffix)
 
     for i in visualizations:
         # I have to check which clustering method was used and visualize it
@@ -1671,7 +1672,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Numerical heatmap':
             chosen_charts.append((
                 visualize.numerical_heatmap(df), i + '_' + key_suffix))
-        
+
         elif i == 'Time heatmap' and temporal_feature is not None:
             feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
                                      key=i + '_' + key_suffix + '1. feature')

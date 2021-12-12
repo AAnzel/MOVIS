@@ -339,10 +339,11 @@ def time_heatmap(data, target_feature, temporal_feature):
         data,
         title=target_feature + ' counts through time').mark_rect().encode(
                 alt.X(temporal_feature, type='temporal',
-                        scale=alt.Scale(nice=True)),
+                      scale=alt.Scale(nice=True)),
                 alt.Y(target_feature, type=color_type),
                 alt.Color('count(' + target_feature + '):Q'),
-                alt.Tooltip([temporal_feature, 'count(' + target_feature + ')']))
+                alt.Tooltip([temporal_feature,
+                             'count(' + target_feature + ')']))
 
     return chart.interactive()
 

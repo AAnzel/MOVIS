@@ -75,7 +75,6 @@ def remove_cached_data():
 
 
 def upload_csv(key_suffix):
-    
     upload_csv_label_text = '''Upload your data set here. The maximum size is 50MB
                            for the web version of MOVIS, 1TB for the docker
                            version of MOVIS.'''
@@ -92,8 +91,7 @@ def upload_csv(key_suffix):
                               features (columns).**'''}
 
     with st.expander('Show data format information'):
-            st.info(upload_csv_text_general +
-                    upload_csv_text_specific[key_suffix])
+        st.info(upload_csv_text_general + upload_csv_text_specific[key_suffix])
 
     imported_files = []
 
@@ -203,7 +201,7 @@ def upload_multiple(key_suffix):
                        1. D03.fa for FASTA file collected on the third day, or
                        W03.fa for FASTA file collected on the third week.
                        You will be given an option to select the start date.
-                       
+
                        2. 2019-03-15.fa for FASTA file collected on 15.03.2019.
                        You should use either the first or the second option,
                        mixing name options is not allowed.''',
@@ -213,14 +211,14 @@ def upload_multiple(key_suffix):
                          day, or W03.fa[a] for FASTA file collected the on
                          third week. You will be given an option to select the
                          start date.
-                         
+
                          2. 2019-03-15.fa[a] for FASTA file collected on
                          15.03.2019. You should use either the first or the
                          second option, mixing name options is not allowed.'''}
 
     upload_help_zip_kegg = {
         'Genomics': '''File names can be given in two formats:
-                       
+
                        1. D03.KOs.besthits for FASTA file collected on the
                        third day, or W03.KOs.besthits for FASTA file collected
                        on the third week. You will be given an option to select
@@ -316,7 +314,6 @@ def upload_multiple(key_suffix):
 def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
-
 
     df = None
 
