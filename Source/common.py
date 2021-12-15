@@ -971,6 +971,19 @@ def create_annotated_data_set(end, path_bins):
     return result_df
 
 
+def create_depth_data_set(end, path_depths):
+    print("Importing depth data set")
+    depth_files = os.listdir(path_depths)
+    depth_files.sort()
+
+    final_dict = {}
+
+    result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
+    print("Finished importing")
+
+    return result_df
+
+
 def show_folder_structure(folder_path):
 
     space = '    '
@@ -1286,6 +1299,21 @@ def work_with_fasta(data_set_type, folder_path, key_suffix):
     return df
 
 
+def work_with_depth(data_set_type, folder_path, key_suffix):
+    depth_files = os.listdir(folder_path)
+    depth_files.sort()
+    num_of_depth_files = len(depth_files)
+
+    df = create_depth_data_set(
+        end=num_of_depth_files, path_bins=folder_path)
+
+    list_of_dates = create_temporal_column(
+        depth_files, None, None, 'TIMESTAMP')
+    df.insert(0, 'DateTime', list_of_dates)
+
+    return df
+
+
 def work_with_kegg(data_set_type, folder_path, key_suffix):
 
     besthits_files = os.listdir(folder_path)
@@ -1389,7 +1417,7 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
         return []
 
     # IMPORTANT: Do not run KEGG, it takes too much RAM
-    if data_set_type in ['FASTA', 'KEGG', 'BINS']:
+    if data_set_type in ['FASTA', 'KEGG', 'BINS', 'DEPTH']:
         file_name_type = show_folder_structure(folder_path_or_df)
         recache = create_zip_temporality(
             folder_path_or_df, file_name_type, key_suffix)
@@ -1491,6 +1519,29 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
                 cache_dataframe(df, BINS_DATA_SET_PATH)
 
         show_calculated_data_set(df, 'Imported bins')
+        df = fix_data_set(df)
+        temporal_feature, feature_list = find_temporal_feature(df)
+        df, feature_list = modify_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+        chosen_charts = visualize_data_set(
+            df, temporal_feature, feature_list, key_suffix)
+
+    elif data_set_type == 'DEPTH':
+        DEPTH_DATA_SET_NAME = 'depth.pkl'
+        DEPTH_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], DEPTH_DATA_SET_NAME)
+
+        if recache is False and os.path.exists(DEPTH_DATA_SET_PATH):
+            df = get_cached_dataframe(DEPTH_DATA_SET_PATH)
+
+        else:
+            with st.spinner('Creating depth-of-coverage data frame. ' +
+                            'This might take some time.'):
+                df = work_with_depth(
+                    data_set_type, folder_path, key_suffix)
+                cache_dataframe(df, DEPTH_DATA_SET_PATH)
+
+        show_calculated_data_set(df, 'Imported depths')
         df = fix_data_set(df)
         temporal_feature, feature_list = find_temporal_feature(df)
         df, feature_list = modify_data_set(

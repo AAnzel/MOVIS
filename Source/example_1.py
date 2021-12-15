@@ -47,11 +47,11 @@ def upload_multiple(key_suffix):
         'Metagenomics': {
             'Raw FASTA files': 'FASTA',
             'BINS annotation files': 'BINS',
-            'Depth-of-coverage': 'Depth'},
+            'Depth-of-coverage': 'DEPTH'},
         'Metaproteomics': {
             'Raw FASTA files': 'FASTA'},
         'Metatranscriptomics': {
-            'Depth-of-coverage': 'Depth'}
+            'Depth-of-coverage': 'DEPTH'}
     }
 
     selected_data_set_type = st.selectbox(
