@@ -31,6 +31,10 @@ path_example_1_genomics_fasta = os.path.join(
     path_example_1_genomics, 'rmags_filtered')
 path_example_1_genomics_kegg = os.path.join(path_example_1_genomics, 'KEGG')
 path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'Bins')
+path_example_1_genomics_depths = os.path.join(
+    path_example_1_genomics, 'MG_Depths')
+path_example_1_transcriptomics_depths = os.path.join(
+    path_example_1_genomics, 'MT_Depths')
 path_example_1_proteomics_fasta = os.path.join(
     path_example_1_proteomics, 'set_of_78')
 

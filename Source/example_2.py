@@ -51,6 +51,7 @@ path_example_2_transcriptomics_final = os.path.join(
 path_example_2_viz = os.path.join(
     path_example_2_root_data, 'visualizations')
 
+
 def upload_intro(folder_path, key_suffix):
     df = None
 
