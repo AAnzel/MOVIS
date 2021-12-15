@@ -326,24 +326,23 @@ def numerical_heatmap(data):
 
 
 # TODO: Needs work
-def time_heatmap(data, target_feature, temporal_feature):
+def time_heatmap(data, target_feature, color_feature, temporal_feature):
 
-    selected_column_type = str(data[target_feature].dtype)
+    target_column_type = str(data[target_feature].dtype)
+    color_column_type = str(data[color_feature].dtype)
 
-    if selected_column_type == 'string':
-        color_type = 'nominal'
-    else:
-        color_type = 'quantitative'
+    target_type = 'ordinal' if target_column_type == 'string'\
+        else 'quantitative'
+
+    color_type = 'ordinal' if color_column_type == 'string' else 'quantitative'
 
     chart = alt.Chart(
         data,
-        title=target_feature + ' counts through time').mark_rect().encode(
-                alt.X(temporal_feature, type='temporal',
-                      scale=alt.Scale(nice=True)),
-                alt.Y(target_feature, type=color_type),
-                alt.Color('count(' + target_feature + '):Q'),
-                alt.Tooltip([temporal_feature,
-                             'count(' + target_feature + ')']))
+        title=target_feature + ' time heatmap').mark_square(size=100).encode(
+            alt.X(temporal_feature, type='temporal'),
+            alt.Y(target_feature, type=target_type),
+            alt.Color(color_feature, type=color_type),
+            alt.Tooltip([temporal_feature, target_feature, color_feature]))
 
     return chart.interactive()
 

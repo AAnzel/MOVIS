@@ -1610,7 +1610,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             'Choose your visualization',
             options=['Feature through time', 'Two features plot',
                      'Scatter-plot matrix', 'Multiple features parallel chart',
-                     'Numerical heatmap', 'Top 10 share through time'],
+                     'Numerical heatmap', 'Time heatmap',
+                     'Top 10 share through time'],
             key='vis_data_' + key_suffix)
 
     for i in visualizations:
@@ -1725,11 +1726,24 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 visualize.numerical_heatmap(df), i + '_' + key_suffix))
 
         elif i == 'Time heatmap' and temporal_feature is not None:
-            feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
-                                     key=i + '_' + key_suffix + '1. feature')
-            chosen_charts.append((
-                visualize.time_heatmap(df, feature_1, temporal_feature),
-                i + '_' + key_suffix))
+            feature_1 = None
+            feature_2 = None
+
+            feature_1 = st.selectbox(
+                i + ': select qualitative y-axis feature', feature_list,
+                key=i + '_' + key_suffix + '1. feature')
+
+            new_feature_list = [i for i in feature_list if i != feature_1]
+
+            feature_2 = st.selectbox(
+                i + ': select quantitative color feature', new_feature_list,
+                key=i + '_' + key_suffix + '2. feature')
+
+            if feature_1 is not None and feature_2 is not None:
+                chosen_charts.append((
+                    visualize.time_heatmap(df, feature_1, feature_2,
+                                           temporal_feature),
+                    i + '_' + key_suffix))
 
         elif i == 'Top 10 share through time' and temporal_feature is not None:
             chosen_charts.append((visualize.top_10_time(df, feature_list,
