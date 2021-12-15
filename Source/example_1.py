@@ -39,8 +39,6 @@ path_example_1_proteomics_fasta = os.path.join(
     path_example_1_proteomics, 'set_of_78')
 
 
-# TODO: Fix bins data set and fix KEGG data set zip files
-
 def upload_multiple(key_suffix):
 
     # TODO: Add KEGG data set, since it is not yet ready for production
@@ -48,9 +46,12 @@ def upload_multiple(key_suffix):
     available_data_set_types = {
         'Metagenomics': {
             'Raw FASTA files': 'FASTA',
-            'BINS annotation files': 'BINS'},
+            'BINS annotation files': 'BINS',
+            'Depth-of-coverage': 'Depth'},
         'Metaproteomics': {
-            'Raw FASTA files': 'FASTA'}
+            'Raw FASTA files': 'FASTA'},
+        'Metatranscriptomics': {
+            'Depth-of-coverage': 'Depth'}
     }
 
     selected_data_set_type = st.selectbox(
@@ -65,12 +66,17 @@ def upload_multiple(key_suffix):
 
         # elif selected_data_set_type == 'KEGG annotation files':
         #     return_path = path_example_1_genomics_kegg
+        elif selected_data_set_type == 'Depth-of-coverage':
+            return_path = path_example_1_genomics_depths
 
         else:
             return_path = path_example_1_genomics_bins
 
     elif key_suffix == 'Metaproteomics':
         return_path = path_example_1_proteomics_fasta
+
+    elif key_suffix == 'Metatranscriptomics':
+        return_path = path_example_1_transcriptomics_depths
 
     else:
         pass
@@ -137,6 +143,17 @@ def example_1_metabolomics():
     df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
+
+
+def example_1_transcriptomics():
+    key_suffix = 'Metatranscriptomics'
+    cache_folder_path = path_example_1_transcriptomics
+
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
+
+    return common.work_with_zip(
+        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def example_1_phy_che():
