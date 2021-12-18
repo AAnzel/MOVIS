@@ -347,6 +347,38 @@ def time_heatmap(data, target_feature, color_feature, temporal_feature):
     return chart.interactive()
 
 
+def whisker_chart(summary_data, temporal_column):
+    # Summary data frame contains the following columns:
+    # 'Q1','Q3', 'IQR', 'LowerLimit', 'UpperLimit', 'Mean'
+
+    bar_chart = alt.Chart(summary_data).mark_bar(size=10).encode(
+        alt.X(temporal_column, type='temporal'),
+        alt.Y('Q1:Q', title=None),
+        alt.Y2('Q3:Q', title=None),
+        alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
+    )
+
+    whiskers_chart = alt.Chart(summary_data).mark_rule().encode(
+        alt.X(temporal_column, type='temporal'),
+        alt.Y('LowerLimit:Q', scale=alt.Scale(zero=False), title=None),
+        alt.Y2('UpperLimit:Q', title=None),
+        alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
+    )
+
+    mean_chart = alt.Chart(summary_data).mark_tick(
+        color='black', height=80, opacity=1).encode(
+        alt.X(temporal_column, type='temporal'),
+        alt.Y('Mean:Q', title=None),
+        alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
+    )
+
+    final_chart = (whiskers_chart + bar_chart + mean_chart).configure_scale(
+        bandPaddingInner=0.2
+    )
+
+    return final_chart.interactive()
+
+
 def top_10_time(data, list_of_features, temporal_column):
 
     # I want to create a stacked bar chart where on x axis I will have time
