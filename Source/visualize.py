@@ -373,8 +373,7 @@ def whisker_chart(summary_data, temporal_column):
     )
 
     final_chart = (whiskers_chart + bar_chart + mean_chart).configure_scale(
-        bandPaddingInner=0.2
-    )
+        bandPaddingInner=0.2)
 
     return final_chart.interactive()
 

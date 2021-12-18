@@ -971,17 +971,88 @@ def create_annotated_data_set(end, path_bins):
     return result_df
 
 
+def create_aggregation_functions(column_names):
+    result_dict = {}
+    for one_column_name in column_names:
+        if one_column_name == 'Gene':
+            continue
+        else:
+            result_dict[one_column_name] = 'sum'
+
+    return result_dict
+
+
+def create_summary_df(df):
+    summary_dict = dict()
+    numerical_columns = df.select_dtypes(include=np.number).columns.tolist()
+    for one_column_name in numerical_columns:
+        q_1 = df[one_column_name].quantile(0.25)
+        q_3 = df[one_column_name].quantile(0.75)
+        mean = np.mean(df[one_column_name])
+        iqr = q_3 - q_1
+        lower_lim = 0 if (q_1 - 1.5*iqr) < 0 else q_1 - 1.5*iqr
+        upper_lim = q_3 + 1.5*iqr
+        summary_dict[one_column_name] = {'Q1': q_1, 'Q3': q_3, 'IQR': iqr,
+                                         'LowerLimit': lower_lim,
+                                         'UpperLimit': upper_lim, 'Mean': mean}
+
+    summary_df = pd.DataFrame().from_dict(summary_dict).T.reset_index().rename(
+        columns={'index': 'DateTime'})
+
+    return summary_df, summary_dict
+
+
+def create_outliers_df(df, summary_dict):
+    outliers_df = pd.DataFrame()
+    for one_column_name in list(summary_dict.keys()):
+        outliers_df[one_column_name] = df[one_column_name][
+            (df[one_column_name] <
+             summary_dict[one_column_name]['LowerLimit']) |
+            (df[one_column_name] >
+             summary_dict[one_column_name]['UpperLimit'])]
+
+    outliers_df = outliers_df.reset_index().melt('index').drop(
+        'index', axis=1).rename(columns={'variable': 'DateTime'})
+
+    return outliers_df
+
+
 def create_depth_data_set(end, path_depths):
     print("Importing depth data set")
     depth_files = os.listdir(path_depths)
     depth_files.sort()
 
-    final_dict = {}
+    final_df = None
+    for i in depth_files:
+        # We have to initialize the first dataframe
+        tmp_df = pd.read_csv(
+            os.path.join(path_depths, i), sep='\t',
+            names=['Gene', os.path.splitext(i)[0]])
 
-    result_df = pd.DataFrame.from_dict(final_dict).fillna(0).transpose()
-    print("Finished importing")
+        if final_df is None:
+            final_df = tmp_df
+        else:
+            final_df = pd.merge(final_df, tmp_df, how="outer", on=['Gene'])
 
-    return result_df
+    print("Finished importing\nCreating summary data set")
+    # This dataframe now has columns: 'Gene' and other columns are timestamps
+    # There migh be genes that are named the same, and we want to sum them
+    # Since they are not annotated
+    aggregation_functions = create_aggregation_functions(
+        final_df.columns.to_list())
+    final_df = final_df.groupby(final_df['Gene']).aggregate(
+        aggregation_functions)
+    final_df.reset_index(inplace=True)
+
+    # We now want to create summary dataframe that has columns
+    # DateTime, Q1, Q3, IQR, LowerLimit, UpperLimit, Mean
+    # This dataframe is relevant to us
+    summary_df, summary_dict = create_summary_df(final_df)
+    outliers_df = create_outliers_df(final_df, summary_dict)
+
+    print("Finished creating")
+
+    return summary_df, outliers_df
 
 
 def show_folder_structure(folder_path):
@@ -1304,14 +1375,10 @@ def work_with_depth(data_set_type, folder_path, key_suffix):
     depth_files.sort()
     num_of_depth_files = len(depth_files)
 
-    df = create_depth_data_set(
+    summary_df, outliers_df = create_depth_data_set(
         end=num_of_depth_files, path_bins=folder_path)
 
-    list_of_dates = create_temporal_column(
-        depth_files, None, None, 'TIMESTAMP')
-    df.insert(0, 'DateTime', list_of_dates)
-
-    return df
+    return summary_df, outliers_df
 
 
 def work_with_kegg(data_set_type, folder_path, key_suffix):
@@ -1527,27 +1594,42 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
             df, temporal_feature, feature_list, key_suffix)
 
     elif data_set_type == 'DEPTH':
-        DEPTH_DATA_SET_NAME = 'depth.pkl'
-        DEPTH_DATA_SET_PATH = os.path.join(
-            os.path.split(folder_path)[0], DEPTH_DATA_SET_NAME)
+        SUM_DEPTH_DATA_SET_NAME = 'sum_depth.pkl'
+        OUT_DEPTH_DATA_SET_NAME = 'out_depth.pkl'
+        SUM_DEPTH_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], SUM_DEPTH_DATA_SET_NAME)
+        OUT_DEPTH_DATA_SET_PATH = os.path.join(
+            os.path.split(folder_path)[0], OUT_DEPTH_DATA_SET_NAME)
 
-        if recache is False and os.path.exists(DEPTH_DATA_SET_PATH):
-            df = get_cached_dataframe(DEPTH_DATA_SET_PATH)
+        if recache is False and os.path.exists(SUM_DEPTH_DATA_SET_PATH)\
+                and os.path.exists(OUT_DEPTH_DATA_SET_PATH):
+            summary_df = get_cached_dataframe(SUM_DEPTH_DATA_SET_PATH)
+            outliers_df = get_cached_dataframe(OUT_DEPTH_DATA_SET_PATH)
 
         else:
             with st.spinner('Creating depth-of-coverage data frame. ' +
                             'This might take some time.'):
-                df = work_with_depth(
+                summary_df, outliers_df = work_with_depth(
                     data_set_type, folder_path, key_suffix)
-                cache_dataframe(df, DEPTH_DATA_SET_PATH)
+                cache_dataframe(summary_df, SUM_DEPTH_DATA_SET_PATH)
 
-        show_calculated_data_set(df, 'Imported depths')
-        df = fix_data_set(df)
-        temporal_feature, feature_list = find_temporal_feature(df)
-        df, feature_list = modify_data_set(
-            df, temporal_feature, feature_list, key_suffix)
-        chosen_charts = visualize_data_set(
-            df, temporal_feature, feature_list, key_suffix)
+        show_calculated_data_set(summary_df, 'Summary of imported depths')
+        show_calculated_data_set(outliers_df, 'Outliers of imported depths')
+        summary_df = fix_data_set(summary_df)
+        outliers_df = fix_data_set(outliers_df)
+        summary_temporal_feature, summary_feature_list =\
+            find_temporal_feature(summary_df)
+        outliers_temporal_feature, outliers_feature_list =\
+            find_temporal_feature(outliers_df)
+        # df, feature_list = modify_data_set(
+        #    df, temporal_feature, feature_list, key_suffix)
+        chosen_charts = []
+        chosen_charts += visualize_data_set(
+            summary_df, summary_temporal_feature, summary_feature_list,
+            key_suffix + 'sum')
+        chosen_charts += visualize_data_set(
+            outliers_df, outliers_temporal_feature, outliers_feature_list,
+            key_suffix + 'out')
 
     elif data_set_type == 'Calculated':
         CALCULATED_DATA_SET_NAME = 'calculated.pkl'
