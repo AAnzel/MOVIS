@@ -723,10 +723,10 @@ def show_data_set(df):
         st.dataframe(df.head(100))
 
         try:
-            tmp_df = df.describe()
+            tmp_df = df.describe(datetime_is_numeric=True)
             if len(tmp_df.columns.to_list()) > 1:
                 st.markdown('Summary statistics')
-                st.dataframe(df.describe())
+                st.dataframe(df.describe(datetime_is_numeric=True))
         except TypeError or ValueError:
             pass
 
@@ -1684,26 +1684,26 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     if key_suffix.startswith('Cluster'):
         visualizations = st.multiselect(
-            'Choose your visualization',
+            'Choose your visualization:',
             options=['PCA visualization', 'MDS visualization',
                      't-SNE visualization'], key='vis_data_' + key_suffix)
 
     # If we are dealing with depth data, we have a summary dataframe
     elif key_suffix.startswith('sum_'):
         visualizations = st.multiselect(
-            'Choose your visualization',
+            'Choose your visualization:',
             options=['Feature through time', 'Two features plot',
                      'Scatter plot', 'Scatter-plot matrix',
-                     'Multiple features parallel chart', 'Numerical heatmap',
+                     'Multiple features parallel chart', 'Correlation heatmap',
                      'Time heatmap', 'Top 10 share through time',
                      'Whisker plot'],
             key='vis_data_' + key_suffix)
     else:
         visualizations = st.multiselect(
-            'Choose your visualization',
+            'Choose your visualization:',
             options=['Feature through time', 'Two features plot',
                      'Scatter plot', 'Scatter-plot matrix',
-                     'Multiple features parallel chart', 'Numerical heatmap',
+                     'Multiple features parallel chart', 'Correlation heatmap',
                      'Time heatmap', 'Top 10 share through time'],
             key='vis_data_' + key_suffix)
 
@@ -1813,27 +1813,20 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             #    use_container_width=True)
             #
 
-        elif i == 'Numerical heatmap':
+        elif i == 'Correlation heatmap':
             chosen_charts.append((
-                visualize.numerical_heatmap(df), i + '_' + key_suffix))
+                visualize.correlation_heatmap(df), i + '_' + key_suffix))
 
         elif i == 'Time heatmap' and temporal_feature is not None:
-            feature_1 = None
-            feature_2 = None
+            target_feature = None
 
-            feature_1 = st.selectbox(
-                i + ': select qualitative y-axis feature', feature_list,
-                key=i + '_' + key_suffix + '1. feature')
+            target_feature = st.selectbox(
+                i + ': select color feature', feature_list,
+                key=i + '_' + key_suffix + 'target_feature')
 
-            new_feature_list = [i for i in feature_list if i != feature_1]
-
-            feature_2 = st.selectbox(
-                i + ': select quantitative color feature', new_feature_list,
-                key=i + '_' + key_suffix + '2. feature')
-
-            if feature_1 is not None and feature_2 is not None:
+            if target_feature is not None:
                 chosen_charts.append((
-                    visualize.time_heatmap(df, feature_1, feature_2,
+                    visualize.time_heatmap(df, target_feature,
                                            temporal_feature),
                     i + '_' + key_suffix))
 
