@@ -260,6 +260,22 @@ def parallel_coordinates(data, list_of_features, target_feature):
     return chart.interactive()
 
 
+def scatter(data, selected_feature, temporal_feature):
+
+    selected_column_type = str(data[selected_feature].dtype)
+    if selected_column_type == 'string':
+        selected_column_type = 'nominal'
+    else:
+        selected_column_type = 'quantitative'
+
+    chart = alt.Chart(data).mark_circle().encode(
+        alt.X(temporal_feature, type='temporal'),
+        alt.Y(selected_feature, type=selected_column_type)
+    ).interactive()
+
+    return chart
+
+
 def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
 
     list_of_features.remove(target_feature)
@@ -347,7 +363,7 @@ def time_heatmap(data, target_feature, color_feature, temporal_feature):
     return chart.interactive()
 
 
-def whisker_chart(summary_data, temporal_column):
+def whisker(summary_data, temporal_column):
     # Summary data frame contains the following columns:
     # 'Q1','Q3', 'IQR', 'LowerLimit', 'UpperLimit', 'Mean'
 

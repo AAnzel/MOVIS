@@ -1376,7 +1376,7 @@ def work_with_depth(data_set_type, folder_path, key_suffix):
     num_of_depth_files = len(depth_files)
 
     summary_df, outliers_df = create_depth_data_set(
-        end=num_of_depth_files, path_bins=folder_path)
+        num_of_depth_files, folder_path)
 
     return summary_df, outliers_df
 
@@ -1612,6 +1612,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
                 summary_df, outliers_df = work_with_depth(
                     data_set_type, folder_path, key_suffix)
                 cache_dataframe(summary_df, SUM_DEPTH_DATA_SET_PATH)
+                cache_dataframe(outliers_df, OUT_DEPTH_DATA_SET_PATH)
 
         show_calculated_data_set(summary_df, 'Summary of imported depths')
         show_calculated_data_set(outliers_df, 'Outliers of imported depths')
@@ -1623,8 +1624,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
             find_temporal_feature(outliers_df)
         # df, feature_list = modify_data_set(
         #    df, temporal_feature, feature_list, key_suffix)
-        chosen_charts = []
-        chosen_charts += visualize_data_set(
+        chosen_charts = visualize_data_set(
             summary_df, summary_temporal_feature, summary_feature_list,
             'sum_' + key_suffix)
         chosen_charts += visualize_data_set(
@@ -1689,21 +1689,22 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                      't-SNE visualization'], key='vis_data_' + key_suffix)
 
     # If we are dealing with depth data, we have a summary dataframe
-    elif key_suffix.startswith('sum_') or key_suffix.startswith('out_'):
+    elif key_suffix.startswith('sum_'):
         visualizations = st.multiselect(
             'Choose your visualization',
             options=['Feature through time', 'Two features plot',
-                     'Scatter-plot matrix', 'Multiple features parallel chart',
-                     'Numerical heatmap', 'Time heatmap',
-                     'Top 10 share through time', 'Whisker chart'],
+                     'Scatter plot', 'Scatter-plot matrix',
+                     'Multiple features parallel chart', 'Numerical heatmap',
+                     'Time heatmap', 'Top 10 share through time',
+                     'Whisker plot'],
             key='vis_data_' + key_suffix)
     else:
         visualizations = st.multiselect(
             'Choose your visualization',
             options=['Feature through time', 'Two features plot',
-                     'Scatter-plot matrix', 'Multiple features parallel chart',
-                     'Numerical heatmap', 'Time heatmap',
-                     'Top 10 share through time'],
+                     'Scatter plot', 'Scatter-plot matrix',
+                     'Multiple features parallel chart', 'Numerical heatmap',
+                     'Time heatmap', 'Top 10 share through time'],
             key='vis_data_' + key_suffix)
 
     for i in visualizations:
@@ -1790,12 +1791,11 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 target_feature = st.selectbox(
                     i + ': select target feature for color',
                     feature_list + [temporal_feature],
-                    index=len(feature_list))
+                    index=len(feature_list) - 1)
             else:
                 target_feature = st.selectbox(
-                    i + ': select target feature for color',
-                    feature_list,
-                    index=len(feature_list))
+                    i + ': select target feature for color', feature_list,
+                    index=len(feature_list) - 1)
 
             list_of_features = st.multiselect(
                 i + ': choose at least 2 features', options=feature_list)
@@ -1842,9 +1842,18 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                                                         temporal_feature),
                                   i + '_' + key_suffix))
 
-        elif i == 'Whisker chart':
-            chosen_charts.append((visualize.whisker_chart(
+        elif i == 'Whisker plot':
+            chosen_charts.append((visualize.whisker(
                 df, temporal_feature), i + '_' + key_suffix))
+
+        elif i == 'Scatter plot':
+            print(feature_list)
+            target_feature = st.selectbox(
+                    i + ': select target feature', feature_list,
+                    index=len(feature_list) - 1)
+
+            chosen_charts.append((visualize.scatter(
+                df, target_feature, temporal_feature), i + '_' + key_suffix))
 
         else:
             pass
