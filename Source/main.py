@@ -3,7 +3,7 @@ import streamlit as st
 
 import example_1
 import example_2
-import use_case
+import case_study
 import upload
 import home
 
@@ -55,7 +55,7 @@ def create_sidebar_and_main():
 
     # TODO: Add 'Example 3' below when the data is ready
     choice_data_set = st.sidebar.radio(
-        '', ('Home', 'Example 1', 'Example 2', 'Use case', 'Upload'), index=0)
+        '', ('Home', 'Example 1', 'Example 2', 'Case study', 'Upload'), index=0)
 
     st.sidebar.markdown('''
         ---
@@ -77,8 +77,8 @@ def create_sidebar_and_main():
         example_1.create_main_example_1()
     elif choice_data_set == 'Example 2':
         example_2.create_main_example_2()
-    elif choice_data_set == 'Use case':
-        use_case.create_main_use_case()
+    elif choice_data_set == 'Case study':
+        case_study.create_main_case_study()
     elif choice_data_set == 'Upload':
         upload.create_main_upload()
     else:

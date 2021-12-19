@@ -14,29 +14,29 @@ __email__ = 'aleksandar.anzel@uni-marburg.de'
 __status__ = 'Dev'
 
 
-path_use_case_root_data = os.path.join('..', 'Data', 'cached', 'example_1')
-path_use_case_genomics = os.path.join(path_use_case_root_data, 'genomics')
-path_use_case_proteomics = os.path.join(
-    path_use_case_root_data, 'proteomics')
-path_use_case_transcriptomics = os.path.join(
-    path_use_case_root_data, 'transcriptomics')
-path_use_case_metabolomics = os.path.join(
-    path_use_case_root_data, 'metabolomics')
-path_use_case_phy_che = os.path.join(
-    path_use_case_root_data, 'phy_che')
-path_use_case_viz = os.path.join(
-    path_use_case_root_data, 'visualizations')
+path_case_study_root_data = os.path.join('..', 'Data', 'cached', 'example_1')
+path_case_study_genomics = os.path.join(path_case_study_root_data, 'genomics')
+path_case_study_proteomics = os.path.join(
+    path_case_study_root_data, 'proteomics')
+path_case_study_transcriptomics = os.path.join(
+    path_case_study_root_data, 'transcriptomics')
+path_case_study_metabolomics = os.path.join(
+    path_case_study_root_data, 'metabolomics')
+path_case_study_phy_che = os.path.join(
+    path_case_study_root_data, 'phy_che')
+path_case_study_viz = os.path.join(
+    path_case_study_root_data, 'visualizations')
 
-path_use_case_genomics_fasta = os.path.join(
-    path_use_case_genomics, 'rmags_filtered')
-path_use_case_genomics_kegg = os.path.join(path_use_case_genomics, 'KEGG')
-path_use_case_genomics_bins = os.path.join(path_use_case_genomics, 'Bins')
-path_use_case_genomics_depths = os.path.join(
-    path_use_case_genomics, 'MG_Depths')
-path_use_case_transcriptomics_depths = os.path.join(
-    path_use_case_genomics, 'MT_Depths')
-path_use_case_proteomics_fasta = os.path.join(
-    path_use_case_proteomics, 'set_of_78')
+path_case_study_genomics_fasta = os.path.join(
+    path_case_study_genomics, 'rmags_filtered')
+path_case_study_genomics_kegg = os.path.join(path_case_study_genomics, 'KEGG')
+path_case_study_genomics_bins = os.path.join(path_case_study_genomics, 'Bins')
+path_case_study_genomics_depths = os.path.join(
+    path_case_study_genomics, 'MG_Depths')
+path_case_study_transcriptomics_depths = os.path.join(
+    path_case_study_genomics, 'MT_Depths')
+path_case_study_proteomics_fasta = os.path.join(
+    path_case_study_proteomics, 'set_of_78')
 
 
 def upload_multiple(key_suffix):
@@ -59,21 +59,21 @@ def upload_multiple(key_suffix):
 
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
-            return_path = path_use_case_genomics_fasta
+            return_path = path_case_study_genomics_fasta
 
         # elif selected_data_set_type == 'KEGG annotation files':
-        #     return_path = path_use_case_genomics_kegg
+        #     return_path = path_case_study_genomics_kegg
         elif selected_data_set_type == 'Depth-of-coverage':
-            return_path = path_use_case_genomics_depths
+            return_path = path_case_study_genomics_depths
 
         else:
-            return_path = path_use_case_genomics_bins
+            return_path = path_case_study_genomics_bins
 
     elif key_suffix == 'Metaproteomics':
-        return_path = path_use_case_proteomics_fasta
+        return_path = path_case_study_proteomics_fasta
 
     elif key_suffix == 'Metatranscriptomics':
-        return_path = path_use_case_transcriptomics_depths
+        return_path = path_case_study_transcriptomics_depths
 
     else:
         pass
@@ -110,9 +110,9 @@ def upload_intro(folder_path, key_suffix):
         return df, data_set_type
 
 
-def use_case_genomics():
+def case_study_genomics():
     key_suffix = 'Metagenomics'
-    cache_folder_path = path_use_case_genomics
+    cache_folder_path = path_case_study_genomics
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
@@ -121,9 +121,9 @@ def use_case_genomics():
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
-def use_case_proteomics():
+def case_study_proteomics():
     key_suffix = 'Metaproteomics'
-    cache_folder_path = path_use_case_proteomics
+    cache_folder_path = path_case_study_proteomics
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
@@ -132,18 +132,18 @@ def use_case_proteomics():
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
-def use_case_metabolomics():
+def case_study_metabolomics():
     key_suffix = 'Metabolomics'
-    cache_folder_path = path_use_case_metabolomics
+    cache_folder_path = path_case_study_metabolomics
 
     df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
-def use_case_transcriptomics():
+def case_study_transcriptomics():
     key_suffix = 'Metatranscriptomics'
-    cache_folder_path = path_use_case_transcriptomics
+    cache_folder_path = path_case_study_transcriptomics
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
@@ -152,16 +152,16 @@ def use_case_transcriptomics():
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
-def use_case_phy_che():
+def case_study_phy_che():
     key_suffix = 'Physico-chemical'
-    cache_folder_path = path_use_case_phy_che
+    cache_folder_path = path_case_study_phy_che
 
     df = upload_intro(cache_folder_path, key_suffix)
 
     return common.work_with_csv(df, cache_folder_path, key_suffix)
 
 
-def create_main_use_case():
+def create_main_case_study():
 
     col_1, col_2 = st.columns([1, 2])
 
@@ -185,10 +185,10 @@ def create_main_use_case():
     col_2.map(pd.DataFrame({'lat': [49.513414], 'lon': [6.017925]}),
               zoom=8, use_container_width=True)
 
-    use_case_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
+    case_study_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
                            'Physico-chemical']
     choose_omics = st.multiselect(
-        'What kind of data set do you want to see?', use_case_omics_list)
+        'What kind of data set do you want to see?', case_study_omics_list)
 
     num_of_columns = len(choose_omics)
 
@@ -202,30 +202,30 @@ def create_main_use_case():
             if i == 'Metagenomics':
                 with column_list[curr_pos]:
                     curr_pos += 1
-                    charts += use_case_genomics()
+                    charts += case_study_genomics()
             elif i == 'Metabolomics':
                 with column_list[curr_pos]:
                     curr_pos += 1
-                    charts += use_case_metabolomics()
+                    charts += case_study_metabolomics()
             elif i == 'Metaproteomics':
                 with column_list[curr_pos]:
                     curr_pos += 1
-                    charts += use_case_proteomics()
+                    charts += case_study_proteomics()
             else:
                 with column_list[curr_pos]:
                     curr_pos += 1
-                    charts += use_case_phy_che()
+                    charts += case_study_phy_che()
 
     else:
         for i in choose_omics:
             if i == 'Metagenomics':
-                charts += use_case_genomics()
+                charts += case_study_genomics()
             elif i == 'Metabolomics':
-                charts += use_case_metabolomics()
+                charts += case_study_metabolomics()
             elif i == 'Metaproteomics':
-                charts += use_case_proteomics()
+                charts += case_study_proteomics()
             else:
-                charts += use_case_phy_che()
+                charts += case_study_phy_che()
 
     for i in charts:
         type_of_chart = type(i[0])
@@ -233,7 +233,7 @@ def create_main_use_case():
         with st.spinner('Visualizing...'):
             if 'altair' in str(type_of_chart):
                 st.altair_chart(i[0], use_container_width=True)
-                common.save_chart(i[0], path_use_case_viz, i[1])
+                common.save_chart(i[0], path_case_study_viz, i[1])
             else:
                 pass
 
