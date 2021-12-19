@@ -1626,10 +1626,10 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
         chosen_charts = []
         chosen_charts += visualize_data_set(
             summary_df, summary_temporal_feature, summary_feature_list,
-            key_suffix + 'sum')
+            'sum_' + key_suffix)
         chosen_charts += visualize_data_set(
             outliers_df, outliers_temporal_feature, outliers_feature_list,
-            key_suffix + 'out')
+            'out_' + key_suffix)
 
     elif data_set_type == 'Calculated':
         CALCULATED_DATA_SET_NAME = 'calculated.pkl'
@@ -1687,6 +1687,16 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             'Choose your visualization',
             options=['PCA visualization', 'MDS visualization',
                      't-SNE visualization'], key='vis_data_' + key_suffix)
+
+    # If we are dealing with depth data, we have a summary dataframe
+    elif key_suffix.startswith('sum_') or key_suffix.startswith('out_'):
+        visualizations = st.multiselect(
+            'Choose your visualization',
+            options=['Feature through time', 'Two features plot',
+                     'Scatter-plot matrix', 'Multiple features parallel chart',
+                     'Numerical heatmap', 'Time heatmap',
+                     'Top 10 share through time', 'Whisker chart'],
+            key='vis_data_' + key_suffix)
     else:
         visualizations = st.multiselect(
             'Choose your visualization',
@@ -1831,6 +1841,11 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             chosen_charts.append((visualize.top_10_time(df, feature_list,
                                                         temporal_feature),
                                   i + '_' + key_suffix))
+
+        elif i == 'Whisker chart':
+            chosen_charts.append((visualize.whisker_chart(
+                df, temporal_feature), i + '_' + key_suffix))
+
         else:
             pass
 
