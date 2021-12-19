@@ -70,7 +70,6 @@ def shrink_data(data, num_of_columns=MAX_COLUMNS):
     if num_of_columns != MAX_COLUMNS:
         data.drop(data.columns.tolist()[num_of_columns:], axis=1, inplace=True)
         shrink_signal = True
-
     else:
         pass
 
@@ -217,10 +216,8 @@ def parallel_coordinates(data, list_of_features, target_feature):
     # Use https://altair-viz.github.io/gallery/normed_parallel_coordinates.html
     selected_column_type = str(data[target_feature].dtype)
 
-    if selected_column_type == 'string':
-        color_type = 'nominal'
-    else:
-        color_type = 'quantitative'
+    color_type = 'nominal' if selected_column_type == 'string'\
+        else 'quantitative'
 
     new_data = data[list_of_features].reset_index().melt(
         id_vars=['index', target_feature])
@@ -263,10 +260,9 @@ def parallel_coordinates(data, list_of_features, target_feature):
 def scatter(data, selected_feature, temporal_feature):
 
     selected_column_type = str(data[selected_feature].dtype)
-    if selected_column_type == 'string':
-        selected_column_type = 'nominal'
-    else:
-        selected_column_type = 'quantitative'
+
+    selected_column_type = 'nominal' if selected_column_type == 'string'\
+        else 'quantitative'
 
     chart = alt.Chart(data).mark_circle().encode(
         alt.X(temporal_feature, type='temporal'),
@@ -281,10 +277,7 @@ def scatter_matrix(data, list_of_features, target_feature, temporal_feature):
     list_of_features.remove(target_feature)
     selected_column_type = str(data[target_feature].dtype)
 
-    if selected_column_type == 'string':
-        color_type = 'N'
-    else:
-        color_type = 'Q'
+    color_type = 'N' if selected_column_type == 'string' else 'Q'
 
     brush = alt.selection_interval()
 
