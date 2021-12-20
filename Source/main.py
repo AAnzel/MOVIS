@@ -55,7 +55,8 @@ def create_sidebar_and_main():
 
     # TODO: Add 'Example 3' below when the data is ready
     choice_data_set = st.sidebar.radio(
-        '', ('Home', 'Example 1', 'Example 2', 'Case study', 'Upload'), index=0)
+        '', ('Home', 'Example 1', 'Example 2', 'Case study', 'Upload'),
+        index=0)
 
     st.sidebar.markdown('''
         ---

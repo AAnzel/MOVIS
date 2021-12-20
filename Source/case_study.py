@@ -186,7 +186,7 @@ def create_main_case_study():
               zoom=8, use_container_width=True)
 
     case_study_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
-                           'Physico-chemical']
+                             'Metatranscriptomics', 'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of data set do you want to see?', case_study_omics_list)
 
@@ -211,10 +211,16 @@ def create_main_case_study():
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += case_study_proteomics()
-            else:
+            elif i == 'Metatranscriptomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    charts += case_study_transcriptomics()
+            elif i == 'Physico-chemical':
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += case_study_phy_che()
+            else:
+                pass
 
     else:
         for i in choose_omics:
@@ -224,8 +230,12 @@ def create_main_case_study():
                 charts += case_study_metabolomics()
             elif i == 'Metaproteomics':
                 charts += case_study_proteomics()
-            else:
+            elif i == 'Metatranscriptomics':
+                charts += case_study_transcriptomics()
+            elif i == 'Physico-chemical':
                 charts += case_study_phy_che()
+            else:
+                pass
 
     for i in charts:
         type_of_chart = type(i[0])

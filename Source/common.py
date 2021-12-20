@@ -1615,18 +1615,20 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
                 cache_dataframe(outliers_df, OUT_DEPTH_DATA_SET_PATH)
 
         show_calculated_data_set(summary_df, 'Summary of imported depths')
-        show_calculated_data_set(outliers_df, 'Outliers of imported depths')
+
         summary_df = fix_data_set(summary_df)
-        outliers_df = fix_data_set(outliers_df)
         summary_temporal_feature, summary_feature_list =\
             find_temporal_feature(summary_df)
+        chosen_charts = visualize_data_set(
+            summary_df, summary_temporal_feature, summary_feature_list,
+            'sum_' + key_suffix)
+
+        outliers_df = fix_data_set(outliers_df)
+        show_calculated_data_set(outliers_df, 'Outliers of imported depths')
         outliers_temporal_feature, outliers_feature_list =\
             find_temporal_feature(outliers_df)
         # df, feature_list = modify_data_set(
         #    df, temporal_feature, feature_list, key_suffix)
-        chosen_charts = visualize_data_set(
-            summary_df, summary_temporal_feature, summary_feature_list,
-            'sum_' + key_suffix)
         chosen_charts += visualize_data_set(
             outliers_df, outliers_temporal_feature, outliers_feature_list,
             'out_' + key_suffix)
@@ -1677,6 +1679,19 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
     return chosen_charts
 
 
+def dataframe_size_above_limit(df, i):
+    # We have a limit of 50MB and 15000 rows for dataframes that we want to
+    # visualize. We return True if there is an error, else we return False
+    if df.memory_usage(index=True).sum() > 50000000 or df.shape[0] > 15000:
+        st.warning('The data set in use is greater than 50MB or has more ' +
+                   'than 15000 rows. This data set is too big to be ' +
+                   'visualized using **' + i + '** chart. Please make your ' +
+                   'data set smaller to continue.')
+        return True
+    else:
+        return False
+
+
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     chosen_charts = []
@@ -1708,6 +1723,9 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             key='vis_data_' + key_suffix)
 
     for i in visualizations:
+        if dataframe_size_above_limit(df, i):
+            return []
+
         # I have to check which clustering method was used and visualize it
         if i == 'PCA visualization':
             chosen_charts.append(
@@ -1840,7 +1858,6 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 df, temporal_feature), i + '_' + key_suffix))
 
         elif i == 'Scatter plot':
-            print(feature_list)
             target_feature = st.selectbox(
                     i + ': select target feature', feature_list,
                     index=len(feature_list) - 1)

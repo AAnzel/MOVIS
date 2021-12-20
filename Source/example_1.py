@@ -34,7 +34,7 @@ path_example_1_genomics_bins = os.path.join(path_example_1_genomics, 'Bins')
 path_example_1_genomics_depths = os.path.join(
     path_example_1_genomics, 'MG_Depths')
 path_example_1_transcriptomics_depths = os.path.join(
-    path_example_1_genomics, 'MT_Depths')
+    path_example_1_transcriptomics, 'MT_Depths')
 path_example_1_proteomics_fasta = os.path.join(
     path_example_1_proteomics, 'set_of_78')
 
@@ -190,7 +190,7 @@ def create_main_example_1():
               zoom=8, use_container_width=True)
 
     example_1_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
-                            'Physico-chemical']
+                            'Metatranscriptomics', 'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of data set do you want to see?', example_1_omics_list)
 
@@ -215,10 +215,16 @@ def create_main_example_1():
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += example_1_proteomics()
-            else:
+            elif i == 'Metatranscriptomics':
+                with column_list[curr_pos]:
+                    curr_pos += 1
+                    charts += example_1_transcriptomics()
+            elif i == 'Physico-chemical':
                 with column_list[curr_pos]:
                     curr_pos += 1
                     charts += example_1_phy_che()
+            else:
+                pass
 
     else:
         for i in choose_omics:
@@ -228,8 +234,12 @@ def create_main_example_1():
                 charts += example_1_metabolomics()
             elif i == 'Metaproteomics':
                 charts += example_1_proteomics()
-            else:
+            elif i == 'Metatranscriptomics':
+                charts += example_1_transcriptomics()
+            elif i == 'Physico-chemical':
                 charts += example_1_phy_che()
+            else:
+                pass
 
     for i in charts:
         type_of_chart = type(i[0])
