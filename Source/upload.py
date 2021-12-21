@@ -259,7 +259,7 @@ def upload_multiple(key_suffix):
     }
 
     selected_data_set_type = st.selectbox(
-        'What kind of data set do you want to upload?',
+        'What kind of omic data do you want to upload?',
         list(available_data_set_types[key_suffix].keys())
     )
 

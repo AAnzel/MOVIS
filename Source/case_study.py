@@ -37,6 +37,8 @@ path_case_study_transcriptomics_depths = os.path.join(
     path_case_study_genomics, 'MT_Depths')
 path_case_study_proteomics_fasta = os.path.join(
     path_case_study_proteomics, 'set_of_78')
+path_case_study_metabolomics_precalculated = os.path.join(
+    path_case_study_metabolomics, 'fig4.tsv')
 
 
 def upload_multiple(key_suffix):
@@ -49,7 +51,10 @@ def upload_multiple(key_suffix):
         'Metaproteomics': {
             'Raw FASTA files': 'FASTA'},
         'Metatranscriptomics': {
-            'Depth-of-coverage': 'DEPTH'}
+            'Depth-of-coverage': 'DEPTH'},
+        'Metabolomics': {
+            'Processed data set 1': 'PR1',
+            'Processed data set 2': 'PR2'}
     }
 
     selected_data_set_type = st.selectbox(
@@ -74,6 +79,17 @@ def upload_multiple(key_suffix):
 
     elif key_suffix == 'Metatranscriptomics':
         return_path = path_case_study_transcriptomics_depths
+
+    # TODO: Add calculated 1 and calculated 2 data sets here and maybe remove
+    # TODO: upload introand move everything here
+    elif key_suffix == 'Metabolomics':
+        if selected_data_set_type == 'Processed data set 1':
+            return_path = path_case_study_genomics_fasta
+
+        # elif selected_data_set_type == 'KEGG annotation files':
+        #     return_path = path_case_study_genomics_kegg
+        elif selected_data_set_type == 'Depth-of-coverage':
+            return_path = path_case_study_genomics_depths
 
     else:
         pass
@@ -188,7 +204,8 @@ def create_main_case_study():
     case_study_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
                              'Metatranscriptomics', 'Physico-chemical']
     choose_omics = st.multiselect(
-        'What kind of data set do you want to see?', case_study_omics_list)
+        'What kind of omic data do you want to explore?',
+        case_study_omics_list)
 
     num_of_columns = len(choose_omics)
 

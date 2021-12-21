@@ -61,7 +61,6 @@ def upload_multiple(key_suffix):
 
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
-
             return_path = path_example_1_genomics_fasta
 
         # elif selected_data_set_type == 'KEGG annotation files':
@@ -192,7 +191,7 @@ def create_main_example_1():
     example_1_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
                             'Metatranscriptomics', 'Physico-chemical']
     choose_omics = st.multiselect(
-        'What kind of data set do you want to see?', example_1_omics_list)
+        'What kind of omic data do you want to explore?', example_1_omics_list)
 
     num_of_columns = len(choose_omics)
 

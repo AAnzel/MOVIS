@@ -101,7 +101,7 @@ def create_main_example_2():
 
     example_2_omics_list = ['Transcriptomics']
     choose_omics = st.multiselect(
-        'What kind of data set do you want to see?', example_2_omics_list)
+        'What kind of omic data do you want to explore?', example_2_omics_list)
 
     charts = []  # An empty list to hold all pairs (visualizations, key)
 
