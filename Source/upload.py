@@ -123,7 +123,6 @@ def upload_csv(key_suffix):
             return None
 
     else:
-
         # Checking file extension for the first file only
         imported_file_extension = os.path.splitext(
             imported_files[0].name)[1][1:].strip().lower()

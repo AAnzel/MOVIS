@@ -27,6 +27,8 @@ path_case_study_phy_che = os.path.join(
 path_case_study_viz = os.path.join(
     path_case_study_root_data, 'visualizations')
 
+CALCULATED_DATA_SET_NAME = 'calculated.pkl'
+CALCULATED_NOW_DATA_SET_NAME = 'calculated_now.pkl'
 path_case_study_genomics_fasta = os.path.join(
     path_case_study_genomics, 'rmags_filtered')
 path_case_study_genomics_kegg = os.path.join(path_case_study_genomics, 'KEGG')
@@ -34,11 +36,15 @@ path_case_study_genomics_bins = os.path.join(path_case_study_genomics, 'Bins')
 path_case_study_genomics_depths = os.path.join(
     path_case_study_genomics, 'MG_Depths')
 path_case_study_transcriptomics_depths = os.path.join(
-    path_case_study_genomics, 'MT_Depths')
+    path_case_study_transcriptomics, 'MT_Depths')
 path_case_study_proteomics_fasta = os.path.join(
     path_case_study_proteomics, 'set_of_78')
-path_case_study_metabolomics_precalculated = os.path.join(
-    path_case_study_metabolomics, 'fig4.tsv')
+path_case_study_metabolomics_prec_1 = os.path.join(
+    path_case_study_metabolomics, CALCULATED_DATA_SET_NAME)
+path_case_study_metabolomics_prec_2 = os.path.join(
+    path_case_study_metabolomics, CALCULATED_NOW_DATA_SET_NAME)
+path_case_study_phy_che_prec_1 = os.path.join(
+    path_case_study_phy_che, CALCULATED_DATA_SET_NAME)
 
 
 def upload_multiple(key_suffix):
@@ -53,8 +59,10 @@ def upload_multiple(key_suffix):
         'Metatranscriptomics': {
             'Depth-of-coverage': 'DEPTH'},
         'Metabolomics': {
-            'Processed data set 1': 'PR1',
-            'Processed data set 2': 'PR2'}
+            'Processed data set 1': 'CALC',
+            'Processed data set 2': 'CALC'},
+        'Physico-chemical': {
+            'Processed data set 1': 'CALC'}
     }
 
     selected_data_set_type = st.selectbox(
@@ -65,12 +73,10 @@ def upload_multiple(key_suffix):
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
             return_path = path_case_study_genomics_fasta
-
         # elif selected_data_set_type == 'KEGG annotation files':
         #     return_path = path_case_study_genomics_kegg
         elif selected_data_set_type == 'Depth-of-coverage':
             return_path = path_case_study_genomics_depths
-
         else:
             return_path = path_case_study_genomics_bins
 
@@ -80,16 +86,19 @@ def upload_multiple(key_suffix):
     elif key_suffix == 'Metatranscriptomics':
         return_path = path_case_study_transcriptomics_depths
 
-    # TODO: Add calculated 1 and calculated 2 data sets here and maybe remove
-    # TODO: upload introand move everything here
     elif key_suffix == 'Metabolomics':
         if selected_data_set_type == 'Processed data set 1':
-            return_path = path_case_study_genomics_fasta
+            return_path = path_case_study_metabolomics_prec_1
+        elif selected_data_set_type == 'Processed data set 2':
+            return_path = path_case_study_metabolomics_prec_2
+        else:
+            pass
 
-        # elif selected_data_set_type == 'KEGG annotation files':
-        #     return_path = path_case_study_genomics_kegg
-        elif selected_data_set_type == 'Depth-of-coverage':
-            return_path = path_case_study_genomics_depths
+    elif key_suffix == 'Physico-chemical':
+        if selected_data_set_type == 'Processed data set 1':
+            return_path = path_case_study_phy_che_prec_1
+        else:
+            pass
 
     else:
         pass
@@ -102,28 +111,20 @@ def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
 
-    df = None
+    return_path = None
+    return_path, data_set_type = upload_multiple(key_suffix)
 
-    if key_suffix in ['Metabolomics', 'Physico-chemical']:
-        CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-        CALCULATED_DATA_SET_PATH = os.path.join(
-            folder_path, CALCULATED_DATA_SET_NAME)
+    if return_path is None:
+        st.warning('Upload your data set')
 
-        if os.path.exists(CALCULATED_DATA_SET_PATH):
-            df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
-        else:
-            st.error('Wrong cache path')
-            st.stop()
-
-        return df
-
+    # We return DataFrame if we work with tabular data format or precalculated
+    # We return folder_path and data_set_type if we work with archived data
+    if data_set_type == 'CALC':
+        return_path_or_df = common.get_cached_dataframe(return_path)
     else:
-        df, data_set_type = upload_multiple(key_suffix)
+        return_path_or_df = return_path
 
-        if df is None:
-            st.warning('Upload your data set')
-
-        return df, data_set_type
+    return return_path_or_df, data_set_type
 
 
 def case_study_genomics():
@@ -152,9 +153,11 @@ def case_study_metabolomics():
     key_suffix = 'Metabolomics'
     cache_folder_path = path_case_study_metabolomics
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    return common.work_with_csv(
+        folder_path_or_df, cache_folder_path, key_suffix)
 
 
 def case_study_transcriptomics():
@@ -172,9 +175,11 @@ def case_study_phy_che():
     key_suffix = 'Physico-chemical'
     cache_folder_path = path_case_study_phy_che
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    return common.work_with_csv(
+        folder_path_or_df, cache_folder_path, key_suffix)
 
 
 def create_main_case_study():
