@@ -338,13 +338,16 @@ def time_heatmap(data, target_feature, temporal_feature):
 
     target_type = 'ordinal' if target_column_type == 'string'\
         else 'quantitative'
+    target_color_scheme = 'tableau20' if target_column_type == 'string'\
+        else 'greys'
 
     chart = alt.Chart(
         data,
         title=target_feature + ' time heatmap').mark_rect().encode(
             alt.X('date(' + temporal_feature + ')', type='temporal'),
             alt.Y('month(' + temporal_feature + ')', type='temporal'),
-            alt.Color(target_feature, type=target_type),
+            alt.Color(target_feature, type=target_type,
+                      scale=alt.Scale(scheme=target_color_scheme)),
             alt.Tooltip([temporal_feature, target_feature]))
 
     return chart.interactive()
