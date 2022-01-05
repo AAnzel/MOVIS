@@ -118,7 +118,8 @@ def upload_intro(folder_path, key_suffix):
         st.warning('Upload your data set')
 
     # We return DataFrame if we work with tabular data format or precalculated
-    # We return folder_path and data_set_type if we work with archived data
+    # We return folder_path if we work with archived data
+    # Data_set_type is always returned
     if data_set_type == 'CALC':
         return_path_or_df = common.get_cached_dataframe(return_path)
     else:
@@ -208,9 +209,13 @@ def create_main_case_study():
 
     case_study_omics_list = ['Metagenomics', 'Metabolomics', 'Metaproteomics',
                              'Metatranscriptomics', 'Physico-chemical']
+    # We use this specific omics for case study, as default values for
+    # multiselect widget
+    case_study_chosen_omics = ['Metagenomics', 'Metabolomics',
+                               'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of omic data do you want to explore?',
-        case_study_omics_list)
+        case_study_omics_list, default=case_study_chosen_omics)
 
     num_of_columns = len(choose_omics)
 
