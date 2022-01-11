@@ -1539,7 +1539,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
         # Traversing pairs in list
         for i in labels_list:
             temporal_feature, feature_list = find_temporal_feature(df)
-            feature_list = i[0]
+            feature_list = [i[0]]
             df[i[0]] = i[1]
             chosen_charts += visualize_data_set(
                     df, temporal_feature, feature_list,
@@ -1565,7 +1565,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
         # Traversing pairs in list
         for i in labels_list:
             temporal_feature, feature_list = find_temporal_feature(df)
-            feature_list = i[0]
+            feature_list = [i[0]]
             df[i[0]] = i[1]
             chosen_charts += visualize_data_set(
                     df, temporal_feature, feature_list,

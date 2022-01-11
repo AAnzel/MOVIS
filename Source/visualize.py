@@ -427,11 +427,12 @@ def elbow_rule(data):
 
 
 # Everything below is used for genomics data set exclusively
-def visualize_clusters(data, temporal_feature, labels_feature, method):
+def visualize_clusters(data, temporal_feature, feature_list, method):
+    tmp_data = data.copy()
+    temporal_series = tmp_data[temporal_feature]
+    tmp_data = tmp_data.drop(temporal_feature, axis=1)
 
-    temporal_series = data[temporal_feature]
-    tmp_data = data.drop(temporal_feature, axis=1)
-
+    labels_feature = feature_list[0]
     labels_series = tmp_data[labels_feature]
     tmp_data = tmp_data.drop(labels_feature, axis=1)
 
@@ -483,12 +484,14 @@ def visualize_clusters(data, temporal_feature, labels_feature, method):
     # select_time = alt.selection_single(
     #     fields=['New_DateTime'], bind=slider)
 
-    chart = alt.Chart(tmp_data, title=tmp_title).mark_circle(opacity=1).encode(
+    chart = alt.Chart(tmp_data, title=tmp_title).mark_point(opacity=1).encode(
             alt.X(str(tmp_data.columns[2]), type='quantitative'),
             alt.Y(str(tmp_data.columns[3]), type='quantitative'),
-            alt.Color(str(tmp_data.columns[1]), type='nominal'),
-            alt.Tooltip(str(tmp_data.columns[0]), type='temporal')
-        )
+            alt.Shape(str(tmp_data.columns[1]), type='nominal'),
+            alt.Color(str(tmp_data.columns[0]), type='temporal',
+                      scale=alt.Scale(scheme='greys')),
+            alt.Tooltip([temporal_feature, labels_feature]),
+        ).configure_legend(columns=2)
     # .add_selection(select_time).transform_filter(select_time)
 
     return chart
