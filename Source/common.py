@@ -1713,12 +1713,13 @@ def select_case_study_default_vis(key_suffix):
 
 
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
-
     chosen_charts = []
     feature_list = list(feature_list)
 
     # TODO: Put preselected values for use case scenario inside each if-branch
-    # We can differentiate use case scenario by checking whether the
+    # Use the function above. Also adapt default parameters for visualization
+    # below, where needed (when that visualization is in use for case study)
+    # # We can differentiate use case scenario by checking whether the
     # key_suffix ends with CASE_STUDY. This keywords is preceeded by the
     # omic name, which can also be used to differentiate omics
     default_visualizations_dict = select_case_study_default_vis(key_suffix)
@@ -1874,7 +1875,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
         elif i == 'Time heatmap' and temporal_feature is not None:
             selected_features = st.multiselect(
-                i + ': select features to visualize', options=feature_list)
+                i + ': select features to visualize', options=feature_list,
+                default=default_visualization_parameters)
 
             for j in selected_features:
                 chosen_charts.append((
