@@ -1692,16 +1692,44 @@ def dataframe_size_above_limit(df, i):
         return False
 
 
+def select_case_study_default_vis(key_suffix):
+    default_visualizations_dict = dict()
+
+    # This happens if we are not doing case study visualizations
+    # Then we don't have preselected visualizations, so we return an empty dict
+    # Dict contains visualizations as keys, and as a value it contains a list
+    # of arguments for that specific visualization (e.g. feature_1, feature_2)
+    # Available arguments are presented in the visualize_data_set function
+    if not key_suffix.endswith('CASE_STUDY'):
+        return default_visualizations_dict
+
+    if key_suffix.endswith('Physico-chemical_CASE_STUDY'):
+        default_visualizations_dict['Feature through time'] = [
+            'Volume_aeration  m3/h', 'T C']
+        default_visualizations_dict['Time heatmap'] = [
+            'Volume_aeration  m3/h', 'T C']
+
+    return default_visualizations_dict
+
+
 def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
     chosen_charts = []
     feature_list = list(feature_list)
 
+    # TODO: Put preselected values for use case scenario inside each if-branch
+    # We can differentiate use case scenario by checking whether the
+    # key_suffix ends with CASE_STUDY. This keywords is preceeded by the
+    # omic name, which can also be used to differentiate omics
+    default_visualizations_dict = select_case_study_default_vis(key_suffix)
+
     if key_suffix.startswith('Cluster'):
         visualizations = st.multiselect(
             'Choose your visualization:',
             options=['PCA visualization', 'MDS visualization',
-                     't-SNE visualization'], key='vis_data_' + key_suffix)
+                     't-SNE visualization'],
+            default=list(default_visualizations_dict.keys()),
+            key='vis_data_' + key_suffix)
 
     # If we are dealing with depth data, we have a summary dataframe
     elif key_suffix.startswith('sum_'):
@@ -1712,23 +1740,27 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                      'Multiple features parallel chart', 'Correlation heatmap',
                      'Time heatmap', 'Top 10 share through time',
                      'Whisker plot'],
+            default=list(default_visualizations_dict.keys()),
             key='vis_data_' + key_suffix)
     else:
-        # TODO: Put preselected values for use case scenario
-        # We can differentiate use case scenario by checking whether the 
-        # key_suffix ends with CASE_STUDY. This keywords is preceeded by the
-        # omic name, which can also be used to differentiate omics
         visualizations = st.multiselect(
             'Choose your visualization:',
             options=['Feature through time', 'Two features plot',
                      'Scatter plot', 'Scatter-plot matrix',
                      'Multiple features parallel chart', 'Correlation heatmap',
                      'Time heatmap', 'Top 10 share through time'],
+            default=list(default_visualizations_dict.keys()),
             key='vis_data_' + key_suffix)
 
     for i in visualizations:
         if dataframe_size_above_limit(df, i):
             return []
+
+        # We have to check if we are creating a case study visualization and
+        # if yes, then we update default parameters for that visualization
+        default_visualization_parameters = []
+        if i in default_visualizations_dict:
+            default_visualization_parameters = default_visualizations_dict[i]
 
         # I have to check which clustering method was used and visualize it
         if i == 'PCA visualization':
@@ -1751,7 +1783,8 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_features = st.multiselect(
-                i + ': select features to visualize', options=feature_list)
+                i + ': select features to visualize', options=feature_list,
+                default=default_visualization_parameters)
 
             encode_feature_color = st.checkbox(
                 'Encode one nominal feature with color?',
@@ -1840,16 +1873,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 visualize.correlation_heatmap(df), i + '_' + key_suffix))
 
         elif i == 'Time heatmap' and temporal_feature is not None:
-            target_feature = None
+            selected_features = st.multiselect(
+                i + ': select features to visualize', options=feature_list)
 
-            target_feature = st.selectbox(
-                i + ': select color feature', feature_list,
-                key=i + '_target_feature_' + key_suffix)
-
-            if target_feature is not None:
+            for j in selected_features:
                 chosen_charts.append((
-                    visualize.time_heatmap(df, target_feature,
-                                           temporal_feature),
+                    visualize.time_heatmap(df, j, temporal_feature),
                     i + '_' + key_suffix))
 
         elif i == 'Top 10 share through time' and temporal_feature is not None:
