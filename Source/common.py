@@ -1543,7 +1543,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
             df[i[0]] = i[1]
             chosen_charts += visualize_data_set(
                     df, temporal_feature, feature_list,
-                    'Cluster_FASTA_' + key_suffix + '_' + i[0])
+                    'Cluster_FASTA_' + i[0] + '_' + key_suffix)
 
     elif data_set_type == 'KEGG':
         KEGG_DATA_SET_NAME = 'kegg.pkl'
@@ -1569,7 +1569,7 @@ def work_with_data_set(df, data_set_type, folder_path, recache, key_suffix):
             df[i[0]] = i[1]
             chosen_charts += visualize_data_set(
                     df, temporal_feature, feature_list,
-                    'Cluster_KEGG_' + key_suffix + '_' + i[0])
+                    'Cluster_KEGG_' + i[0] + '_' + key_suffix)
 
     elif data_set_type == 'BINS':
         BINS_DATA_SET_NAME = 'bins.pkl'
@@ -1714,6 +1714,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                      'Whisker plot'],
             key='vis_data_' + key_suffix)
     else:
+        # TODO: Put preselected values for use case scenario
+        # We can differentiate use case scenario by checking whether the 
+        # key_suffix ends with CASE_STUDY. This keywords is preceeded by the
+        # omic name, which can also be used to differentiate omics
         visualizations = st.multiselect(
             'Choose your visualization:',
             options=['Feature through time', 'Two features plot',
@@ -1731,19 +1735,19 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             chosen_charts.append(
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 'PCA'),
-                 i + '_' + key_suffix + '_PCA'))
+                 i + '_PCA_' + key_suffix))
 
         elif i == 'MDS visualization':
             chosen_charts.append(
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 'MDS'),
-                 i + '_' + key_suffix + '_MDS'))
+                 i + '_MDS_' + key_suffix))
 
         elif i == 't-SNE visualization':
             chosen_charts.append(
                 (visualize.visualize_clusters(df, temporal_feature,
                                               feature_list, 't-SNE'),
-                 i + '_' + key_suffix + '_t-SNE'))
+                 i + '_t-SNE_' + key_suffix))
 
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_features = st.multiselect(
@@ -1751,7 +1755,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             encode_feature_color = st.checkbox(
                 'Encode one nominal feature with color?',
-                key=i + '_' + key_suffix + 'color checkbox')
+                key=i + '_color checkbox_' + key_suffix)
 
             if encode_feature_color:
                 color_feature_list = [feature for feature in feature_list
@@ -1776,13 +1780,13 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             feature_2 = None
 
             feature_1 = st.selectbox(i + ': select 1. feature', feature_list,
-                                     key=i + '_' + key_suffix + '1. feature')
+                                     key=i + '_1. feature_' + key_suffix)
 
             new_feature_list = [i for i in feature_list if i != feature_1]
 
             feature_2 = st.selectbox(
                 i + ': select 2. feature', new_feature_list,
-                key=i + '_' + key_suffix + '2. feature')
+                key=i + '_2. feature_' + key_suffix)
 
             if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append(
@@ -1840,7 +1844,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             target_feature = st.selectbox(
                 i + ': select color feature', feature_list,
-                key=i + '_' + key_suffix + 'target_feature')
+                key=i + '_target_feature_' + key_suffix)
 
             if target_feature is not None:
                 chosen_charts.append((

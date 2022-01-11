@@ -134,6 +134,7 @@ def case_study_genomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
+    key_suffix += '_CASE_STUDY'
 
     return common.work_with_zip(
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
@@ -156,6 +157,7 @@ def case_study_metabolomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
+    key_suffix += '_CASE_STUDY'
 
     return common.work_with_csv(
         folder_path_or_df, cache_folder_path, key_suffix)
@@ -167,6 +169,7 @@ def case_study_transcriptomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
+    key_suffix += '_CASE_STUDY'
 
     return common.work_with_zip(
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
@@ -178,6 +181,7 @@ def case_study_phy_che():
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
+    key_suffix += '_CASE_STUDY'
 
     return common.work_with_csv(
         folder_path_or_df, cache_folder_path, key_suffix)
