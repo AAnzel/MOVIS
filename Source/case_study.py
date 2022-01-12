@@ -69,7 +69,7 @@ def upload_multiple(key_suffix):
         'Metagenomics': 2,
         'Metaproteomics': 0,
         'Metatranscriptomics': 0,
-        'Metabolomics': 1,
+        'Metabolomics': 0,
         'Physico-chemical': 0
     }
 

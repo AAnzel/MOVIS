@@ -755,11 +755,16 @@ def show_calculated_data_set(df, text_info):
 
 
 def show_clustering_info(df, key_suffix):
+    default_clustering_method_values = []
+    default_number_of_clusters_or_samples = 2
+    if key_suffix.endswith('Metaproteomics_CASE_STUDY'):
+        default_clustering_method_values.append('K-Means')
+        default_number_of_clusters_or_samples = 3
 
     clustering_methods = st.multiselect(
         'Choose clustering method:', options=['K-Means', 'OPTICS'],
-        key='choose_clus' + key_suffix
-        )
+        key='choose_clus' + key_suffix,
+        default=default_clustering_method_values)
 
     tmp_df = get_number_of_clusters(df)
     st.altair_chart(visualize.elbow_rule(tmp_df),
@@ -776,18 +781,20 @@ def show_clustering_info(df, key_suffix):
         cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=2, max_value=15, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans)
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans,
+            value=default_number_of_clusters_or_samples)
         cluster_samples = st.slider(
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=2, max_value=15, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text_optics)
+            help=help_text_optics, value=default_number_of_clusters_or_samples)
 
     elif 'K-Means' in clustering_methods:
         cluster_number = st.slider(
             'Select a number of clusters for K-Means using the elbow rule:',
             min_value=2, max_value=15, step=1, format='%d',
-            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans)
+            key='slider_cluster_Kmeans_' + key_suffix, help=help_text_kmeans,
+            value=default_number_of_clusters_or_samples)
         cluster_samples = 0
 
     elif 'OPTICS' in clustering_methods:
@@ -796,7 +803,7 @@ def show_clustering_info(df, key_suffix):
             'Select a minimum number of samples for OPTICS to be considered as\
             a core point:', min_value=2, max_value=15, step=1,
             format='%d', key='slider_cluster_Optics_' + key_suffix,
-            help=help_text_optics)
+            help=help_text_optics, value=default_number_of_clusters_or_samples)
 
     else:
         pass
@@ -1718,6 +1725,20 @@ def select_case_study_default_vis(key_suffix):
             key_suffix.startswith('sum_'):
         default_visualizations_dict['Whisker plot'] = []
         default_visualizations_dict['Feature through time'] = ['Mean']
+
+    elif key_suffix.endswith('Metaproteomics_CASE_STUDY') and\
+            key_suffix.startswith('Cluster'):
+        default_visualizations_dict['PCA visualization'] = []
+        default_visualizations_dict['MDS visualization'] = []
+
+    elif key_suffix.endswith('Metaproteomics_CASE_STUDY') and\
+            not key_suffix.startswith('Cluster'):
+        default_visualizations_dict['Feature through time'] = [
+            'Fraction polar']
+
+    elif key_suffix.endswith('Metaboloics_CASE_STUDY'):
+        default_visualizations_dict['Feature through time'] = [
+            'measurement', 'Chebi_Name_combined']
 
     return default_visualizations_dict
 
