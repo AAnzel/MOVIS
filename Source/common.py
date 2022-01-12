@@ -1736,9 +1736,8 @@ def select_case_study_default_vis(key_suffix):
         default_visualizations_dict['Feature through time'] = [
             'Fraction polar']
 
-    elif key_suffix.endswith('Metaboloics_CASE_STUDY'):
-        default_visualizations_dict['Feature through time'] = [
-            'measurement', 'Chebi_Name_combined']
+    elif key_suffix.endswith('Metabolomics_CASE_STUDY'):
+        default_visualizations_dict['Feature through time'] = ['L1sum_MP']
 
     return default_visualizations_dict
 
@@ -1818,9 +1817,14 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 i + ': select features to visualize', options=feature_list,
                 default=default_visualization_parameters)
 
+            default_bool_parameter = False
+            if key_suffix.endswith('Metabolomics_CASE_STUDY'):
+                default_bool_parameter = True
+
             encode_feature_color = st.checkbox(
                 'Encode one nominal feature with color?',
-                key=i + '_color checkbox_' + key_suffix)
+                key=i + '_color checkbox_' + key_suffix,
+                value=default_bool_parameter)
 
             if encode_feature_color:
                 color_feature_list = [feature for feature in feature_list
