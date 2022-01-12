@@ -154,6 +154,7 @@ def case_study_proteomics():
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
+    key_suffix += '_CASE_STUDY'
 
     return common.work_with_zip(
         folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
@@ -223,8 +224,8 @@ def create_main_case_study():
                              'Metatranscriptomics', 'Physico-chemical']
     # We use this specific omics for case study, as default values for
     # multiselect widget
-    default_case_study_omics = ['Metagenomics', 'Metabolomics',
-                                'Metatranscriptomics', 'Physico-chemical']
+    default_case_study_omics = ['Metagenomics', 'Metaproteomics',
+                                'Metabolomics', 'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of omic data do you want to explore?',
         case_study_omics_list, default=default_case_study_omics)

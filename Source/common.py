@@ -1489,12 +1489,17 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
         recache = create_zip_temporality(
             folder_path_or_df, file_name_type, key_suffix)
 
-        if data_set_type == 'FASTA' and key_suffix in\
-                ['Proteomics', 'Genomics', 'Metaproteomics', 'Metagenomics']:
+        if data_set_type == 'FASTA' and key_suffix.startswith((
+                'Proteomics', 'Genomics', 'Metaproteomics', 'Metagenomics')):
             # Calculating additional physico-chemical properties
+            default_additional_properties_value = False
+            if key_suffix.endswith('CASE_STUDY'):
+                default_additional_properties_value = True
+
             additional_check = st.checkbox(
                 'Calculate additional physico-chemical properties?',
-                value=False, key='Additional_check_' + key_suffix)
+                value=default_additional_properties_value,
+                key='Additional_check_' + key_suffix)
 
             if additional_check:
                 chosen_charts = work_with_data_set(
