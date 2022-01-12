@@ -65,10 +65,18 @@ def upload_multiple(key_suffix):
             'Processed data set 1': 'CALC'}
     }
 
+    default_case_study_data_set_types = {
+        'Metagenomics': 2,
+        'Metaproteomics': 0,
+        'Metatranscriptomics': 0,
+        'Metabolomics': 1,
+        'Physico-chemical': 0
+    }
+
     selected_data_set_type = st.selectbox(
         'What kind of data set do you want to see?',
-        list(available_data_set_types[key_suffix].keys())
-    )
+        options=list(available_data_set_types[key_suffix].keys()),
+        index=default_case_study_data_set_types[key_suffix])
 
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
@@ -215,11 +223,11 @@ def create_main_case_study():
                              'Metatranscriptomics', 'Physico-chemical']
     # We use this specific omics for case study, as default values for
     # multiselect widget
-    case_study_chosen_omics = ['Metagenomics', 'Metabolomics',
-                               'Metatranscriptomics', 'Physico-chemical']
+    default_case_study_omics = ['Metagenomics', 'Metabolomics',
+                                'Metatranscriptomics', 'Physico-chemical']
     choose_omics = st.multiselect(
         'What kind of omic data do you want to explore?',
-        case_study_omics_list, default=case_study_chosen_omics)
+        case_study_omics_list, default=default_case_study_omics)
 
     num_of_columns = len(choose_omics)
 

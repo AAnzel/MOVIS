@@ -1705,9 +1705,14 @@ def select_case_study_default_vis(key_suffix):
 
     if key_suffix.endswith('Physico-chemical_CASE_STUDY'):
         default_visualizations_dict['Feature through time'] = [
-            'Volume_aeration  m3/h', 'T C']
+            'Volume_aeration  m3/h', 'T C', 'Inflow_conductivity µS/cm']
         default_visualizations_dict['Time heatmap'] = [
-            'Volume_aeration  m3/h', 'T C']
+            'T C', 'Inflow_conductivity µS/cm']
+
+    elif key_suffix.endswith('Metagenomics_CASE_STUDY') and\
+            key_suffix.startswith('sum_'):
+        default_visualizations_dict['Whisker plot'] = []
+        default_visualizations_dict['Feature through time'] = ['Mean']
 
     return default_visualizations_dict
 
@@ -1733,7 +1738,7 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             key='vis_data_' + key_suffix)
 
     # If we are dealing with depth data, we have a summary dataframe
-    elif key_suffix.startswith('sum_'):
+    elif key_suffix.startswith('sum_') or key_suffix.startswith('out_'):
         visualizations = st.multiselect(
             'Choose your visualization:',
             options=['Feature through time', 'Two features plot',

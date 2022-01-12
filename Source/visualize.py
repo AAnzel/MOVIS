@@ -135,10 +135,17 @@ def time_feature(data, selected_column, temporal_column, target_feature):
 
             # Draw text labels near the points, and highlight based on
             # selection
-            text = line.mark_text(
-                align='left', dx=10, dy=15, stroke='#000000',
+            text_1 = line.mark_text(
+                align='left', dx=10, dy=15, stroke='#222222',
                 fill='#ffffff', filled=False, size=12).encode(
                     text=alt.condition(nearest, selected_column + ':Q',
+                                       alt.value(' '))
+            )
+
+            text_2 = line.mark_text(
+                align='left', dx=10, dy=35, stroke='#222222',
+                fill='#ffffff', filled=False, size=12).encode(
+                    text=alt.condition(nearest, temporal_column + ':T',
                                        alt.value(' '))
             )
 
@@ -150,7 +157,7 @@ def time_feature(data, selected_column, temporal_column, target_feature):
             )
 
             chart = alt.layer(
-                line, selectors, points, rules, text, data=data,
+                line, selectors, points, rules, text_1, text_2, data=data,
                 title=selected_column + ' through time')
 
     return chart
@@ -331,7 +338,6 @@ def correlation_heatmap(data):
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
 
 
-# TODO: Needs work
 def time_heatmap(data, target_feature, temporal_feature):
 
     target_column_type = str(data[target_feature].dtype)
@@ -344,8 +350,8 @@ def time_heatmap(data, target_feature, temporal_feature):
     chart = alt.Chart(
         data,
         title=target_feature + ' time heatmap').mark_rect().encode(
-            alt.X('date(' + temporal_feature + ')', type='temporal'),
-            alt.Y('month(' + temporal_feature + ')', type='temporal'),
+            alt.X('date(' + temporal_feature + ')', type='ordinal'),
+            alt.Y('month(' + temporal_feature + ')', type='ordinal'),
             alt.Color(target_feature, type=target_type,
                       scale=alt.Scale(scheme=target_color_scheme)),
             alt.Tooltip([temporal_feature, target_feature]))
