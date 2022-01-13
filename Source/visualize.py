@@ -339,7 +339,9 @@ def correlation_heatmap(data):
 
 
 def time_heatmap(data, target_feature, temporal_feature):
-
+    # TODO: Check if timestamps span over months, days or minutes
+    # And use yearmonth, monthdate etc. acordingly
+    # https://altair-viz.github.io/user_guide/transform/timeunit.html
     target_column_type = str(data[target_feature].dtype)
 
     target_type = 'ordinal' if target_column_type == 'string'\
@@ -351,7 +353,7 @@ def time_heatmap(data, target_feature, temporal_feature):
         data,
         title=target_feature + ' time heatmap').mark_rect().encode(
             alt.X('date(' + temporal_feature + ')', type='ordinal'),
-            alt.Y('month(' + temporal_feature + ')', type='ordinal'),
+            alt.Y('yearmonth(' + temporal_feature + ')', type='ordinal'),
             alt.Color(target_feature, type=target_type,
                       scale=alt.Scale(scheme=target_color_scheme)),
             alt.Tooltip([temporal_feature, target_feature]))
