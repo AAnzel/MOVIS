@@ -1718,8 +1718,7 @@ def select_case_study_default_vis(key_suffix):
     if key_suffix.endswith('Physico-chemical_CASE_STUDY'):
         default_visualizations_dict['Feature through time'] = [
             'Volume_aeration  m3/h', 'T C', 'Inflow_conductivity µS/cm']
-        default_visualizations_dict['Time heatmap'] = [
-            'T C', 'Inflow_conductivity µS/cm']
+        default_visualizations_dict['Time heatmap'] = [3, 0, 0]
 
     elif key_suffix.endswith('Metagenomics_CASE_STUDY') and\
             key_suffix.startswith('sum_'):
@@ -1737,8 +1736,7 @@ def select_case_study_default_vis(key_suffix):
     #        'Fraction polar']
 
     elif key_suffix.endswith('Metabolomics_CASE_STUDY'):
-        default_visualizations_dict['Feature through time'] = [
-            'measurement', 'fraction', 'metabolite_class']
+        default_visualizations_dict['Time heatmap'] = [1, 0, 1]
 
     else:
         pass
@@ -1793,9 +1791,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
         # We have to check if we are creating a case study visualization and
         # if yes, then we update default parameters for that visualization
+        # 10 is maximum number of parameters a visualization takes
         default_visualization_parameters = []
+        default_index_list = [0 for i in range(10)]
         if i in default_visualizations_dict:
             default_visualization_parameters = default_visualizations_dict[i]
+            default_index_list = default_visualization_parameters
 
         # I have to check which clustering method was used and visualize it
         if i == 'PCA visualization':
@@ -1914,7 +1915,10 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
 
             feature_1 = st.selectbox(
                 i + ': select quantitative color feature', feature_list,
-                key=i + '_color feature_' + key_suffix)
+                key=i + '_color feature_' + key_suffix,
+                index=default_index_list[0])
+
+            del default_index_list[0]
 
             if str(df[feature_1].dtype) == 'string':
                 st.warning('Selected feature is not quantitative')
@@ -1925,12 +1929,18 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
             feature_2 = st.selectbox(
                 i + ': select y-axis feature',
                 [temporal_feature] + new_feature_list,
-                key=i + '_y-axis feature_' + key_suffix)
+                key=i + '_y-axis feature_' + key_suffix,
+                index=default_index_list[0])
+
+            del default_index_list[0]
 
             color_feature = st.selectbox(
                 i + ': select color scheme',
                 ['Sequential Single-Hue', 'Diverging'],
-                key=i + '_color feature_' + key_suffix)
+                key=i + '_color feature_' + key_suffix,
+                index=default_index_list[0])
+
+            del default_index_list[0]
 
             if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append((
