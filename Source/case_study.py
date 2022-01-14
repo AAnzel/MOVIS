@@ -224,8 +224,8 @@ def create_main_case_study():
                              'Metatranscriptomics', 'Physico-chemical']
     # We use this specific omics for case study, as default values for
     # multiselect widget
-    default_case_study_omics = ['Metagenomics', 'Metaproteomics',
-                                'Metabolomics', 'Physico-chemical']
+    default_case_study_omics = ['Physico-chemical', 'Metaproteomics',
+                                'Metabolomics', 'Metagenomics']
     choose_omics = st.multiselect(
         'What kind of omic data do you want to explore?',
         case_study_omics_list, default=default_case_study_omics)
