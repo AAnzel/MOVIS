@@ -96,7 +96,8 @@ def time_feature(data, selected_column, temporal_column, target_feature):
                               scale=alt.Scale(nice=True)),
                         alt.Y(selected_column, type='quantitative'),
                         alt.Color(target_feature, type='nominal'),
-                        alt.Tooltip([temporal_column, selected_column]))
+                        alt.Tooltip([temporal_column, selected_column,
+                                     target_feature]))
         else:
             # TODO: https://altair-viz.github.io/gallery/select_mark_area.html
             # brush = alt.selection_interval(encodings=['x'])
@@ -344,7 +345,7 @@ def time_heatmap(data, target_feature, temporal_feature):
     # https://altair-viz.github.io/user_guide/transform/timeunit.html
     target_column_type = str(data[target_feature].dtype)
 
-    target_type = 'ordinal' if target_column_type == 'string'\
+    target_type = 'nominal' if target_column_type == 'string'\
         else 'quantitative'
     target_color_scheme = 'tableau20' if target_column_type == 'string'\
         else 'greys'

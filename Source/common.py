@@ -1739,6 +1739,9 @@ def select_case_study_default_vis(key_suffix):
     elif key_suffix.endswith('Metabolomics_CASE_STUDY'):
         default_visualizations_dict['Feature through time'] = ['L1sum_MP']
 
+    else:
+        pass
+
     return default_visualizations_dict
 
 
