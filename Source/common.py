@@ -1736,7 +1736,7 @@ def select_case_study_default_vis(key_suffix):
     #        'Fraction polar']
 
     elif key_suffix.endswith('Metabolomics_CASE_STUDY'):
-        default_visualizations_dict['Time heatmap'] = [1, 0, 1]
+        default_visualizations_dict['Time heatmap'] = [1, 1, 1]
 
     else:
         pass
