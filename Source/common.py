@@ -1909,13 +1909,33 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
                 visualize.correlation_heatmap(df), i + '_' + key_suffix))
 
         elif i == 'Time heatmap' and temporal_feature is not None:
-            selected_features = st.multiselect(
-                i + ': select features to visualize', options=feature_list,
-                default=default_visualization_parameters)
+            feature_1 = None
+            feature_2 = None
 
-            for j in selected_features:
+            feature_1 = st.selectbox(
+                i + ': select quantitative color feature', feature_list,
+                key=i + '_color feature_' + key_suffix)
+
+            if str(df[feature_1].dtype) == 'string':
+                st.warning('Selected feature is not quantitative')
+                st.stop()
+
+            new_feature_list = [i for i in feature_list if i != feature_1]
+
+            feature_2 = st.selectbox(
+                i + ': select y-axis feature',
+                [temporal_feature] + new_feature_list,
+                key=i + '_y-axis feature_' + key_suffix)
+
+            color_feature = st.selectbox(
+                i + ': select color scheme',
+                ['Sequential Single-Hue', 'Diverging'],
+                key=i + '_color feature_' + key_suffix)
+
+            if feature_1 is not None and feature_2 is not None:
                 chosen_charts.append((
-                    visualize.time_heatmap(df, j, temporal_feature),
+                    visualize.time_heatmap(df, feature_1, feature_2,
+                                           color_feature, temporal_feature),
                     i + '_' + key_suffix))
 
         elif i == 'Top 10 share through time' and temporal_feature is not None:

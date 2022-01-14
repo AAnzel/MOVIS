@@ -339,25 +339,39 @@ def correlation_heatmap(data):
     return chart.transform_filter("datum.var_1 < datum.var_2").interactive()
 
 
-def time_heatmap(data, target_feature, temporal_feature):
+def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
     # TODO: Check if timestamps span over months, days or minutes
     # And use yearmonth, monthdate etc. acordingly
     # https://altair-viz.github.io/user_guide/transform/timeunit.html
-    target_column_type = str(data[target_feature].dtype)
+    if color_feature == 'Sequential Single-Hue':
+        color_scheme = 'greys'
+    else:
+        color_scheme = 'redblue'
 
-    target_type = 'nominal' if target_column_type == 'string'\
-        else 'quantitative'
-    target_color_scheme = 'tableau20' if target_column_type == 'string'\
-        else 'greys'
+    if feature_2 == temporal_feature:
+        chart = alt.Chart(
+            data,
+            title=feature_1 + ' time heatmap').mark_rect().encode(
+                alt.X('date(' + temporal_feature + ')', type='ordinal'),
+                alt.Y('yearmonth(' + temporal_feature + ')', type='ordinal'),
+                alt.Color(feature_1, type='quantitative',
+                          scale=alt.Scale(scheme=color_scheme)),
+                alt.Tooltip([temporal_feature, feature_1]))
 
-    chart = alt.Chart(
-        data,
-        title=target_feature + ' time heatmap').mark_rect().encode(
-            alt.X('date(' + temporal_feature + ')', type='ordinal'),
-            alt.Y('yearmonth(' + temporal_feature + ')', type='ordinal'),
-            alt.Color(target_feature, type=target_type,
-                      scale=alt.Scale(scheme=target_color_scheme)),
-            alt.Tooltip([temporal_feature, target_feature]))
+    else:
+        feature_2_type = str(data[feature_2].dtype)
+        feature_2_type = 'nominal' if feature_2_type == 'string'\
+            else 'quantitative'
+
+        chart = alt.Chart(
+            data,
+            title=feature_1 + ' time heatmap').mark_rect().encode(
+                alt.X('yearmonthdate(' + temporal_feature + ')',
+                      type='ordinal', axis=alt.Axis(labelAngle=-45)),
+                alt.Y(feature_2, type=feature_2_type),
+                alt.Color(feature_1, type='quantitative',
+                          scale=alt.Scale(scheme=color_scheme, reverse=True)),
+                alt.Tooltip([temporal_feature, feature_1, feature_2]))
 
     return chart.interactive()
 
