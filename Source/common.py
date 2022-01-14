@@ -1500,8 +1500,8 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
                 'Proteomics', 'Genomics', 'Metaproteomics', 'Metagenomics')):
             # Calculating additional physico-chemical properties
             default_additional_properties_value = False
-            if key_suffix.endswith('CASE_STUDY'):
-                default_additional_properties_value = True
+            # if key_suffix.endswith('CASE_STUDY'):
+            #    default_additional_properties_value = True
 
             additional_check = st.checkbox(
                 'Calculate additional physico-chemical properties?',
@@ -1731,10 +1731,10 @@ def select_case_study_default_vis(key_suffix):
         default_visualizations_dict['PCA visualization'] = []
         default_visualizations_dict['MDS visualization'] = []
 
-    elif key_suffix.endswith('Metaproteomics_CASE_STUDY') and\
-            not key_suffix.startswith('Cluster'):
-        default_visualizations_dict['Feature through time'] = [
-            'Fraction polar']
+    # elif key_suffix.endswith('Metaproteomics_CASE_STUDY') and\
+    #        not key_suffix.startswith('Cluster'):
+    #    default_visualizations_dict['Feature through time'] = [
+    #        'Fraction polar']
 
     elif key_suffix.endswith('Metabolomics_CASE_STUDY'):
         default_visualizations_dict['Feature through time'] = ['L1sum_MP']
