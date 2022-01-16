@@ -345,8 +345,10 @@ def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
     # https://altair-viz.github.io/user_guide/transform/timeunit.html
     if color_feature == 'Sequential Single-Hue':
         color_scheme = 'greys'
+        reverse_param = False
     else:
         color_scheme = 'redblue'
+        reverse_param = True
 
     if feature_2 == temporal_feature:
         chart = alt.Chart(
@@ -370,7 +372,8 @@ def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
                       type='ordinal', axis=alt.Axis(labelAngle=-45)),
                 alt.Y(feature_2, type=feature_2_type),
                 alt.Color(feature_1, type='quantitative',
-                          scale=alt.Scale(scheme=color_scheme, reverse=True)),
+                          scale=alt.Scale(scheme=color_scheme,
+                                          reverse=reverse_param)),
                 alt.Tooltip([temporal_feature, feature_1, feature_2]))
 
     return chart.interactive()
@@ -381,29 +384,31 @@ def whisker(summary_data, temporal_column):
     # 'Q1','Q3', 'IQR', 'LowerLimit', 'UpperLimit', 'Mean'
     # TODO: Add title
 
-    bar_chart = alt.Chart(summary_data).mark_bar(size=10).encode(
+    bar_chart = alt.Chart().mark_bar(size=10).encode(
         alt.X(temporal_column, type='temporal'),
         alt.Y('Q1:Q', title=None),
         alt.Y2('Q3:Q', title=None),
         alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
     )
 
-    whiskers_chart = alt.Chart(summary_data).mark_rule().encode(
+    whiskers_chart = alt.Chart().mark_rule().encode(
         alt.X(temporal_column, type='temporal'),
         alt.Y('LowerLimit:Q', scale=alt.Scale(zero=False), title=None),
         alt.Y2('UpperLimit:Q', title=None),
         alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
     )
 
-    mean_chart = alt.Chart(summary_data).mark_tick(
+    mean_chart = alt.Chart().mark_tick(
         color='black', height=80, opacity=1).encode(
         alt.X(temporal_column, type='temporal'),
         alt.Y('Mean:Q', title=None),
         alt.Tooltip(['Q1:Q', 'Q3:Q', 'LowerLimit:Q', 'UpperLimit:Q', 'Mean:Q'])
     )
 
-    final_chart = (whiskers_chart + bar_chart + mean_chart).configure_scale(
-        bandPaddingInner=0.2)
+    final_chart = alt.layer(
+        whiskers_chart, bar_chart, mean_chart, data=summary_data,
+        title='Depth-of-coverage through time'
+        ).configure_scale(bandPaddingInner=0.2)
 
     return final_chart.interactive()
 

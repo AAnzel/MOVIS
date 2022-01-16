@@ -76,7 +76,8 @@ def upload_multiple(key_suffix):
     selected_data_set_type = st.selectbox(
         'What kind of data set do you want to see?',
         options=list(available_data_set_types[key_suffix].keys()),
-        index=default_case_study_data_set_types[key_suffix])
+        index=default_case_study_data_set_types[key_suffix],
+        key='Case_study_' + key_suffix)
 
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
@@ -276,6 +277,8 @@ def create_main_case_study():
                 charts += case_study_phy_che()
             else:
                 pass
+
+    st.markdown('---')
 
     for i in charts:
         type_of_chart = type(i[0])

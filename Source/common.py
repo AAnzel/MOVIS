@@ -740,16 +740,25 @@ def show_calculated_data_set(df, text_info):
                         'First 50 entries and first 8 features (columns). ')
             st.dataframe(df.iloc[:50, :8])
 
-            # TODO: Uncomment pd.describe when the bug is fixed in Pandas
-            # Bug: https://github.com/pandas-dev/pandas/issues/37429
-            # More: https://github.com/pandas-dev/pandas/issues/42626
-            # st.markdown('Summary statistics')
-            # st.dataframe(df.describe(datetime_is_numeric=True))
         else:
             st.markdown('**' + text_info + '**' + ' First 100 entries.')
             st.dataframe(df.head(100))
-            # st.markdown('Summary statistics')
-            # st.dataframe(df.describe(datetime_is_numeric=True))
+
+        # TODO: Uncomment pd.describe when the bug is fixed in Pandas
+        # Bug: https://github.com/pandas-dev/pandas/issues/37429
+        # More: https://github.com/pandas-dev/pandas/issues/42626
+        try:
+            tmp_df = df.describe(datetime_is_numeric=True)
+            if len(tmp_df.columns.to_list()) > 50\
+                    or len(tmp_df.columns.to_list()) == 1:
+                st.markdown('**Summary statistics.**' +
+                            ' First 8 features (columns).')
+                st.dataframe(tmp_df.iloc[:, :8])
+            else:
+                st.markdown('**Summary statistics**')
+                st.dataframe(tmp_df)
+        except TypeError or ValueError:
+            pass
 
     return None
 
@@ -864,6 +873,38 @@ def check_multi_csv_validity(df_list):
                     st.stop()
 
         return None
+
+
+def check_archive_validity(folder_path_or_df, data_set_type):
+    bad_names_flag = False
+    list_of_file_extensions = [os.path.splitext(
+        file_name)[1][1:].strip().lower() for file_name in
+        os.listdir(folder_path_or_df)]
+    # We will shrink this list to make everything faster
+    list_of_file_extensions = list(set(list_of_file_extensions))
+    valid_extensions = []
+
+    if data_set_type == 'FASTA':
+        valid_extensions = ['faa', 'fa']
+
+    elif data_set_type == 'KEGG':
+        valid_extensions = ['besthits']
+
+    elif data_set_type == 'BINS':
+        valid_extensions = ['gff']
+
+    elif data_set_type == 'DEPTH':
+        return None
+
+    if any(i not in valid_extensions for i in list_of_file_extensions):
+        bad_names_flag = True
+
+    if bad_names_flag:
+        st.error('''One or more file extensions are bad. See upload help above
+                    to find out what file extensions are supported.''')
+        st.stop()
+
+    return None
 
 
 def create_kegg_matrix(list_data, path_keggs):
@@ -1470,11 +1511,7 @@ def work_with_csv(df, folder_path, key_suffix):
     if df is None:
         return []
 
-    # In this case we have a list of dfs
-    if key_suffix in ['Transcriptomics', 'Metatranscriptomics']:
-        show_calculated_data_set(df, 'Concatenated transcriptomics data sets')
-    else:
-        show_data_set(df)
+    show_calculated_data_set(df, 'Uploaded ' + key_suffix + ' data.')
 
     chosen_charts = work_with_data_set(
         df, 'Calculated', folder_path, False, key_suffix)
@@ -1493,6 +1530,7 @@ def work_with_zip(folder_path_or_df, data_set_type, cache_folder_path,
     # IMPORTANT: Do not run KEGG, it takes too much RAM
     if data_set_type in ['FASTA', 'KEGG', 'BINS', 'DEPTH']:
         file_name_type = show_folder_structure(folder_path_or_df)
+        check_archive_validity(folder_path_or_df, data_set_type)
         recache = create_zip_temporality(
             folder_path_or_df, file_name_type, key_suffix)
 

@@ -69,8 +69,8 @@ def upload_multiple(key_suffix):
 
     selected_data_set_type = st.selectbox(
         'What kind of data set do you want to see?',
-        list(available_data_set_types[key_suffix].keys())
-    )
+        list(available_data_set_types[key_suffix].keys()),
+        key='Example_1_' + key_suffix)
 
     if key_suffix == 'Metagenomics':
         if selected_data_set_type == 'Raw FASTA files':
@@ -260,6 +260,8 @@ def create_main_example_1():
                 charts += example_1_phy_che()
             else:
                 pass
+
+    st.markdown('---')
 
     for i in charts:
         type_of_chart = type(i[0])

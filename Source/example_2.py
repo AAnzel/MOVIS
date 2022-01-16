@@ -63,8 +63,8 @@ def upload_multiple(key_suffix):
 
     selected_data_set_type = st.selectbox(
         'What kind of data set do you want to see?',
-        list(available_data_set_types[key_suffix].keys())
-    )
+        list(available_data_set_types[key_suffix].keys()),
+        key='Example_2_' + key_suffix)
 
     if key_suffix == 'Transcriptomics':
         return_path = path_example_2_transcriptomics_prec_1
@@ -141,6 +141,8 @@ def create_main_example_2():
             charts += example_2_transcriptomics()
         else:
             pass
+
+    st.markdown('---')
 
     for i in charts:
         type_of_chart = type(i[0])

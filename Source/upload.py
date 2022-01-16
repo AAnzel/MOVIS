@@ -84,8 +84,9 @@ def upload_csv(key_suffix):
                            it is expected they have different names, and MOVIS
                            will merge them into one column named DateTime. '''
     upload_csv_text_specific = {
-        'Metabolomics': '',
+        'Genomics': '',
         'Proteomics': '',
+        'Metabolomics': '',
         'Physico-chemical': '',
         'Transcriptomics': '''**Data sets must have exactly the same names of
                               features (columns).**'''}
@@ -117,61 +118,57 @@ def upload_csv(key_suffix):
     number_of_files = len(imported_files)
 
     if imported_files == [] or imported_files[0] is None:
-        if key_suffix == 'Transcriptomics':
-            return None, None
-        else:
-            return None
+        return None
 
+    # Checking file extension for the first file only
+    imported_file_extension = os.path.splitext(
+        imported_files[0].name)[1][1:].strip().lower()
+
+    delimiter = st.selectbox(
+        'Select the delimiter for your data set',
+        list(delimiter_dict.keys()),
+        index=default_delimiter_dict[imported_file_extension],
+        key='Upload_delim_1_' + key_suffix)
+
+    if number_of_files <= 1:
+        warning_text = 'Please choose the right delimiter'
+        success_text = 'Data set succesfully uploaded'
     else:
-        # Checking file extension for the first file only
-        imported_file_extension = os.path.splitext(
-            imported_files[0].name)[1][1:].strip().lower()
+        warning_text = 'Data sets do not have the same delimiter'
+        success_text = 'Data sets succesfully uploaded'
 
-        delimiter = st.selectbox(
-            'Select the delimiter for your data set',
-            list(delimiter_dict.keys()),
-            index=default_delimiter_dict[imported_file_extension],
-            key='Upload_delim_1_' + key_suffix)
+    df_list = []
+    if key_suffix == 'Transcriptomics':
+        selected_df_names = []
 
-        if number_of_files <= 1:
-            warning_text = 'Please choose the right delimiter'
-            success_text = 'Data set succesfully uploaded'
-        else:
-            warning_text = 'Data sets do not have the same delimiter'
-            success_text = 'Data sets succesfully uploaded'
+    for i in range(number_of_files):
+        try:
+            # TODO: Implement data imputation, maybe
+            df = pd.read_csv(
+                imported_files[i],
+                delimiter=delimiter_dict[delimiter],
+                low_memory=False)
 
-        df_list = []
-        if key_suffix == 'Transcriptomics':
-            selected_df_names = []
+            df.dropna(inplace=True)
+            df.reset_index(inplace=True, drop=True)
+            df = common.fix_dataframe_columns(df)
+        except ValueError:
+            st.warning(warning_text)
 
-        for i in range(number_of_files):
-            try:
-                # TODO: Implement data imputation, maybe
-                df = pd.read_csv(
-                    imported_files[i],
-                    delimiter=delimiter_dict[delimiter],
-                    low_memory=False)
-
-                df.dropna(inplace=True)
-                df.reset_index(inplace=True, drop=True)
-                df = common.fix_dataframe_columns(df)
-            except ValueError:
-                st.warning(warning_text)
-
-            df = df.convert_dtypes()
-            df_list.append(df)
-
-            if key_suffix == 'Transcriptomics':
-                selected_df_names.append(os.path.splitext(
-                    imported_files[i].name)[0].strip())
-
-        st.success(success_text)
+        df = df.convert_dtypes()
+        df_list.append(df)
 
         if key_suffix == 'Transcriptomics':
-            return df_list, selected_df_names
+            selected_df_names.append(os.path.splitext(
+                imported_files[i].name)[0].strip())
 
-        else:
-            return df_list[0]
+    st.success(success_text)
+
+    if key_suffix == 'Transcriptomics':
+        df_list[0] = common.work_with_multi_transcriptomics(
+            df_list, selected_df_names)
+
+    return df_list[0]
 
 
 def upload_multiple(key_suffix):
@@ -186,13 +183,6 @@ def upload_multiple(key_suffix):
                          are given as help, above. The maximum size is
                          50MB for the web version of MOVIS, 1TB for the docker
                          version of MOVIS.'''}
-
-    upload_text_zip_kegg = {
-        'Genomics': '''Upload your archive here. Archive should
-                       contain only KO besthits (.besthits) files. Possible
-                       file names are given as help, above.
-                       The maximum size is 50MB for the web version of MOVIS,
-                       1TB for the docker version of MOVIS.'''}
 
     upload_help_zip_fasta = {
         'Genomics': '''File names can be given in two formats:
@@ -214,6 +204,13 @@ def upload_multiple(key_suffix):
                          2. 2019-03-15.fa[a] for FASTA file collected on
                          15.03.2019. You should use either the first or the
                          second option, mixing name options is not allowed.'''}
+
+    upload_text_zip_kegg = {
+        'Genomics': '''Upload your archive here. Archive should
+                       contain only KO besthits (.besthits) files. Possible
+                       file names are given as help, above.
+                       The maximum size is 50MB for the web version of MOVIS,
+                       1TB for the docker version of MOVIS.'''}
 
     upload_help_zip_kegg = {
         'Genomics': '''File names can be given in two formats:
@@ -247,57 +244,95 @@ def upload_multiple(key_suffix):
                        You should use either the first or the second option,
                        mixing name options is not allowed.'''}
 
+    upload_text_zip_depth = {
+        'Genomics': '''Upload your archive here. Archive should
+                       contain files with any extension. Possible file names
+                       are given as help, above. The maximum size is 50MB for
+                       the web version of MOVIS, 1TB for the docker version of
+                       MOVIS.''',
+        'Transcriptomics': '''Upload your archive here. Archive should
+                         contain files with any extension. Possible file names
+                         are given as help, above. The maximum size is
+                         50MB for the web version of MOVIS, 1TB for the docker
+                         version of MOVIS.'''}
+
+    upload_help_zip_depth = {
+        'Genomics': '''File names can be given in two formats:
+
+                       1. D03.any_extension for depth-of-coverage file
+                       collected on the third day, or W03.any_extension for
+                       depth-of-coverage file collected on the third week.
+                       You will be given an option to select the start date.
+
+                       2. 2019-03-15.any_extension for depth-of-coverage file
+                       collected on 15.03.2019. You should use either the first
+                       or the second option, mixing name options is not
+                       allowed.''',
+        'Transcriptomics': '''File names can be given in two formats:
+
+                       1. D03.any_extension for depth-of-coverage file
+                       collected on the third day, or W03.any_extension for
+                       depth-of-coverage file collected on the third week.
+                       You will be given an option to select the start date.
+
+                       2. 2019-03-15.any_extension for depth-of-coverage file
+                       collected on 15.03.2019. You should use either the first
+                       or the second option, mixing name options is not
+                       allowed.'''}
+
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
             'KEGG annotation files': 'KEGG',
-            'BINS annotation files': 'BINS'},
+            'BINS annotation files': 'BINS',
+            'Depth-of-coverage': 'DEPTH',
+            'Processed data set': 'CALC'},
         'Proteomics': {
             'Raw FASTA files': 'FASTA',
-            'Calculated data set': 'Calculated'}
+            'Processed data set': 'CALC'},
+        'Metabolomics': {
+            'Processed data set': 'CALC'},
+        'Transcriptomics': {
+            'Depth-of-coverage': 'DEPTH',
+            'Processed data set': 'CALC'},
+        'Physico-chemical': {
+            'Processed data set': 'CALC'}
     }
 
     selected_data_set_type = st.selectbox(
         'What kind of omic data do you want to upload?',
-        list(available_data_set_types[key_suffix].keys())
-    )
+        list(available_data_set_types[key_suffix].keys()),
+        key='Upload_' + key_suffix)
 
-    if key_suffix == 'Genomics':
-        if selected_data_set_type == 'Raw FASTA files':
-            label_text = upload_text_zip_fasta[key_suffix]
-            help_text = upload_help_zip_fasta[key_suffix]
+    if selected_data_set_type == 'Raw FASTA files':
+        label_text = upload_text_zip_fasta[key_suffix]
+        help_text = upload_help_zip_fasta[key_suffix]
 
-        elif selected_data_set_type == 'KEGG annotation files':
-            label_text = upload_text_zip_kegg[key_suffix]
-            help_text = upload_help_zip_kegg[key_suffix]
+    elif selected_data_set_type == 'KEGG annotation files':
+        label_text = upload_text_zip_kegg[key_suffix]
+        help_text = upload_help_zip_kegg[key_suffix]
 
-        else:
-            label_text = upload_text_zip_bins[key_suffix]
-            help_text = upload_help_zip_bins[key_suffix]
+    elif selected_data_set_type == 'BINS annotation files':
+        label_text = upload_text_zip_bins[key_suffix]
+        help_text = upload_help_zip_bins[key_suffix]
 
-        with st.expander('Show data format information'):
-            st.info(help_text)
+    elif selected_data_set_type == 'Depth-of-coverage':
+        label_text = upload_text_zip_depth[key_suffix]
+        help_text = upload_help_zip_depth[key_suffix]
 
-        imported_file = st.file_uploader(
-            label_text, type=type_list_zip, accept_multiple_files=False,
-            key='Upload_file_' + key_suffix)
-
-    elif key_suffix == 'Proteomics':
-        if selected_data_set_type == 'Raw FASTA files':
-            with st.expander('Show data format information'):
-                st.info(upload_help_zip_fasta[key_suffix])
-
-            imported_file = st.file_uploader(
-                upload_text_zip_fasta[key_suffix], type=type_list_zip,
-                accept_multiple_files=False, key='Upload_file_' + key_suffix)
-
-        else:
-            return (upload_csv(key_suffix),
-                    available_data_set_types[key_suffix]
-                    [selected_data_set_type])
-
+    elif selected_data_set_type == 'Processed data set':
+        return (upload_csv(key_suffix),
+                available_data_set_types[key_suffix]
+                [selected_data_set_type])
     else:
-        imported_file = None
+        pass
+
+    with st.expander('Show data format information'):
+        st.info(help_text)
+
+    imported_file = st.file_uploader(
+        label_text, type=type_list_zip, accept_multiple_files=False,
+        key='Upload_file_' + key_suffix)
 
     if imported_file is not None:
         return (common.import_archive(imported_file,
@@ -312,37 +347,13 @@ def upload_intro(folder_path, key_suffix):
     st.header(key_suffix + ' data')
     st.markdown('')
 
-    df = None
+    return_path_or_df = None
+    return_path_or_df, data_set_type = upload_multiple(key_suffix)
 
-    if key_suffix in ['Metabolomics', 'Physico-chemical', 'Transcriptomics']:
+    if return_path_or_df is None:
+        st.warning('Upload your data set')
 
-        # TODO: This should be revised, because there is not such
-        # functionality for genomics and proteomics. Maybe it is better
-        # that the user uploads the data set each time
-        # CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-        # CALCULATED_DATA_SET_PATH = os.path.join(
-        #     folder_path, CALCULATED_DATA_SET_NAME)
-
-        # if os.path.exists(CALCULATED_DATA_SET_PATH):
-        #     df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
-        # else:
-        #     df = upload_csv(key_suffix)
-        #     common.cache_dataframe(df, CALCULATED_DATA_SET_PATH)
-
-        df_list = upload_csv(key_suffix)
-
-        if df_list is None:
-            st.warning('Upload your data set')
-
-        return df_list
-
-    else:
-        df, data_set_type = upload_multiple(key_suffix)
-
-        if df is None:
-            st.warning('Upload your data set')
-
-        return df, data_set_type
+    return return_path_or_df, data_set_type
 
 
 def upload_genomics():
@@ -352,20 +363,27 @@ def upload_genomics():
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
 
-    return common.work_with_zip(
-        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
+    if data_set_type == 'CALC':
+        return common.work_with_csv(
+            folder_path_or_df, cache_folder_path, key_suffix)
+    else:
+        return common.work_with_zip(
+            folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_proteomics():
-
     key_suffix = 'Proteomics'
     cache_folder_path = path_uploaded_proteomics
 
     folder_path_or_df, data_set_type = upload_intro(
         cache_folder_path, key_suffix)
 
-    return common.work_with_zip(
-        folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
+    if data_set_type == 'CALC':
+        return common.work_with_csv(
+            folder_path_or_df, cache_folder_path, key_suffix)
+    else:
+        return common.work_with_zip(
+            folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_transcriptomics():
@@ -373,12 +391,15 @@ def upload_transcriptomics():
     key_suffix = 'Transcriptomics'
     cache_folder_path = path_uploaded_transcriptomics
 
-    df_list, selected_df_names = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    df = common.work_with_multi_transcriptomics(
-        df_list, selected_df_names)
-
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    if data_set_type == 'CALC':
+        return common.work_with_csv(
+            folder_path_or_df, cache_folder_path, key_suffix)
+    else:
+        return common.work_with_zip(
+            folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_metabolomics():
@@ -386,9 +407,15 @@ def upload_metabolomics():
     key_suffix = 'Metabolomics'
     cache_folder_path = path_uploaded_metabolomics
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    if data_set_type == 'CALC':
+        return common.work_with_csv(
+            folder_path_or_df, cache_folder_path, key_suffix)
+    else:
+        return common.work_with_zip(
+            folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def upload_phy_che():
@@ -396,9 +423,15 @@ def upload_phy_che():
     key_suffix = 'Physico-chemical'
     cache_folder_path = path_uploaded_phy_che
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    if data_set_type == 'CALC':
+        return common.work_with_csv(
+            folder_path_or_df, cache_folder_path, key_suffix)
+    else:
+        return common.work_with_zip(
+            folder_path_or_df, data_set_type, cache_folder_path, key_suffix)
 
 
 def create_main_upload():
@@ -452,6 +485,8 @@ def create_main_upload():
                 charts += upload_transcriptomics()
             else:
                 charts += upload_phy_che()
+
+    st.markdown('---')
 
     for i in charts:
         type_of_chart = type(i[0])
