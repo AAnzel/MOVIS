@@ -379,6 +379,7 @@ def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
 def whisker(summary_data, temporal_column):
     # Summary data frame contains the following columns:
     # 'Q1','Q3', 'IQR', 'LowerLimit', 'UpperLimit', 'Mean'
+    # TODO: Add title
 
     bar_chart = alt.Chart(summary_data).mark_bar(size=10).encode(
         alt.X(temporal_column, type='temporal'),

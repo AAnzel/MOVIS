@@ -14,6 +14,7 @@ __email__ = 'aleksandar.anzel@uni-marburg.de'
 __status__ = 'Dev'
 
 
+CALCULATED_DATA_SET_NAME = 'calculated.pkl'
 path_example_2_root_data = os.path.join('..', 'Data', 'cached', 'example_2')
 path_example_2_transcriptomics = os.path.join(path_example_2_root_data,
                                               'transcriptomics')
@@ -47,34 +48,64 @@ path_example_2_transcriptomics_pov_3 = os.path.join(
 
 path_example_2_transcriptomics_final = os.path.join(
     path_example_2_transcriptomics, 'Final.csv')
+path_example_2_transcriptomics_prec_1 = os.path.join(
+    path_example_2_transcriptomics, CALCULATED_DATA_SET_NAME)
 
 path_example_2_viz = os.path.join(
     path_example_2_root_data, 'visualizations')
 
 
-def upload_intro(folder_path, key_suffix):
-    df = None
+def upload_multiple(key_suffix):
+    available_data_set_types = {
+        'Transcriptomics': {
+            'Processed data set 1': 'CALC'}
+    }
 
-    CALCULATED_DATA_SET_NAME = 'calculated.pkl'
-    CALCULATED_DATA_SET_PATH = os.path.join(
-        folder_path, CALCULATED_DATA_SET_NAME)
+    selected_data_set_type = st.selectbox(
+        'What kind of data set do you want to see?',
+        list(available_data_set_types[key_suffix].keys())
+    )
 
-    if os.path.exists(CALCULATED_DATA_SET_PATH):
-        df = common.get_cached_dataframe(CALCULATED_DATA_SET_PATH)
+    if key_suffix == 'Transcriptomics':
+        return_path = path_example_2_transcriptomics_prec_1
+
     else:
-        st.error('Wrong cache path')
-        st.stop()
+        pass
 
-    return df
+    return (return_path,
+            available_data_set_types[key_suffix][selected_data_set_type])
+
+
+def upload_intro(folder_path, key_suffix):
+    st.header(key_suffix + ' data')
+    st.markdown('')
+
+    return_path = None
+    return_path, data_set_type = upload_multiple(key_suffix)
+
+    if return_path is None:
+        st.warning('Upload your data set')
+
+    # We return DataFrame if we work with tabular data format or precalculated
+    # We return folder_path if we work with archived data
+    # Data_set_type is always returned
+    if data_set_type == 'CALC':
+        return_path_or_df = common.get_cached_dataframe(return_path)
+    else:
+        return_path_or_df = return_path
+
+    return return_path_or_df, data_set_type
 
 
 def example_2_transcriptomics():
     key_suffix = 'Transcriptomics'
     cache_folder_path = path_example_2_transcriptomics
 
-    df = upload_intro(cache_folder_path, key_suffix)
+    folder_path_or_df, data_set_type = upload_intro(
+        cache_folder_path, key_suffix)
 
-    return common.work_with_csv(df, cache_folder_path, key_suffix)
+    return common.work_with_csv(
+        folder_path_or_df, cache_folder_path, key_suffix)
 
 
 def create_main_example_2():

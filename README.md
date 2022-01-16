@@ -20,7 +20,8 @@ This tool is created for the following paper:
 **Paper badge placeholder, link to the PDF placeholder**
 
 Please cite the paper as:
-``` Bibtex citation placeholder
+```
+Bibtex citation placeholder
 ```
 
 ---
