@@ -192,17 +192,17 @@ def create_main_example_1():
     col_1.info('''
             This data set comes from the following paper:
 
-            **Herold, M., Martínez Arbas, S., Narayanasamy, S. et al.\
-            Integration of time-series meta-omics data reveals how microbial\
-            ecosystems respond to disturbance. Nat Commun 11, 5281(2020).\
-            https://doi.org/10.1038/s41467-020-19006-2**. Analyzed samples\
-            were collected from a biological wastewater treatment plant in\
+            **Herold, M., Martínez Arbas, S., Narayanasamy, S. et al.
+            Integration of time-series meta-omics data reveals how microbial
+            ecosystems respond to disturbance. Nat Commun 11, 5281(2020).
+            https://doi.org/10.1038/s41467-020-19006-2**. Analyzed samples
+            were collected from a biological wastewater treatment plant in
             Schifflange, Luxembourg (49.513414, 6.017925). A precise location
             is shown on the map located on the right.
 
-            It contains **genomics**, **metabolomics**, **proteomics**, and\
-            **physico-chemical** data. The code used to parse the data can be\
-            found here: [GitLab]
+            It contains **metagenomics**, **metabolomics**, **metaproteomics**,
+            and **physico-chemical** data. The code used to parse the data can
+            be found here: [GitLab]
             (https://git-r3lab.uni.lu/malte.herold/laots_niche_ecology_analysis)
             ''')
 
