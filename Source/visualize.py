@@ -358,7 +358,8 @@ def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
                 alt.Y('yearmonth(' + temporal_feature + ')', type='ordinal'),
                 alt.Color(feature_1, type='quantitative',
                           scale=alt.Scale(scheme=color_scheme)),
-                alt.Tooltip([temporal_feature, feature_1]))
+                alt.Tooltip([temporal_feature, feature_1])
+            ).configure_legend(orient='bottom')
 
     else:
         feature_2_type = str(data[feature_2].dtype)
@@ -374,7 +375,8 @@ def time_heatmap(data, feature_1, feature_2, color_feature, temporal_feature):
                 alt.Color(feature_1, type='quantitative',
                           scale=alt.Scale(scheme=color_scheme,
                                           reverse=reverse_param)),
-                alt.Tooltip([temporal_feature, feature_1, feature_2]))
+                alt.Tooltip([temporal_feature, feature_1, feature_2])
+            ).configure_legend(orient='bottom')
 
     return chart.interactive()
 
