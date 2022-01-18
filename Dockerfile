@@ -5,12 +5,12 @@ FROM continuumio/miniconda3
 WORKDIR .
 
 RUN /opt/conda/bin/conda install --yes \
-        numpy==1.20.3 \
-        pandas==1.3.2 \
-        scikit-learn==0.24.2 \
-        scipy==1.6.2 \
-        protobuf==3.14.0 \
-        python-Levenshtein==0.12.2 \
+        numpy==1.21.2 \
+        pandas==1.3.5 \
+        scikit-learn==1.0.2 \
+        scipy==1.7.3 \
+        protobuf==3.19.1 \
+        python-levenshtein==0.12.2 \
         nomkl
 
 RUN /opt/conda/bin/conda config --add channels conda-forge
@@ -27,7 +27,7 @@ RUN find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete
 
-RUN pip install streamlit==1.0.0
+RUN pip install streamlit==1.2.0
 
 COPY . .
 
