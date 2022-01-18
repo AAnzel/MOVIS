@@ -41,13 +41,13 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |altair_saver|0.5.0|
 |biopython|1.78|
 |gensim|4.0.1|
-|numpy|1.20.3|
-|pandas|1.3.2|
-|scikit-learn|0.24.2|
-|scipy|1.6.2|
-|streamlit|0.81.1|
-|protobuf|3.14.0|
-|python-Levenshtein|0.12.2|
+|numpy|1.21.2|
+|pandas|1.3.5|
+|scikit-learn|1.0.2|
+|scipy|1.7.3|
+|streamlit|1.2.0|
+|protobuf|3.19.1|
+|python-levenshtein|0.12.2|
 
 
 ## Data
