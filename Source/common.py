@@ -1511,7 +1511,7 @@ def work_with_csv(df, folder_path, key_suffix):
     if df is None:
         return []
 
-    show_calculated_data_set(df, 'Uploaded ' + key_suffix + ' data.')
+    show_calculated_data_set(df, 'Data overview.')
 
     chosen_charts = work_with_data_set(
         df, 'Calculated', folder_path, False, key_suffix)
