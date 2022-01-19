@@ -74,12 +74,13 @@ It is stored at [Data/cached/example_2/](./Data/cached/example_2) in a raw forma
 |[Source/home.py](./Source/home.py)|contains the code that builds the home page.
 |[Source/example_1.py](./Source/example_1.py)|contains the code that builds the example 1 page.
 |[Source/example_2.py](./Source/example_2.py)|contains the code that builds the example 2 page.
+|[Source/case_study.py](./Source/case_study.py)|contains the code that builds the case study page.
 |[Source/upload.py](./Source/upload.py)|contains the code that builds the upload page.
 |[Source/common.py](./Source/common.py)|contains the code with functions shared by all pages.
 |[Source/visualize.py](./Source/visualize.py)|contains the code with functions that create various visualizations present in this tool.
 
 ## Getting started
-Check out our [Wiki page](https://github.com/AAnzel/MOVIS/wiki/0.-Home) for detailed information about MOVIS and how to use it.
+Check out our [Wiki page](https://github.com/AAnzel/MOVIS/wiki) for detailed information about MOVIS and how to use it.
 
 ## Installation & Running
 ### Stable
