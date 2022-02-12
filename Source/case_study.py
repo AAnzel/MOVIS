@@ -225,11 +225,25 @@ def create_main_case_study():
                              'Metatranscriptomics', 'Physico-chemical']
     # We use this specific omics for case study, as default values for
     # multiselect widget
-    default_case_study_omics = ['Physico-chemical', 'Metaproteomics',
-                                'Metabolomics', 'Metagenomics']
+    default_case_study_omics = ['Physico-chemical']
+
     choose_omics = st.multiselect(
         'What kind of omic data do you want to explore?',
         case_study_omics_list, default=default_case_study_omics)
+
+    st.info('''**To demonstrate the usability of MOVIS, we presented a case study
+            based on one of the available examples. We focused on the built-in
+            Example 1 that contains metagenomics, metaproteomics,
+            metatranscriptomics, metabolomics, and physico-chemical data from
+            the biological wastewater treatment plant (BWWTP).
+            The data was collected in situ, at weekly intervals, and over 14
+            months. The end goal of this case study was to reveal if there were
+            any niche types, and if there were, how do they respond to the
+            substrate changes. The case study employs some functional omics
+            aspects, as presented in the original manuscript. We recommend that
+            users follow the omics order presented in the Case Study wiki page
+            (https://github.com/AAnzel/MOVIS/wiki/3.-Case-study), to unravel
+            the story of this data set.**''')
 
     num_of_columns = len(choose_omics)
 

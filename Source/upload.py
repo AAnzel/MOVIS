@@ -40,7 +40,7 @@ path_uploaded_dict = {
 
 def remove_cached_data():
 
-    SAVE_TIME = 5400  # Time is given in seconds, 5400s = 1.5h
+    SAVE_TIME = 3600  # Time is given in seconds, 5400s = 1.5h, 3600 = 1h
     time_limit = time.time() - SAVE_TIME
 
     # Traversing every cache directory and deleting everything from it
@@ -75,14 +75,18 @@ def remove_cached_data():
 
 
 def upload_csv(key_suffix):
-    upload_csv_label_text = '''Upload your data set here. The maximum size is 50MB
-                           for the web version of MOVIS, 1TB for the docker
-                           version of MOVIS.'''
+    upload_csv_label_text = '''Upload your data set here. The maximum size is
+                            50MB for the web version of MOVIS, 1TB for the
+                            docker version of MOVIS.'''
     upload_csv_text_general = '''Tabular data sets must have one or two temporal
                            columns named as one of the following: DateTime,
                            Date, Time, Hour, Minute. If there are two columns,
                            it is expected they have different names, and MOVIS
-                           will merge them into one column named DateTime. '''
+                           will merge them into one column named DateTime.
+                           More information is available on our Wiki page
+                           https://github.com/AAnzel/MOVIS/wiki/1.-Start-with-MOVIS#tabular-data-sets'''
+    # noqa e501
+
     upload_csv_text_specific = {
         'Genomics': '',
         'Proteomics': '',
@@ -91,7 +95,7 @@ def upload_csv(key_suffix):
         'Transcriptomics': '''**Data sets must have exactly the same names of
                               features (columns).**'''}
 
-    with st.expander('Show data format information'):
+    with st.expander('Show data format information', expanded=True):
         st.info(upload_csv_text_general + upload_csv_text_specific[key_suffix])
 
     imported_files = []
@@ -280,6 +284,10 @@ def upload_multiple(key_suffix):
                        or the second option, mixing name options is not
                        allowed.'''}
 
+    upload_help_general = '''More information is available on our Wiki page
+                           https://github.com/AAnzel/MOVIS/wiki/1.-Start-with-MOVIS#archived-data-sets'''
+    # noqa e501
+
     available_data_set_types = {
         'Genomics': {
             'Raw FASTA files': 'FASTA',
@@ -327,8 +335,8 @@ def upload_multiple(key_suffix):
     else:
         pass
 
-    with st.expander('Show data format information'):
-        st.info(help_text)
+    with st.expander('Show data format information', expanded=True):
+        st.info(upload_help_general + '\n' + help_text)
 
     imported_file = st.file_uploader(
         label_text, type=type_list_zip, accept_multiple_files=False,
@@ -444,8 +452,13 @@ def create_main_upload():
     choose_omics = st.multiselect('Which omic data do you want to upload:',
                                   omics_list)
 
+    st.warning('Your data will be saved for 1 hour on our servers')
+
     num_of_columns = len(choose_omics)
     charts = []  # An empty list to hold all pairs (visualizations, key)
+
+    # Removing previously cached data
+    remove_cached_data()
 
     if num_of_columns >= 2:
         column_list = st.columns(num_of_columns)
