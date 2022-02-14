@@ -45,7 +45,7 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |pandas|1.3.5|
 |scikit-learn|1.0.2|
 |scipy|1.7.3|
-|streamlit|1.2.0|
+|streamlit|1.5.1|
 |protobuf|3.19.1|
 |python-levenshtein|0.12.2|
 

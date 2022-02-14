@@ -28,13 +28,13 @@ RUN conda install --yes \
         altair==4.1.0 \
         biopython==1.78 \
         gensim==4.0.1 \
-	vega-cli==5.17.0 \
-	vega-lite-cli==4.17.0 \
+		vega-cli==5.17.0 \
+		vega-lite-cli==4.17.0 \
         altair_saver==0.5.0
 
 RUN conda clean --all --yes
 
-RUN pip install streamlit==1.2.0
+RUN pip install streamlit==1.5.1
 
 COPY . .
 
