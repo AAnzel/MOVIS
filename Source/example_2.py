@@ -47,7 +47,7 @@ path_example_2_transcriptomics_pov_3 = os.path.join(
     path_example_2_transcriptomics, 'POV_3.csv')
 
 path_example_2_transcriptomics_final = os.path.join(
-    path_example_2_transcriptomics, 'Final.csv')
+    path_example_2_transcriptomics, 'Final_compressed.csv')
 path_example_2_transcriptomics_prec_1 = os.path.join(
     path_example_2_transcriptomics, CALCULATED_DATA_SET_NAME)
 
