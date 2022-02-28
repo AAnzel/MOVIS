@@ -36,7 +36,7 @@ abstract = {Thanks to recent advances in sequencing and computational technologi
 }
 ```
 
-[![DOI](./Source/Images/movis_doi.svg)](https://www.sciencedirect.com/science/article/pii/S2001037022000526?via%3Dihub)
+[![DOI](./Source/images/movis_doi.svg)](https://www.sciencedirect.com/science/article/pii/S2001037022000526?via%3Dihub)
 
 ---
 Abstract:
