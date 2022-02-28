@@ -20,26 +20,29 @@ This tool is created for the following paper:
 **Paper badge placeholder, link to the PDF placeholder**
 
 Please cite the paper as:
-```bibtex
-@article{Anel2022,
-  doi = {10.1016/j.csbj.2022.02.012},
-  url = {https://doi.org/10.1016/j.csbj.2022.02.012},
-  year = {2022},
-  publisher = {Elsevier {BV}},
-  volume = {20},
-  pages = {1044--1055},
-  author = {Aleksandar An{\v{z}}el and Dominik Heider and Georges Hattab},
-  title = {{MOVIS}: A multi-omics software solution for multi-modal time-series clustering,  embedding,  and visualizing tasks},
-  journal = {Computational and Structural Biotechnology Journal}
+```latex
+@article{ANZEL20221044,
+title = {MOVIS: A multi-omics software solution for multi-modal time-series clustering, embedding, and visualizing tasks},
+journal = {Computational and Structural Biotechnology Journal},
+volume = {20},
+pages = {1044-1055},
+year = {2022},
+issn = {2001-0370},
+doi = {https://doi.org/10.1016/j.csbj.2022.02.012},
+url = {https://www.sciencedirect.com/science/article/pii/S2001037022000526},
+author = {Aleksandar Anžel and Dominik Heider and Georges Hattab},
+keywords = {Time-series, Multi-omics, Visualization, Data exploration, Temporal multi-omics, Longitudinal multi-omics},
+abstract = {Thanks to recent advances in sequencing and computational technologies, many researchers with biological and/or medical backgrounds are now producing multiple data sets with an embedded temporal dimension. Multi-modalities enable researchers to explore and investigate different biological and physico-chemical processes with various technologies. Motivated to explore multi-omics data and time-series multi-omics specifically, the exploration process has been hindered by the separation introduced by each omics-type. To effectively explore such temporal data sets, discover anomalies, find patterns, and better understand their intricacies, expertise in computer science and bioinformatics is required. Here we present MOVIS, a modular time-series multi-omics exploration tool with a user-friendly web interface that facilitates the data exploration of such data. It brings into equal participation each time-series omic-type for analysis and visualization. As of the time of writing, two time-series multi-omics data sets have been integrated and successfully reproduced. The resulting visualizations are task-specific, reproducible, and publication-ready. MOVIS is built on open-source software and is easily extendable to accommodate different analytical tasks. An online version of MOVIS is available under https://movis.mathematik.uni-marburg.de/ and on Docker Hub (https://hub.docker.com/r/aanzel/movis).}
 }
 ```
+
+[![DOI](./Source/Images/movis_doi.svg)](https://www.sciencedirect.com/science/article/pii/S2001037022000526?via%3Dihub)
 
 ---
 Abstract:
 
-> Thanks to recent advances in sequencing and computational technologies, many researchers with biological and/or medical backgrounds are now producing multiple data sets with an embedded temporal dimension. With various technologies, multiple modalities enable researchers to explore and investigate different biological and physico-chemical processes. Motivated to specifically explore multi-omics data and time-series multi-omics, the exploration process has been hindered by the separation introduced by each omics-type. To effectively explore such temporal data sets, discover anomalies, find patterns, and better understand their intricacies, expertise in computer science and bioinformatics is required. Here we present MOVIS, a modular time-series multi-omics exploration tool with a user-friendly web interface that facilitates the data exploration of such data.  It brings into equal participation each time-series omic-type for analysis and visualization. As of the time of writing, two time-series multi-omics data sets haven been integrated and successfully reproduced. The resulting visualizations are task-specific, reproducible, and publication-ready. MOVIS is built on open-source software and is easily extendable to accommodate different analytical tasks.
+> Thanks to recent advances in sequencing and computational technologies, many researchers with biological and/or medical backgrounds are now producing multiple data sets with an embedded temporal dimension. Multi-modalities enable researchers to explore and investigate different biological and physico-chemical processes with various technologies. Motivated to explore multi-omics data and time-series multi-omics specifically, the exploration process has been hindered by the separation introduced by each omics-type. To effectively explore such temporal data sets, discover anomalies, find patterns, and better understand their intricacies, expertise in computer science and bioinformatics is required. Here we present MOVIS, a modular time-series multi-omics exploration tool with a user-friendly web interface that facilitates the data exploration of such data. It brings into equal participation each time-series omic-type for analysis and visualization. As of the time of writing, two time-series multi-omics data sets have been integrated and successfully reproduced. The resulting visualizations are task-specific, reproducible, and publication-ready. MOVIS is built on open-source software and is easily extendable to accommodate different analytical tasks. An online version of MOVIS is available under https://movis.mathematik.uni-marburg.de/ and on Docker Hub (https://hub.docker.com/r/aanzel/movis).
 
-**Paper image placeholder**
 
 ## Dependancy
 
