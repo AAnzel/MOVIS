@@ -10,10 +10,10 @@ authors:
 - family-names: "Hattab"
   given-names: "Georges"
   orcid: "https://orcid.org/0000-0003-4168-8254"
-title: "MOVIS"
+title: "MOVIS: A multi-omics software solution for multi-modal time-series clustering, embedding, and visualizing tasks"
 version: 1.0.0
-doi: 10.5281/zenodo.1234
-date-released: 2021-08-25
+doi: 10.1016/j.csbj.2022.02.012
+date-released: 2022-02-22
 url: "https://github.com/AAnzel/MOVIS"
 preferred-citation:
   type: article
@@ -27,12 +27,12 @@ preferred-citation:
   - family-names: "Hattab"
     given-names: "Georges"
     orcid: "https://orcid.org/0000-0003-4168-8254"
-  doi: "10.0000/00000"
-  journal: "Bioinformatics"
-  month: 9
-  start: 1 # First page number
-  end: 10 # Last page number
-  title: "MOVIS: A Multi-Omics Software Solution for Multi-modal Time-Series Clustering and Embedding Tasks"
+  doi: "10.1016/j.csbj.2022.02.012"
+  journal: "Computational and Structural Biotechnology Journal"
+  month: 2
+  start: 1044 # First page number
+  end: 1055 # Last page number
+  title: "MOVIS: A multi-omics software solution for multi-modal time-series clustering, embedding, and visualizing tasks"
   issue: 1
-  volume: 1
-  year: 2021
+  volume: 20
+  year: 2022
