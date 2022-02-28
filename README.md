@@ -20,8 +20,18 @@ This tool is created for the following paper:
 **Paper badge placeholder, link to the PDF placeholder**
 
 Please cite the paper as:
-```
-Bibtex citation placeholder
+```bibtex
+@article{Anel2022,
+  doi = {10.1016/j.csbj.2022.02.012},
+  url = {https://doi.org/10.1016/j.csbj.2022.02.012},
+  year = {2022},
+  publisher = {Elsevier {BV}},
+  volume = {20},
+  pages = {1044--1055},
+  author = {Aleksandar An{\v{z}}el and Dominik Heider and Georges Hattab},
+  title = {{MOVIS}: A multi-omics software solution for multi-modal time-series clustering,  embedding,  and visualizing tasks},
+  journal = {Computational and Structural Biotechnology Journal}
+}
 ```
 
 ---
