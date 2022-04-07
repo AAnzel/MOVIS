@@ -59,7 +59,7 @@ The code is written in Python 3.8.11 and tested on Linux with the following libr
 |streamlit|1.5.1|
 |protobuf|3.19.1|
 |python-levenshtein|0.12.2|
-
+|click|7.1.2|
 
 ## Data
 The data used in the **Example 1** comes from the following paper:
