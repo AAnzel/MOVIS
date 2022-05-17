@@ -1867,11 +1867,12 @@ def visualize_data_set(df, temporal_feature, feature_list, key_suffix):
         elif i == 'Feature through time' and temporal_feature is not None:
             selected_features = st.multiselect(
                 i + ': select features to visualize', options=feature_list,
-                default=default_visualization_parameters)
+                default=default_visualization_parameters,
+                key=i + '_multi_select_' + key_suffix)
 
             encode_feature_color = st.checkbox(
                 'Encode one nominal feature with color?',
-                key=i + '_color checkbox_' + key_suffix)
+                key=i + '_color_checkbox_' + key_suffix)
 
             if encode_feature_color:
                 color_feature_list = [feature for feature in feature_list
