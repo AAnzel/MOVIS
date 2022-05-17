@@ -127,3 +127,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Uploaded files should be ignored
+Data/uploaded/genomics/*
+!Data/uploaded/genomics/.gitkeep
+Data/uploaded/metabolomics/*
+!Data/uploaded/metabolomics/.gitkeep
+Data/uploaded/phy_che/*
+!Data/uploaded/phy_che/.gitkeep
+Data/uploaded/proteomics/*
+!Data/uploaded/proteomics/.gitkeep
+Data/uploaded/transcriptomics/*
+!Data/uploaded/transcriptomics/.gitkeep
+Data/uploaded/visualizations/*
+!Data/uploaded/visualizations/.gitkeep

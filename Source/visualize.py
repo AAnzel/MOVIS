@@ -159,7 +159,7 @@ def time_feature(data, selected_column, temporal_column, target_feature):
 
             chart = alt.layer(
                 line, selectors, points, rules, text_1, text_2, data=data,
-                title=selected_column + ' through time')
+                title=selected_column + ' through time').interactive()
 
     return chart
 
