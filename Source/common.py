@@ -1272,14 +1272,23 @@ def find_temporal_feature(df):
         elif len(temporal_columns) == 2:
             for i in temporal_columns:
                 if i.lower() == 'date':
-                    tmp_date = pd.to_datetime(df[i])
+                    tmp_date = pd.to_datetime(df[i],
+                                              infer_datetime_format=True)
                     df[i] = tmp_date
-                elif i.lower() == 'time' or i.lower() == 'hour':
+                elif i.lower() == 'time':
+                    tmp_time = pd.to_datetime(
+                        df[i], infer_datetime_format=True)
+                    tmp_time = pd.to_timedelta(tmp_time.dt.hour, unit='h') +\
+                        pd.to_timedelta(tmp_time.dt.minute, unit='m')
+                    df[i] = tmp_time
+                elif i.lower() == 'hour':
                     tmp_time = pd.to_timedelta(pd.to_numeric(df[i]), unit='h')
                     df[i] = tmp_time
-                else:
+                elif i.lower() == 'minute':
                     tmp_time = pd.to_timedelta(pd.to_numeric(df[i]), unit='m')
                     df[i] = tmp_time
+                else:
+                    raise ValueError
 
             tmp_combined = tmp_date + tmp_time
             df.insert(0, 'DateTime', tmp_combined.values,
